@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Ladle</string>
     <string name="title_activity_edit_rec">EditRecActivity</string>
+    <string name="rec_name">Название</string>
+    <string name="rec_descr">Описание</string>
+    <string name="rec_ingred">Ингредиенты</string>
+    <string name="time">Время</string>
 </resources>
