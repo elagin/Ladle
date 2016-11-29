@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Ladle</string>
+    <string name="title_activity_edit_rec">EditRecActivity</string>
 </resources>
