@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/edit_rec_time_count"/>
+                android:id="@+id/edit_rec_total_time_count"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
