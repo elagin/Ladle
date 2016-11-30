@@ -5,4 +5,5 @@
     <string name="rec_descr">Описание</string>
     <string name="rec_ingred">Ингредиенты</string>
     <string name="time">Время</string>
+    <string name="title_activity_main3">Main3Activity</string>
 </resources>

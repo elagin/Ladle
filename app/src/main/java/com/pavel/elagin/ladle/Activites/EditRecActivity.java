@@ -1,8 +1,6 @@
 package com.pavel.elagin.ladle.Activites;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -28,7 +26,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     TextView edit_rec_name;
     TextView edit_rec_descr;
     TextView edit_rec_total_time_count;
-    static List<Recipe> recipes;
+    //static List<Recipe> recipes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,37 +41,39 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         button_add_ing = (Button) findViewById(R.id.button_add_ing);
         button_add_ing.setOnClickListener(this);
 
+        edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
+        edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
+        edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
+
+
         MyApp.loadRecipes();
-        recipes = MyApp.getRecipes();
+        //recipes = MyApp.getRecipes();
         Recipe recipe;
 
-        if (recipes.size() != 0) {
-            recipe = recipes.get(0);
-        } else {
-            recipe = new Recipe();
-            recipe.setName("Оладушки");
-            recipe.setDescription("Вкуснота");
-            recipe.setTotalTime(20);
-            recipe.addIngredient("Кефир", 500);
-            recipe.addIngredient("Яйца", 4);
-            recipe.addIngredient("Мука", 2);
-            recipe.addIngredient("Соль", 1);
-            recipe.addIngredient("Разрыхлитель", 1);
-        }
-
-        edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
-        edit_rec_name.setText(recipe.getName());
-
-        edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
-        edit_rec_descr.setText(recipe.getDescription());
-
-        edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
-        edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
-
-        List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
-        for (int i = 0; i < ingredientList.size(); i++) {
-            Recipe.Ingredient item = ingredientList.get(i);
-            addIng(item.name, item.count);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            Integer recipeID = bundle.getInt("recipeID");
+            if (recipeID == null) {
+                recipe = new Recipe();
+                recipe.setName("Оладушки");
+                recipe.setDescription("Вкуснота");
+                recipe.setTotalTime(20);
+                recipe.addIngredient("Кефир", 500);
+                recipe.addIngredient("Яйца", 4);
+                recipe.addIngredient("Мука", 2);
+                recipe.addIngredient("Соль", 1);
+                recipe.addIngredient("Разрыхлитель", 1);
+            } else {
+                recipe = MyApp.getRecipe(recipeID);
+                edit_rec_name.setText(recipe.getName());
+                edit_rec_descr.setText(recipe.getDescription());
+                edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
+                List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
+                for (int i = 0; i < ingredientList.size(); i++) {
+                    Recipe.Ingredient item = ingredientList.get(i);
+                    addIng(item.name, item.count);
+                }
+            }
         }
     }
 
@@ -92,7 +92,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 Recipe recipe = new Recipe();
                 recipe.setName(edit_rec_name.getText().toString());
                 recipe.setDescription(edit_rec_descr.getText().toString());
-                recipe.setTotalTime(Integer.valueOf(edit_rec_total_time_count.getText().toString()));
+                String totalTime = edit_rec_total_time_count.getText().toString();
+                if (totalTime.length() > 0)
+                    recipe.setTotalTime(Integer.valueOf(totalTime));
                 recipe.clearIngredients();
 
                 for (int i = 0, j = table.getChildCount(); i < j; i++) {
@@ -105,9 +107,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     }
                 }
 
-                recipes.clear();
-                recipes.add(recipe);
-
+                //recipes.clear();
+                MyApp.addRecipe(recipe);
                 MyApp.saveRecipes();
                 finish();
 //				Intent intentAbout = new Intent(getActivity(), AboutActivity.class);
