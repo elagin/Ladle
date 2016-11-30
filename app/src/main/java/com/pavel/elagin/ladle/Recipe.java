@@ -11,6 +11,8 @@ import java.util.UUID;
 
 public class Recipe implements Serializable {
 
+    private static final String TAG = "myLogs";
+
     public class Ingredient implements Serializable {
         public String name;
         public int count;
@@ -23,6 +25,7 @@ public class Recipe implements Serializable {
             this.count = count;
         }
     }
+
     private Integer uid;
     private UUID uuid;
     private String name;
@@ -78,12 +81,4 @@ public class Recipe implements Serializable {
     public void clearIngredients() {
         ingredients.clear();
     }
-
-//    public UUID getUuid() {
-//        return uuid;
-//    }
-//
-//    public void setUuid(UUID uuid) {
-//        this.uuid = uuid;
-//    }
 }

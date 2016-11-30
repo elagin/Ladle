@@ -51,18 +51,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
-            if (recipeID == null) {
-//                recipe = new Recipe();
-//                recipe.setName("Оладушки");
-//                recipe.setDescription("Вкуснота");
-//                recipe.setTotalTime(20);
-//                recipe.addIngredient("Кефир", 500);
-//                recipe.addIngredient("Яйца", 4);
-//                recipe.addIngredient("Мука", 2);
-//                recipe.addIngredient("Соль", 1);
-//                recipe.addIngredient("Разрыхлитель", 1);
-            } else {
-//                recipe = MyApp.getRecipe(UUID.fromString(recipeID));
+            if (recipeID != null) {
                 recipe = MyApp.getRecipe(recipeID);
                 edit_rec_name.setText(recipe.getName());
                 edit_rec_descr.setText(recipe.getDescription());
@@ -105,16 +94,14 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         recipe.addIngredient(name.getText().toString(), Integer.valueOf(count.getText().toString()));
                     }
                 }
-//                if (recipe.getUuid() == null)
-//                    recipe.setUuid(UUID.randomUUID());
-                if (recipe.getUid() == null)
+                if (recipeID == null)
                     recipe.setUid(MyApp.newId());
+                else
+                    recipe.setUid(recipeID);
 
                 MyApp.updateRecipe(recipe);
                 MyApp.saveRecipes();
                 finish();
-//				Intent intentAbout = new Intent(getActivity(), AboutActivity.class);
-//				this.startActivity(intentAbout);
                 return true;
         }
         return false;

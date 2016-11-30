@@ -96,15 +96,6 @@ public class MyApp extends Application {
         return recipes;
     }
 
-//    public static Recipe getRecipe(UUID uid) {
-//        for (int i = 0; i < recipes.size(); i++) {
-//            Recipe recipe = recipes.get(i);
-//            if (recipe.getUuid().equals(uid))
-//                return recipe;
-//        }
-//        return null;
-//    }
-
     public static Recipe getRecipe(int uid) {
         for (int i = 0; i < recipes.size(); i++) {
             Recipe recipe = recipes.get(i);
@@ -117,10 +108,9 @@ public class MyApp extends Application {
     public static void updateRecipe(Recipe recipe) {
         for (int i = 0; i < recipes.size(); i++) {
             Recipe oldRecipe = recipes.get(i);
-            //if (oldRecipe.getUuid().equals(recipe.getUuid())) {
-                if (oldRecipe.getUid().equals(recipe.getUid())) {
-                oldRecipe = recipe;
-                break;
+            if (oldRecipe.getUid().equals(recipe.getUid())) {
+                recipes.set(i, recipe);
+                return;
             }
         }
         recipes.add(recipe);

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TableLayout;
@@ -22,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     TableLayout table;
 
+    private static final String TAG = "myLogs";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,19 +42,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-            fillTable();
+        fillTable();
     }
 
     private void fillTable() {
+        Log.d(TAG, "fillTable");
         table.removeAllViews();
         final List<Recipe> recipes = MyApp.getRecipes();
         for (int i = 0; i < recipes.size(); i++) {
             Recipe item = recipes.get(i);
             try {
+                Log.d(TAG, "Insert " + item.getUid() + " : " + item.getName());
                 TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.recipe_row, null);
                 ((TextView) row.findViewById(R.id.rec_name_row)).setText(item.getName() + " " + item.getDescription());
-                final int rowId = MyApp.newId();
-                row.setId(rowId);
+                row.setId(item.getUid());
                 row.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         MyApp.toDetails(v.getId());
@@ -70,9 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.fab:
                 Intent intent = new Intent(getAppContext(), EditRecActivity.class);
-//        Bundle bundle = new Bundle();
-//        bundle.putInt("recipeID", id);
-//        intent.putExtras(bundle);
+                Log.d(TAG, "create new recipe");
                 startActivity(intent);
                 break;
         }
