@@ -18,6 +18,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -95,11 +96,33 @@ public class MyApp extends Application {
         return recipes;
     }
 
-    public static Recipe getRecipe(int id){
-        return recipes.get(id - 1);
+//    public static Recipe getRecipe(UUID uid) {
+//        for (int i = 0; i < recipes.size(); i++) {
+//            Recipe recipe = recipes.get(i);
+//            if (recipe.getUuid().equals(uid))
+//                return recipe;
+//        }
+//        return null;
+//    }
+
+    public static Recipe getRecipe(int uid) {
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe recipe = recipes.get(i);
+            if (recipe.getUid().equals(uid))
+                return recipe;
+        }
+        return null;
     }
 
-    public static void addRecipe(Recipe recipe){
+    public static void updateRecipe(Recipe recipe) {
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe oldRecipe = recipes.get(i);
+            //if (oldRecipe.getUuid().equals(recipe.getUuid())) {
+                if (oldRecipe.getUid().equals(recipe.getUid())) {
+                oldRecipe = recipe;
+                break;
+            }
+        }
         recipes.add(recipe);
     }
 

@@ -3,6 +3,7 @@ package com.pavel.elagin.ladle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by elagin on 30.11.16.
@@ -22,7 +23,8 @@ public class Recipe implements Serializable {
             this.count = count;
         }
     }
-
+    private Integer uid;
+    private UUID uuid;
     private String name;
     private String description;
     private int totalTime;
@@ -61,6 +63,14 @@ public class Recipe implements Serializable {
         ingredients.add(new Ingredient(name, count));
     }
 
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
     public List<Ingredient> getIngredients() {
         return ingredients;
     }
@@ -68,4 +78,12 @@ public class Recipe implements Serializable {
     public void clearIngredients() {
         ingredients.clear();
     }
+
+//    public UUID getUuid() {
+//        return uuid;
+//    }
+//
+//    public void setUuid(UUID uuid) {
+//        this.uuid = uuid;
+//    }
 }

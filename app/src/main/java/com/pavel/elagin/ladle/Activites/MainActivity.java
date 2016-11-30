@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
         MyApp.loadRecipes();
-
     }
 
     @Override
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         MyApp.toDetails(v.getId());
                     }
                 });
-
                 table.addView(row);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -68,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
         int id = view.getId();
         switch (id) {
             case R.id.fab:

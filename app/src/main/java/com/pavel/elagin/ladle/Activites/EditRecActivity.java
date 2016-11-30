@@ -21,12 +21,12 @@ import java.util.List;
 
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button button_add_ing;
-    TableLayout table;
-    TextView edit_rec_name;
-    TextView edit_rec_descr;
-    TextView edit_rec_total_time_count;
-    //static List<Recipe> recipes;
+    private Button button_add_ing;
+    private TableLayout table;
+    private TextView edit_rec_name;
+    private TextView edit_rec_descr;
+    private TextView edit_rec_total_time_count;
+    private Integer recipeID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +45,24 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
         edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
 
-
         MyApp.loadRecipes();
-        //recipes = MyApp.getRecipes();
         Recipe recipe;
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            Integer recipeID = bundle.getInt("recipeID");
+            recipeID = bundle.getInt("recipeID");
             if (recipeID == null) {
-                recipe = new Recipe();
-                recipe.setName("Оладушки");
-                recipe.setDescription("Вкуснота");
-                recipe.setTotalTime(20);
-                recipe.addIngredient("Кефир", 500);
-                recipe.addIngredient("Яйца", 4);
-                recipe.addIngredient("Мука", 2);
-                recipe.addIngredient("Соль", 1);
-                recipe.addIngredient("Разрыхлитель", 1);
+//                recipe = new Recipe();
+//                recipe.setName("Оладушки");
+//                recipe.setDescription("Вкуснота");
+//                recipe.setTotalTime(20);
+//                recipe.addIngredient("Кефир", 500);
+//                recipe.addIngredient("Яйца", 4);
+//                recipe.addIngredient("Мука", 2);
+//                recipe.addIngredient("Соль", 1);
+//                recipe.addIngredient("Разрыхлитель", 1);
             } else {
+//                recipe = MyApp.getRecipe(UUID.fromString(recipeID));
                 recipe = MyApp.getRecipe(recipeID);
                 edit_rec_name.setText(recipe.getName());
                 edit_rec_descr.setText(recipe.getDescription());
@@ -106,9 +105,12 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         recipe.addIngredient(name.getText().toString(), Integer.valueOf(count.getText().toString()));
                     }
                 }
+//                if (recipe.getUuid() == null)
+//                    recipe.setUuid(UUID.randomUUID());
+                if (recipe.getUid() == null)
+                    recipe.setUid(MyApp.newId());
 
-                //recipes.clear();
-                MyApp.addRecipe(recipe);
+                MyApp.updateRecipe(recipe);
                 MyApp.saveRecipes();
                 finish();
 //				Intent intentAbout = new Intent(getActivity(), AboutActivity.class);
