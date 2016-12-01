@@ -8,6 +8,7 @@
     <string name="title_activity_main3">Main3Activity</string>
     <string name="rec_name_ing_is_empty">Не указано название ингредиента.</string>
     <string name="rec_volume_ing_is_empty">Не указан объем ингредиента.</string>
+    <string name="rec_unit_ing_is_empty">Не указаны единицы измерения.</string>
     <string name="rec_name_is_empty">Не указано название рецепта.</string>
     <string name="delete">Удалить</string>
     <string name="delete_confirm">Действительно удалить: %1$s.</string>

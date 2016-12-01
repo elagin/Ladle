@@ -27,6 +27,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private TextView edit_rec_name;
     private TextView edit_rec_descr;
     private TextView edit_rec_total_time_count;
+    private TextView edit_rec_steps;
     private Integer recipeID;
 
     @Override
@@ -44,6 +45,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
+        edit_rec_steps = (TextView) findViewById(R.id.edit_rec_steps);
         edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
 
         MyApp.loadRecipes();
@@ -56,15 +58,16 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 recipe = MyApp.getRecipe(recipeID);
                 edit_rec_name.setText(recipe.getName());
                 edit_rec_descr.setText(recipe.getDescription());
+                edit_rec_steps.setText(recipe.getSteps());
                 edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
                 List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
                 for (int i = 0; i < ingredientList.size(); i++) {
                     Recipe.Ingredient item = ingredientList.get(i);
-                    addIng(item.name, item.count);
+                    addIng(item.name, item.count, item.unit);
                 }
             }
         } else
-            addIng(null, null);
+            addIng(null, null, null);
     }
 
     @Override
@@ -86,6 +89,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 Recipe recipe = new Recipe();
                 recipe.setName(recipeName);
                 recipe.setDescription(edit_rec_descr.getText().toString());
+                recipe.setSteps(edit_rec_steps.getText().toString());
                 String totalTime = edit_rec_total_time_count.getText().toString();
                 if (totalTime.length() > 0)
                     recipe.setTotalTime(Integer.valueOf(totalTime));
@@ -97,18 +101,25 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         TableRow row = (TableRow) view;
                         TextView nameView = (TextView) row.findViewById(R.id.ing_name);
                         TextView countView = (TextView) row.findViewById(R.id.ing_count);
+                        TextView unitView = (TextView) row.findViewById(R.id.ing_unit);
+
                         String name = nameView.getText().toString();
+                        String count = countView.getText().toString();
+                        String unit = unitView.getText().toString();
+
                         if (name.length() == 0) {
                             Toast.makeText(this, getString(R.string.rec_name_ing_is_empty), Toast.LENGTH_LONG).show();
                             return false;
-                        } else {
-                            String count = countView.getText().toString();
-                            if (count.length() == 0) {
-                                Toast.makeText(this, getString(R.string.rec_volume_ing_is_empty), Toast.LENGTH_LONG).show();
-                                return false;
-                            }
-                            recipe.addIngredient(name, Integer.valueOf(count));
                         }
+                        if (count.length() == 0) {
+                            Toast.makeText(this, getString(R.string.rec_volume_ing_is_empty), Toast.LENGTH_LONG).show();
+                            return false;
+                        }
+                        if (unit.length() == 0) {
+                            Toast.makeText(this, getString(R.string.rec_unit_ing_is_empty), Toast.LENGTH_LONG).show();
+                            return false;
+                        }
+                        recipe.addIngredient(name, Double.valueOf(count), unit);
                     }
                 }
                 if (recipeID == null)
@@ -124,7 +135,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
-    private void addIng(String name, Integer count) {
+    private void addIng(String name, Double count, String unit) {
         final int index = table.getChildCount();
 
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.rec_ing_row, null);
@@ -132,7 +143,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             ((TextView) row.findViewById(R.id.ing_name)).setText(name);
         if (count != null)
             ((TextView) row.findViewById(R.id.ing_count)).setText(count.toString());
-
+        if (unit != null)
+            ((TextView) row.findViewById(R.id.ing_unit)).setText(unit);
         row.setId(index);
         table.addView(row);
 
@@ -157,7 +169,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         int id = view.getId();
         switch (id) {
             case R.id.button_add_ing:
-                addIng(null, null);
+                addIng(null, null, null);
                 break;
         }
     }

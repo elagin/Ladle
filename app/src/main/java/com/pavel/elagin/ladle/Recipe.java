@@ -15,21 +15,23 @@ public class Recipe implements Serializable {
 
     public class Ingredient implements Serializable {
         public String name;
-        public int count;
+        public double count;
+        public String unit;
 
         public Ingredient() {
         }
 
-        public Ingredient(String name, int count) {
+        public Ingredient(String name, double count, String unit) {
             this.name = name;
             this.count = count;
+            this.unit = unit;
         }
     }
 
     private Integer uid;
-    private UUID uuid;
     private String name;
     private String description;
+    private String steps;
     private int totalTime;
 
     private List<Ingredient> ingredients;
@@ -62,8 +64,8 @@ public class Recipe implements Serializable {
         this.totalTime = totalTime;
     }
 
-    public void addIngredient(String name, int count) {
-        ingredients.add(new Ingredient(name, count));
+    public void addIngredient(String name, double count, String unit) {
+        ingredients.add(new Ingredient(name, count, unit));
     }
 
     public Integer getUid() {
@@ -72,6 +74,14 @@ public class Recipe implements Serializable {
 
     public void setUid(Integer uid) {
         this.uid = uid;
+    }
+
+    public String getSteps() {
+        return steps;
+    }
+
+    public void setSteps(String steps) {
+        this.steps = steps;
     }
 
     public List<Ingredient> getIngredients() {

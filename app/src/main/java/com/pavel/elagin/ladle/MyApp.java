@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.pavel.elagin.ladle.Activites.EditRecActivity;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -74,17 +76,23 @@ public class MyApp extends Application {
         ObjectInputStream is = null;
         try {
             fis = getAppContext().openFileInput(fileNameRecipes);
+
             is = new ObjectInputStream(fis);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         if (is != null) {
             try {
                 recipes = (List<Recipe>) is.readObject();
                 is.close();
                 fis.close();
+            } catch (java.io.InvalidClassException e) {
+                File file = new File(getAppContext().getFilesDir(), fileNameRecipes);
+                file.delete();
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {

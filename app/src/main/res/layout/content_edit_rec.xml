@@ -68,6 +68,13 @@
                 android:inputType="number"
                 android:ems="10"
                 android:id="@+id/edit_rec_total_time_count"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/edit_rec_steps" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
