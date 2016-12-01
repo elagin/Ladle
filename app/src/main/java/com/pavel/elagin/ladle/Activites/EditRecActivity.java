@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pavel.elagin.ladle.MyApp;
 import com.pavel.elagin.ladle.R;
@@ -62,7 +63,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     addIng(item.name, item.count);
                 }
             }
-        }
+        } else
+            addIng(null, null);
     }
 
     @Override
@@ -76,9 +78,13 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save_rec:
-
+                String recipeName = edit_rec_name.getText().toString();
+                if (recipeName.length() == 0) {
+                    Toast.makeText(this, getString(R.string.rec_name_is_empty), Toast.LENGTH_LONG).show();
+                    return false;
+                }
                 Recipe recipe = new Recipe();
-                recipe.setName(edit_rec_name.getText().toString());
+                recipe.setName(recipeName);
                 recipe.setDescription(edit_rec_descr.getText().toString());
                 String totalTime = edit_rec_total_time_count.getText().toString();
                 if (totalTime.length() > 0)
@@ -89,9 +95,20 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     View view = table.getChildAt(i);
                     if (view instanceof TableRow) {
                         TableRow row = (TableRow) view;
-                        TextView name = (TextView) row.findViewById(R.id.ing_name);
-                        TextView count = (TextView) row.findViewById(R.id.ing_count);
-                        recipe.addIngredient(name.getText().toString(), Integer.valueOf(count.getText().toString()));
+                        TextView nameView = (TextView) row.findViewById(R.id.ing_name);
+                        TextView countView = (TextView) row.findViewById(R.id.ing_count);
+                        String name = nameView.getText().toString();
+                        if (name.length() == 0) {
+                            Toast.makeText(this, getString(R.string.rec_name_ing_is_empty), Toast.LENGTH_LONG).show();
+                            return false;
+                        } else {
+                            String count = countView.getText().toString();
+                            if (count.length() == 0) {
+                                Toast.makeText(this, getString(R.string.rec_volume_ing_is_empty), Toast.LENGTH_LONG).show();
+                                return false;
+                            }
+                            recipe.addIngredient(name, Integer.valueOf(count));
+                        }
                     }
                 }
                 if (recipeID == null)
