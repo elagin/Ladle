@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
         MyApp.loadRecipes();
+        registerForContextMenu(table);
     }
 
     @Override
@@ -61,10 +65,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         MyApp.toDetails(v.getId());
                     }
                 });
+//                row.setLongClickable(true);
+//                row.setOnLongClickListener(new View.OnLongClickListener() {
+//                    @Override
+//                    public boolean onLongClick(View v) {
+////                        table.removeView(v);
+////                        registerForContextMenu(v);
+////                        openContextMenu(v);
+////                        unregisterForContextMenu(v);
+//                        return true;
+//                    }
+//                });
                 table.addView(row);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        menu.setHeaderTitle(".....");
+        inflater.inflate(R.menu.main_rec_table, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_rec_delete:
+                //stuff
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 

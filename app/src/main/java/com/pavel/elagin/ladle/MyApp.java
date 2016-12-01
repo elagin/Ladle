@@ -18,7 +18,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -29,6 +29,7 @@ public class MyApp extends Application {
     private static MyApp instance;
     private static Activity currentActivity;
     private static List<Recipe> recipes;
+    private final static Random random = new Random();
 
     final static String fileNameRecipes = "recipe_list.txt";
 
@@ -133,19 +134,6 @@ public class MyApp extends Application {
     }
 
     public static int newId() {
-        final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
-        if (Build.VERSION.SDK_INT < 17) {
-            for (; ; ) {
-                final int result = sNextGeneratedId.get();
-                int newValue = result + 1;
-                if (newValue > 0x00FFFFFF)
-                    newValue = 1;
-                if (sNextGeneratedId.compareAndSet(result, newValue)) {
-                    return result;
-                }
-            }
-        } else {
-            return View.generateViewId();
-        }
+        return random.nextInt(Integer.MAX_VALUE);
     }
 }
