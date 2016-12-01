@@ -117,6 +117,16 @@ public class MyApp extends Application {
         recipes.add(recipe);
     }
 
+    public static void removeRecipe(int uid) {
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe recipe = recipes.get(i);
+            if (recipe.getUid().equals(uid)) {
+                recipes.remove(i);
+                return;
+            }
+        }
+    }
+
     public static Activity getCurrentActivity() {
         return currentActivity;
     }

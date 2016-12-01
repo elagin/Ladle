@@ -3,6 +3,7 @@ package com.pavel.elagin.ladle.Activites;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -14,6 +15,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.pavel.elagin.ladle.ConfirmDialogFragment;
 import com.pavel.elagin.ladle.MyApp;
 import com.pavel.elagin.ladle.R;
 import com.pavel.elagin.ladle.Recipe;
@@ -22,7 +24,7 @@ import java.util.List;
 
 import static com.pavel.elagin.ladle.MyApp.getAppContext;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ConfirmDialogFragment.ConfirmDialogListener {
 
     TableLayout table;
 
@@ -65,17 +67,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         MyApp.toDetails(v.getId());
                     }
                 });
-//                row.setLongClickable(true);
-//                row.setOnLongClickListener(new View.OnLongClickListener() {
-//                    @Override
-//                    public boolean onLongClick(View v) {
-////                        table.removeView(v);
-////                        registerForContextMenu(v);
-////                        openContextMenu(v);
-////                        unregisterForContextMenu(v);
-//                        return true;
-//                    }
-//                });
+                row.setLongClickable(true);
+                row.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        showNoticeDialog(v.getId());
+                        return true;
+                    }
+                });
                 table.addView(row);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -113,4 +112,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+    public void showNoticeDialog(int id) {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new ConfirmDialogFragment();
+        Recipe recipe = MyApp.getRecipe(id);
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        bundle.putString("name", recipe.getName());
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "ConfirmDialogFragment");
+    }
+
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, int id) {
+        Log.d(TAG, "User touched the dialog's positive button");
+        for (int i = 0; i < table.getChildCount(); i++) {
+            View view = table.getChildAt(i);
+            if (view.getId() == id) {
+                table.removeView(view);
+                MyApp.removeRecipe(id);
+                MyApp.saveRecipes();
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        Log.d(TAG, "User touched the dialog's negative button");
+    }
+
 }
