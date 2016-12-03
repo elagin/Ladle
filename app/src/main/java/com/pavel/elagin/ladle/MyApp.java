@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
 import com.pavel.elagin.ladle.Activites.EditRecActivity;
+import com.pavel.elagin.ladle.Activites.ViewRecActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +19,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by pavel on 25.11.16.
@@ -144,6 +141,14 @@ public class MyApp extends Application {
     }
 
     public static void toDetails(int id) {
+        Intent intent = new Intent(getAppContext(), ViewRecActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("recipeID", id);
+        intent.putExtras(bundle);
+        getCurrentActivity().startActivity(intent);
+    }
+
+    public static void toEdit(int id) {
         Intent intent = new Intent(getAppContext(), EditRecActivity.class);
         Bundle bundle = new Bundle();
         bundle.putInt("recipeID", id);

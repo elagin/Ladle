@@ -20,6 +20,10 @@
             android:name=".Activites.EditRecActivity"
             android:label="@string/title_activity_edit_rec"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activites.ViewRecActivity"
+            android:label="@string/title_activity_view_rec"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
