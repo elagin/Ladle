@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        MyApp.loadRecipes();
+        MyApp.loadRecipesJSon();
         registerForContextMenu(table);
     }
 
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (view.getId() == id) {
                 table.removeView(view);
                 MyApp.removeRecipe(id);
-                MyApp.saveRecipes();
+                MyApp.saveRecipesJSon();
                 return;
             }
         }

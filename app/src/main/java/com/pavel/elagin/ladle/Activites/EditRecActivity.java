@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -48,7 +47,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         edit_rec_steps = (TextView) findViewById(R.id.edit_rec_steps);
         edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
 
-        MyApp.loadRecipes();
+        MyApp.loadRecipesJSon();
         Recipe recipe;
 
         Bundle bundle = getIntent().getExtras();
@@ -128,7 +127,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     recipe.setUid(recipeID);
 
                 MyApp.updateRecipe(recipe);
-                MyApp.saveRecipes();
+                MyApp.saveRecipesJSon();
                 finish();
                 return true;
         }

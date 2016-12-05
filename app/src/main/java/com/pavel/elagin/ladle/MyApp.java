@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.pavel.elagin.ladle.Activites.EditRecActivity;
 import com.pavel.elagin.ladle.Activites.ViewRecActivity;
 
@@ -31,6 +33,7 @@ public class MyApp extends Application {
     private final static Random random = new Random();
 
     final static String fileNameRecipes = "recipe_list.txt";
+    final static String fileNameRecipesJSon = "recipe_list_json.txt";
 
     static {
         //currentActivity = null;
@@ -68,12 +71,35 @@ public class MyApp extends Application {
         }
     }
 
+    public static void saveRecipesJSon() {
+        FileOutputStream fos = null;
+        try {
+            fos = getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ObjectOutputStream os;
+        try {
+
+            Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
+            String json = gson.toJson(new RecipeJsonDataHolder(recipes));
+            os = new ObjectOutputStream(fos);
+            os.writeObject(json);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        saveRecipes();
+    }
+
     public static void loadRecipes() {
         FileInputStream fis = null;
         ObjectInputStream is = null;
         try {
             fis = getAppContext().openFileInput(fileNameRecipes);
-
             is = new ObjectInputStream(fis);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -95,6 +121,41 @@ public class MyApp extends Application {
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void loadRecipesJSon() {
+        FileInputStream fis = null;
+        ObjectInputStream is = null;
+        try {
+            fis = getAppContext().openFileInput(fileNameRecipesJSon);
+            is = new ObjectInputStream(fis);
+            String json = (String) is.readObject();
+            RecipeJsonDataHolder dwarvesBand = new Gson().fromJson(json, RecipeJsonDataHolder.class);
+            recipes = dwarvesBand.mContactList;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (is != null) {
+            try {
+                is.close();
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static class RecipeJsonDataHolder {
+        public List<Recipe> mContactList;
+
+        public RecipeJsonDataHolder(List<Recipe> mContactList) {
+            this.mContactList = mContactList;
         }
     }
 
