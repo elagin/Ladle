@@ -22,7 +22,7 @@ import java.util.List;
 
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button button_add_ing;
+    private ImageButton button_add_ing;
     private TableLayout table;
     private TextView edit_rec_name;
     private TextView edit_rec_descr;
@@ -40,7 +40,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         table = (TableLayout) findViewById(R.id.table_rec_ing);
         table.requestLayout();     // Not sure if this is needed.
 
-        button_add_ing = (Button) findViewById(R.id.button_add_ing);
+        button_add_ing = (ImageButton) findViewById(R.id.button_add_ing);
         button_add_ing.setOnClickListener(this);
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);

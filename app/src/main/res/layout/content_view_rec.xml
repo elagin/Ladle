@@ -49,6 +49,12 @@
                 android:id="@+id/rec_total_time_count"
                 android:textSize="20dp"/>
             <TextView
+                android:text="@string/preparation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rec_preparation"
+                android:textSize="20dp"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rec_steps"

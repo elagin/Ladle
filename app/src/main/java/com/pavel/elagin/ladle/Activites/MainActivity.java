@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 Log.d(TAG, "Insert " + item.getUid() + " : " + item.getName());
                 TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.recipe_row, null);
-                ((TextView) row.findViewById(R.id.rec_name_row)).setText(item.getName() + " " + item.getDescription());
+                ((TextView) row.findViewById(R.id.rec_name_row)).setText(item.getName());
+                ((TextView) row.findViewById(R.id.rec_desc_row)).setText(item.getDescription());
+                ((TextView) row.findViewById(R.id.rec_total_time)).setText(item.getTotalTime().toString());
                 row.setId(item.getUid());
                 row.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {

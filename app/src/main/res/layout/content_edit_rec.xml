@@ -29,9 +29,8 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
                 android:ems="10"
-                android:id="@+id/edit_rec_name"/>
+                android:id="@+id/edit_rec_name" />
             <TextView
                 android:text="@string/rec_descr"
                 android:layout_width="wrap_content"
@@ -40,9 +39,8 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:id="@+id/edit_rec_descr"/>
+                android:id="@+id/edit_rec_descr"
+                android:minLines="1" />
             <TextView
                 android:text="@string/rec_ingred"
                 android:layout_width="wrap_content"
@@ -52,11 +50,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/table_rec_ing"/>
-            <Button
-                android:text="+"
-                android:layout_width="match_parent"
+            <ImageButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button_add_ing" />
+                app:srcCompat="@android:drawable/ic_input_add"
+                android:id="@+id/button_add_ing"
+                android:layout_gravity="center_horizontal" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -76,7 +75,11 @@
                     android:ems="10"
                     android:id="@+id/edit_rec_total_time_count"/>
             </LinearLayout>
-
+            <TextView
+                android:text="@string/preparation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5"/>
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
