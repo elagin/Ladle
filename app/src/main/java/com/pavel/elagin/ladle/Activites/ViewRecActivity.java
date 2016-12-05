@@ -83,22 +83,19 @@ public class ViewRecActivity extends AppCompatActivity {
             List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
             for (int i = 0; i < ingredientList.size(); i++) {
                 Recipe.Ingredient item = ingredientList.get(i);
-                    addIng(item.name, item.count, item.unit);
+                addIng(item.name, item.count, item.unit);
             }
             rec_total_time_count.setText(String.format(getString(R.string.time_format), recipe.getTotalTime().toString()));
 
         }
     }
+
     private void addIng(String name, Double count, String unit) {
         final int index = table.getChildCount();
-
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.rec_ing_view_row, null);
-        if (name != null)
-            ((TextView) row.findViewById(R.id.ing_name)).setText(name);
-        if (count != null)
-            ((TextView) row.findViewById(R.id.ing_count)).setText(count.toString());
-        if (unit != null)
-            ((TextView) row.findViewById(R.id.ing_unit)).setText(unit);
+        ((TextView) row.findViewById(R.id.ing_name)).setText(name);
+        ((TextView) row.findViewById(R.id.ing_count)).setText(count.toString().replace(".0", ""));
+        ((TextView) row.findViewById(R.id.ing_unit)).setText(unit);
         row.setId(index);
         table.addView(row);
     }

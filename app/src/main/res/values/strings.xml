@@ -5,8 +5,8 @@
     <string name="rec_name">Название</string>
     <string name="rec_descr">Описание</string>
     <string name="rec_ingred">Ингредиенты</string>
-    <string name="time">Время</string>
-    <string name="time_format">Время: %1$s.</string>
+    <string name="time">Время, мин.:</string>
+    <string name="time_format">Время: %1$s мин.</string>
     <string name="title_activity_main3">Main3Activity</string>
     <string name="rec_name_ing_is_empty">Не указано название ингредиента.</string>
     <string name="rec_volume_ing_is_empty">Не указан объем ингредиента.</string>
