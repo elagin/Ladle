@@ -32,8 +32,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rec);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         table = (TableLayout) findViewById(R.id.table_rec_ing);
         table.requestLayout();     // Not sure if this is needed.

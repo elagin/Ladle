@@ -30,8 +30,6 @@ public class ViewRecActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_rec);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_view);
-        setSupportActionBar(toolbar);
 
         table = (TableLayout) findViewById(R.id.table_rec_ing_view);
         table.requestLayout();     // Not sure if this is needed.
