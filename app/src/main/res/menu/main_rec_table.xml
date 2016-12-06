@@ -7,18 +7,25 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"/>
     <item
+        android:id="@+id/menu_export"
+        android:orderInCategory="200"
+        android:title="@string/export_to_sd"/>
+    <item
+        android:id="@+id/menu_import"
+        android:orderInCategory="300"
+        android:title="@string/import_to_sd"/>
+    <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="800"
+        android:title="@string/about"/>
+    <item
         android:id="@+id/menu_rec_delete"
         android:title="@string/delete"
         android:visible="false"/>
-
     <item
         android:id="@+id/action_share"
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/share"
         yourapp:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/menu_about"
-        android:orderInCategory="200"
-        android:title="@string/about"/>
 </menu>
 

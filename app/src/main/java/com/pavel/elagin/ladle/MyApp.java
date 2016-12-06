@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,6 +35,7 @@ public class MyApp extends Application {
 
     final static String fileNameRecipes = "recipe_list.txt";
     final static String fileNameRecipesJSon = "recipe_list_json.txt";
+    final static String exportFolderName = "ladle";
 
     static {
         //currentActivity = null;
@@ -71,28 +73,58 @@ public class MyApp extends Application {
         }
     }
 
-    public static void saveRecipesJSon() {
+    public static void saveRecipesJSon(boolean isLocal) {
         FileOutputStream fos = null;
         try {
-            fos = getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE);
+            if (isLocal) {
+                fos = getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE);
+            } else {
+                if (isExternalStorageWritable()) {
+                    fos = new FileOutputStream(getExternalFileName());
+                } else {
+                    //todo: карта памяти отсутствует.
+                }
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         ObjectOutputStream os;
         try {
-
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .create();
-            String json = gson.toJson(new RecipeJsonDataHolder(recipes));
             os = new ObjectOutputStream(fos);
-            os.writeObject(json);
+            os.writeObject(getJSonData());
             os.close();
             fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         saveRecipes();
+    }
+
+    private static String getJSonData() {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        String json = gson.toJson(new RecipeJsonDataHolder(recipes));
+        return json;
+    }
+
+    /* Checks if external storage is available for read and write */
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available to at least read */
+    public static boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
     }
 
     public static void loadRecipes() {
@@ -124,15 +156,20 @@ public class MyApp extends Application {
         }
     }
 
-    public static void loadRecipesJSon() {
+    public static void loadRecipesJSon(boolean isLocal) {
         FileInputStream fis = null;
         ObjectInputStream is = null;
         try {
-            fis = getAppContext().openFileInput(fileNameRecipesJSon);
+            if (isLocal) {
+                fis = getAppContext().openFileInput(fileNameRecipesJSon);
+            } else {
+                if (isExternalStorageReadable())
+                    fis = new FileInputStream(getExternalFileName());
+            }
             is = new ObjectInputStream(fis);
             String json = (String) is.readObject();
-            RecipeJsonDataHolder dwarvesBand = new Gson().fromJson(json, RecipeJsonDataHolder.class);
-            recipes = dwarvesBand.mContactList;
+            RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
+            recipes = holder.mContactList;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -191,6 +228,13 @@ public class MyApp extends Application {
                 return;
             }
         }
+    }
+
+    public static File getExternalFileName() {
+        //todo: Как сделать работу с /storage/sdcard1 ?
+        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), exportFolderName);
+        File file = new File(dir.getAbsolutePath() + "/" + fileNameRecipesJSon);
+        return file;
     }
 
     public static Activity getCurrentActivity() {

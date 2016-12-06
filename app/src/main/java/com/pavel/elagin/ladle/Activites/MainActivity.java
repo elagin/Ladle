@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        MyApp.loadRecipesJSon();
+        MyApp.loadRecipesJSon(true);
         registerForContextMenu(table);
     }
 
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (view.getId() == id) {
                 table.removeView(view);
                 MyApp.removeRecipe(id);
-                MyApp.saveRecipesJSon();
+                MyApp.saveRecipesJSon(true);
                 return;
             }
         }
@@ -166,6 +166,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             case R.id.action_share:
                 Log.d(TAG, "menu share");
+                return true;
+            case R.id.menu_export:
+                MyApp.saveRecipesJSon(false);
+                return true;
+            case R.id.menu_import:
+                MyApp.loadRecipesJSon(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
