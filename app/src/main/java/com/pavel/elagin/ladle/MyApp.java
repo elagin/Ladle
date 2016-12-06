@@ -34,9 +34,9 @@ public class MyApp extends Application {
     private static List<Recipe> recipes;
     private final static Random random = new Random();
 
-    final static String fileNameRecipes = "recipe_list.txt";
-    final static String fileNameRecipesJSon = "recipe_list_json.txt";
-    final static String exportFolderName = "ladle";
+    private final static String fileNameRecipes = "recipe_list.txt";
+    private final static String fileNameRecipesJSon = "recipe_list_json.txt";
+    private final static String exportFolderName = "ladle";
 
     static {
         //currentActivity = null;
@@ -56,14 +56,14 @@ public class MyApp extends Application {
         return instance.getApplicationContext();
     }
 
-    public static void saveRecipes() {
+    private static void saveRecipes() {
         FileOutputStream fos = null;
         try {
             fos = getAppContext().openFileOutput(fileNameRecipes, Context.MODE_PRIVATE);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        ObjectOutputStream os = null;
+        ObjectOutputStream os;
         try {
             os = new ObjectOutputStream(fos);
             os.writeObject(recipes);
@@ -105,21 +105,17 @@ public class MyApp extends Application {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .create();
-        String json = gson.toJson(new RecipeJsonDataHolder(recipes));
-        return json;
+        return gson.toJson(new RecipeJsonDataHolder(recipes));
     }
 
     /* Checks if external storage is available for read and write */
-    public static boolean isExternalStorageWritable() {
+    private static boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     /* Checks if external storage is available to at least read */
-    public static boolean isExternalStorageReadable() {
+    private static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
@@ -134,8 +130,6 @@ public class MyApp extends Application {
         try {
             fis = getAppContext().openFileInput(fileNameRecipes);
             is = new ObjectInputStream(fis);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,9 +143,7 @@ public class MyApp extends Application {
                 File file = new File(getAppContext().getFilesDir(), fileNameRecipes);
                 file.delete();
                 return;
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
@@ -173,8 +165,6 @@ public class MyApp extends Application {
             RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
             recipes = holder.mContactList;
             res = true;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -202,7 +192,7 @@ public class MyApp extends Application {
         }
     }
 
-    public static final List<Recipe> getRecipes() {
+    public static List<Recipe> getRecipes() {
         return recipes;
     }
 
@@ -236,14 +226,14 @@ public class MyApp extends Application {
         }
     }
 
-    public static File getExternalFileName() {
+    private static File getExternalFileName() {
         //todo: Как сделать работу с /storage/sdcard1 ?
         File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), exportFolderName);
         File file = new File(dir.getAbsolutePath() + "/" + fileNameRecipesJSon);
         return file;
     }
 
-    public static Activity getCurrentActivity() {
+    private static Activity getCurrentActivity() {
         return currentActivity;
     }
 

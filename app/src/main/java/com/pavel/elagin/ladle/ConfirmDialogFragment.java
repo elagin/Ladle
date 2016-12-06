@@ -13,8 +13,8 @@ import android.support.v7.app.AlertDialog;
 
 public class ConfirmDialogFragment extends DialogFragment {
 
-    static String name;
-    static int uid;
+    private static String name;
+    private static int uid;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -29,7 +29,6 @@ public class ConfirmDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Send the positive button event back to the host activity
-                        int size = name.length();
                         mListener.onDialogPositiveClick(ConfirmDialogFragment.this, uid);
                     }
                 })
@@ -46,12 +45,12 @@ public class ConfirmDialogFragment extends DialogFragment {
  * implement this interface in order to receive event callbacks.
  * Each method passes the DialogFragment in case the host needs to query it. */
     public interface ConfirmDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, int id);
-        public void onDialogNegativeClick(DialogFragment dialog);
+        void onDialogPositiveClick(DialogFragment dialog, int id);
+        void onDialogNegativeClick(DialogFragment dialog);
     }
 
     // Use this instance of the interface to deliver action events
-    ConfirmDialogListener mListener;
+    private ConfirmDialogListener mListener;
 
     // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override

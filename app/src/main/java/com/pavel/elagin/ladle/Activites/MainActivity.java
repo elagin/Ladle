@@ -27,7 +27,6 @@ import static com.pavel.elagin.ladle.MyApp.getAppContext;
 public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.ConfirmDialogListener {
 
     private TableLayout table;
-    private Menu mMenu;
 
     private static final String TAG = "myLogs";
 
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_rec_table, menu);
-        mMenu = menu;
+        Menu mMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -110,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         }
     }
 
-    public void showNoticeDialog(int id) {
+    private void showNoticeDialog(int id) {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new ConfirmDialogFragment();
         Recipe recipe = MyApp.getRecipe(id);
