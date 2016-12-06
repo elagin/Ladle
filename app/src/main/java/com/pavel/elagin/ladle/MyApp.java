@@ -74,7 +74,8 @@ public class MyApp extends Application {
         }
     }
 
-    public static void saveRecipesJSon(boolean isLocal) {
+    public static boolean saveRecipesJSon(boolean isLocal) {
+        boolean res = false;
         FileOutputStream fos = null;
         try {
             if (isLocal) {
@@ -95,10 +96,13 @@ public class MyApp extends Application {
             os.writeObject(getJSonData());
             os.close();
             fos.close();
+            res = true;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
         saveRecipes();
+        return res;
     }
 
     private static String getJSonData() {

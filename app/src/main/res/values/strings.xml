@@ -25,4 +25,8 @@
     <string name="about_info">Приложение для хранения кулинарных рецептов.</string>
     <string name="about_feedback">elagin.pasha@gmail.com</string>
     <string name="feedback"><![CDATA[<a href=\"mailto:elagin.pasha@gmail.com\">Связаться с автором.</a>]]></string>
+    <string name="import_succsess">Данные успешно импортированы.</string>
+    <string name="import_error">Ошибка импорта данных.</string>
+    <string name="export_succsess">Данные успешно экспртированы.</string>
+    <string name="export_error">Ошибка экспорта данных.</string>
 </resources>

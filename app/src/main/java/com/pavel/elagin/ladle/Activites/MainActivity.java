@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pavel.elagin.ladle.ConfirmDialogFragment;
 import com.pavel.elagin.ladle.MyApp;
@@ -157,13 +158,18 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 Log.d(TAG, "menu share");
                 return true;
             case R.id.menu_export:
-                MyApp.saveRecipesJSon(false);
+                if (MyApp.saveRecipesJSon(false))
+                    Toast.makeText(this, getString(R.string.export_succsess), Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(this, getString(R.string.export_error), Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_import:
                 if (MyApp.loadRecipesJSon(false)) {
+                    Toast.makeText(this, getString(R.string.import_succsess), Toast.LENGTH_LONG).show();
                     MyApp.saveRecipesJSon(true);
                     fillTable();
-                }
+                } else
+                    Toast.makeText(this, getString(R.string.import_error), Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
