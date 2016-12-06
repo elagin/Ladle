@@ -47,7 +47,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         edit_rec_steps = (TextView) findViewById(R.id.edit_rec_steps);
         edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
 
-        MyApp.loadRecipesJSon(true);
+        //MyApp.loadRecipesJSon(true);
         Recipe recipe;
 
         Bundle bundle = getIntent().getExtras();

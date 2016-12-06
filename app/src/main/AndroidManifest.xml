@@ -27,6 +27,10 @@
             android:name=".Activites.ViewRecActivity"
             android:label="@string/title_activity_view_rec"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activites.AboutActivity"
+            android:label="@string/title_activity_about_rec"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

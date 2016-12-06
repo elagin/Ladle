@@ -9,6 +9,7 @@ import android.os.Environment;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.pavel.elagin.ladle.Activites.AboutActivity;
 import com.pavel.elagin.ladle.Activites.EditRecActivity;
 import com.pavel.elagin.ladle.Activites.ViewRecActivity;
 
@@ -156,7 +157,8 @@ public class MyApp extends Application {
         }
     }
 
-    public static void loadRecipesJSon(boolean isLocal) {
+    public static boolean loadRecipesJSon(boolean isLocal) {
+        boolean res = false;
         FileInputStream fis = null;
         ObjectInputStream is = null;
         try {
@@ -170,21 +172,25 @@ public class MyApp extends Application {
             String json = (String) is.readObject();
             RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
             recipes = holder.mContactList;
+            res = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
-
-        if (is != null) {
-            try {
-                is.close();
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                    if(fis != null) {
+                        fis.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            return res;
         }
     }
 
@@ -258,6 +264,11 @@ public class MyApp extends Application {
         Bundle bundle = new Bundle();
         bundle.putInt("recipeID", id);
         intent.putExtras(bundle);
+        getCurrentActivity().startActivity(intent);
+    }
+
+    public static void toAbout() {
+        Intent intent = new Intent(getAppContext(), AboutActivity.class);
         getCurrentActivity().startActivity(intent);
     }
 

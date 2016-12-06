@@ -21,4 +21,8 @@
     <string name="action_settings">Настройки</string>
     <string name="export_to_sd">Экспорт</string>
     <string name="import_to_sd">Импорт</string>
+    <string name="title_activity_about_rec">О приложении</string>
+    <string name="about_info">Приложение для хранения кулинарных рецептов.</string>
+    <string name="about_feedback">elagin.pasha@gmail.com</string>
+    <string name="feedback"><![CDATA[<a href=\"mailto:elagin.pasha@gmail.com\">Связаться с автором.</a>]]></string>
 </resources>

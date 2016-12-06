@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_about:
-                Log.d(TAG, "menu about");
+                MyApp.toAbout();
                 return true;
             case R.id.action_share:
                 Log.d(TAG, "menu share");
@@ -171,7 +171,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 MyApp.saveRecipesJSon(false);
                 return true;
             case R.id.menu_import:
-                MyApp.loadRecipesJSon(false);
+                if (MyApp.loadRecipesJSon(false)) {
+                    MyApp.saveRecipesJSon(true);
+                    fillTable();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
