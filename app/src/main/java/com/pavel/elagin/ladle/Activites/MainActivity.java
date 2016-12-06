@@ -2,7 +2,6 @@ package com.pavel.elagin.ladle.Activites;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,7 +24,7 @@ import java.util.List;
 
 import static com.pavel.elagin.ladle.MyApp.getAppContext;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, ConfirmDialogFragment.ConfirmDialogListener {
+public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.ConfirmDialogListener {
 
     private TableLayout table;
     private Menu mMenu;
@@ -41,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         table = (TableLayout) findViewById(R.id.main_rec_table);
         table.requestLayout();     // Not sure if this is needed.
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(this);
         MyApp.loadRecipesJSon(true);
         registerForContextMenu(table);
     }
@@ -113,18 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        switch (id) {
-            case R.id.fab:
-                Intent intent = new Intent(getAppContext(), EditRecActivity.class);
-                Log.d(TAG, "create new recipe");
-                startActivity(intent);
-                break;
-        }
-    }
-
     public void showNoticeDialog(int id) {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new ConfirmDialogFragment();
@@ -161,6 +146,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_add:
+                Intent intent = new Intent(getAppContext(), EditRecActivity.class);
+                Log.d(TAG, "create new recipe");
+                startActivity(intent);
+                return true;
             case R.id.menu_about:
                 MyApp.toAbout();
                 return true;
