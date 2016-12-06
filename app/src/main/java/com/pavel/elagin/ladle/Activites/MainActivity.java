@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +27,8 @@ import static com.pavel.elagin.ladle.MyApp.getAppContext;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, ConfirmDialogFragment.ConfirmDialogListener {
 
-    TableLayout table;
+    private TableLayout table;
+    private Menu mMenu;
 
     private static final String TAG = "myLogs";
 
@@ -43,6 +45,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab.setOnClickListener(this);
         MyApp.loadRecipesJSon();
         registerForContextMenu(table);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main_rec_table, menu);
+        mMenu = menu;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -148,4 +158,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "User touched the dialog's negative button");
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_about:
+                Log.d(TAG, "menu about");
+                return true;
+            case R.id.action_share:
+                Log.d(TAG, "menu share");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

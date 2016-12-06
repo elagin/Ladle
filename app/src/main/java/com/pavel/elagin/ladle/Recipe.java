@@ -3,7 +3,6 @@ package com.pavel.elagin.ladle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by elagin on 30.11.16.
