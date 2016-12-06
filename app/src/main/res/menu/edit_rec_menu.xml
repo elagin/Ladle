@@ -1,10 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+      xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_cancel_rec"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        yourapp:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_save_rec"
-        android:icon="@android:drawable/checkbox_on_background"
-        android:title=""
-        android:visible="true"
-        yourapp:showAsAction="ifRoom" />
+        android:icon="@android:drawable/ic_menu_save"
+        yourapp:showAsAction="ifRoom"/>
 </menu>

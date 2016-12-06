@@ -127,6 +127,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 MyApp.saveRecipesJSon(true);
                 finish();
                 return true;
+            case R.id.action_cancel_rec:
+                finish();
+                return true;
         }
         return false;
     }
