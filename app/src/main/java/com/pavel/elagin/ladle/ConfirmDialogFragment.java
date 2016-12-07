@@ -13,13 +13,12 @@ import android.support.v7.app.AlertDialog;
 
 public class ConfirmDialogFragment extends DialogFragment {
 
-    private static String name;
     private static int uid;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        name = getArguments().getString("name");
+        String name = getArguments().getString("name");
         uid = getArguments().getInt("id");
 
         // Build the dialog and set up the button click handlers

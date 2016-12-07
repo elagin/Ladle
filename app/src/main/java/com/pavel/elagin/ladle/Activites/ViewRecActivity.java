@@ -2,7 +2,6 @@ package com.pavel.elagin.ladle.Activites;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -84,7 +83,6 @@ public class ViewRecActivity extends AppCompatActivity {
                 addIng(item.name, item.count, item.unit);
             }
             rec_total_time_count.setText(String.format(getString(R.string.time_format), recipe.getTotalTime().toString()));
-
         }
     }
 

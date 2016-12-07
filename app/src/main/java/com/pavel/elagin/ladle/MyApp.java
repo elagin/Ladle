@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,7 +16,6 @@ import com.pavel.elagin.ladle.Activites.ViewRecActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -58,50 +58,66 @@ public class MyApp extends Application {
 
     private static void saveRecipes() {
         FileOutputStream fos = null;
+        ObjectOutputStream os = null;
+
         try {
             fos = getAppContext().openFileOutput(fileNameRecipes, Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        ObjectOutputStream os;
-        try {
             os = new ObjectOutputStream(fos);
             os.writeObject(recipes);
-            os.close();
-            fos.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (os != null)
+                    os.close();
+                if (fos != null)
+                    fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static boolean saveRecipesJSon(boolean isLocal) {
+    public static boolean saveRecipesJSon(Context context, boolean isLocal) {
         boolean res = false;
         FileOutputStream fos = null;
+        ObjectOutputStream os = null;
+
         try {
             if (isLocal) {
                 fos = getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE);
             } else {
                 if (isExternalStorageWritable()) {
-                    fos = new FileOutputStream(getExternalFileName());
+                    File file = getExternalFileName();
+                    fos = new FileOutputStream(file);
                 } else {
-                    //todo: карта памяти отсутствует.
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    Toast.makeText(context, String.format(context.getString(R.string.access_error), path), Toast.LENGTH_LONG).show();
+                    return res;
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        ObjectOutputStream os;
-        try {
-            os = new ObjectOutputStream(fos);
-            os.writeObject(getJSonData());
-            os.close();
-            fos.close();
-            res = true;
-
+            if (fos != null) {
+                os = new ObjectOutputStream(fos);
+                os.writeObject(getJSonData());
+                res = true;
+                saveRecipes();
+                return res;
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            return res;
+        } finally {
+            try {
+                if (os != null)
+                    os.close();
+                if (fos != null)
+                    fos.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        saveRecipes();
         return res;
     }
 
@@ -146,7 +162,6 @@ public class MyApp extends Application {
             } catch (java.io.InvalidClassException e) {
                 File file = new File(getAppContext().getFilesDir(), fileNameRecipes);
                 file.delete();
-                return;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -154,7 +169,6 @@ public class MyApp extends Application {
     }
 
     public static boolean loadRecipesJSon(boolean isLocal) {
-        boolean res = false;
         FileInputStream fis = null;
         ObjectInputStream is = null;
         try {
@@ -168,24 +182,22 @@ public class MyApp extends Application {
             String json = (String) is.readObject();
             RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
             recipes = holder.mContactList;
-            res = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            return true;
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             if (is != null) {
                 try {
                     is.close();
-                    if(fis != null) {
+                    if (fis != null) {
                         fis.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-            return res;
         }
+        return false;
     }
 
     private static class RecipeJsonDataHolder {

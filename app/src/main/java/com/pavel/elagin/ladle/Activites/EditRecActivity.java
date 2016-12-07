@@ -2,7 +2,6 @@ package com.pavel.elagin.ladle.Activites;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,17 +49,15 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
-            if (recipeID != null) {
-                recipe = MyApp.getRecipe(recipeID);
-                edit_rec_name.setText(recipe.getName());
-                edit_rec_descr.setText(recipe.getDescription());
-                edit_rec_steps.setText(recipe.getSteps());
-                edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
-                List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
-                for (int i = 0; i < ingredientList.size(); i++) {
-                    Recipe.Ingredient item = ingredientList.get(i);
-                    addIng(item.name, item.count, item.unit);
-                }
+            recipe = MyApp.getRecipe(recipeID);
+            edit_rec_name.setText(recipe.getName());
+            edit_rec_descr.setText(recipe.getDescription());
+            edit_rec_steps.setText(recipe.getSteps());
+            edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
+            List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
+            for (int i = 0; i < ingredientList.size(); i++) {
+                Recipe.Ingredient item = ingredientList.get(i);
+                addIng(item.name, item.count, item.unit);
             }
         } else
             addIng(null, null, null);
@@ -124,7 +121,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     recipe.setUid(recipeID);
 
                 MyApp.updateRecipe(recipe);
-                MyApp.saveRecipesJSon(true);
+                MyApp.saveRecipesJSon(this, true);
                 finish();
                 return true;
             case R.id.action_cancel_rec:

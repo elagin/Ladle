@@ -29,4 +29,5 @@
     <string name="import_error">Ошибка импорта данных.</string>
     <string name="export_succsess">Данные успешно экспртированы.</string>
     <string name="export_error">Ошибка экспорта данных.</string>
+    <string name="access_error">Ошибка доступа к\n: %1$s</string>
 </resources>

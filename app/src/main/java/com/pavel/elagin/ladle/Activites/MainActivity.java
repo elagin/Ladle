@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_rec_table, menu);
-        Menu mMenu = menu;
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -132,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             if (view.getId() == id) {
                 table.removeView(view);
                 MyApp.removeRecipe(id);
-                MyApp.saveRecipesJSon(true);
+                MyApp.saveRecipesJSon(this, true);
                 return;
             }
         }
@@ -158,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 Log.d(TAG, "menu share");
                 return true;
             case R.id.menu_export:
-                if (MyApp.saveRecipesJSon(false))
+                if (MyApp.saveRecipesJSon(this, false))
                     Toast.makeText(this, getString(R.string.export_succsess), Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(this, getString(R.string.export_error), Toast.LENGTH_LONG).show();
@@ -166,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             case R.id.menu_import:
                 if (MyApp.loadRecipesJSon(false)) {
                     Toast.makeText(this, getString(R.string.import_succsess), Toast.LENGTH_LONG).show();
-                    MyApp.saveRecipesJSon(true);
+                    MyApp.saveRecipesJSon(this, true);
                     fillTable();
                 } else
                     Toast.makeText(this, getString(R.string.import_error), Toast.LENGTH_LONG).show();
