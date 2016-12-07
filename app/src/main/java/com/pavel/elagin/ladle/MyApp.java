@@ -36,7 +36,7 @@ public class MyApp extends Application {
 
     private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
-    private final static String exportFolderName = "ladle";
+    private final static String exportFolderName = "Ladle";
 
     static {
         //currentActivity = null;
@@ -88,8 +88,7 @@ public class MyApp extends Application {
                 fos = getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE);
             } else {
                 if (isExternalStorageWritable()) {
-                    File file = getExternalFileName();
-                    fos = new FileOutputStream(file);
+                    fos = new FileOutputStream(getExternalFileName(true));
                 } else {
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath();
                     Toast.makeText(context, String.format(context.getString(R.string.access_error), path), Toast.LENGTH_LONG).show();
@@ -176,7 +175,7 @@ public class MyApp extends Application {
                 fis = getAppContext().openFileInput(fileNameRecipesJSon);
             } else {
                 if (isExternalStorageReadable())
-                    fis = new FileInputStream(getExternalFileName());
+                    fis = new FileInputStream(getExternalFileName(false));
             }
             is = new ObjectInputStream(fis);
             String json = (String) is.readObject();
@@ -242,9 +241,14 @@ public class MyApp extends Application {
         }
     }
 
-    private static File getExternalFileName() {
+    private static File getExternalFileName(boolean isCreate) {
         //todo: Как сделать работу с /storage/sdcard1 ?
-        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), exportFolderName);
+        File dir = new File(Environment.getExternalStorageDirectory() + "/" + exportFolderName);
+        if (!dir.exists() && isCreate) {
+            if (!dir.mkdir()) {
+                return null;
+            }
+        }
         File file = new File(dir.getAbsolutePath() + "/" + fileNameRecipesJSon);
         return file;
     }
