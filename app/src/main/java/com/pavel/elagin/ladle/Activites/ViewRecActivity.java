@@ -1,5 +1,6 @@
 package com.pavel.elagin.ladle.Activites;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -59,8 +60,44 @@ public class ViewRecActivity extends AppCompatActivity {
             case R.id.action_edit_rec:
                 MyApp.toEdit(recipeID);
                 return true;
+            case R.id.action_share_rec:
+                shareRecipe();
+                return true;
         }
         return false;
+    }
+
+    private void shareRecipe() {
+        Recipe recipe = MyApp.getRecipe(recipeID);
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(recipe.getDescription());
+
+        Integer totalTime = recipe.getTotalTime();
+        if(totalTime != null){
+            buffer.append("\n\n");
+            buffer.append(getString(R.string.time) + totalTime.toString());
+        }
+        String steps = recipe.getSteps();
+        if(steps.length() > 0){
+            buffer.append("\n\n");
+            buffer.append(getString(R.string.preparation) + "\n" + steps);
+        }
+
+        List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
+        buffer.append("\n\n");
+        buffer.append(getString(R.string.rec_ingred));
+        for (int i = 0; i < ingredientList.size(); i++) {
+            Recipe.Ingredient item = ingredientList.get(i);
+            buffer.append("\n");
+            buffer.append(item.name + " " + item.count + " " + item.unit);
+        }
+        buffer.append("\n--------\n");
+        buffer.append(getString(R.string.about_info));
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.recipe) + " " + recipe.getName());
+        intent.putExtra(Intent.EXTRA_TEXT, buffer.toString());
+        startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
     @Override

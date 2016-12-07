@@ -30,4 +30,6 @@
     <string name="export_succsess">Данные успешно экспртированы.</string>
     <string name="export_error">Ошибка экспорта данных.</string>
     <string name="access_error">Ошибка доступа к\n: %1$s</string>
+    <string name="recipe">Рецепт:</string>
+    <string name="edit">редактировать</string>
 </resources>

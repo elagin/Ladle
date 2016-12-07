@@ -4,7 +4,15 @@
     <item
         android:id="@+id/action_edit_rec"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title=""
+        android:title="@string/edit"
         android:visible="true"
         yourapp:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_share_rec"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="@string/share"
+        android:visible="true"
+        yourapp:showAsAction="ifRoom" />
+
 </menu>

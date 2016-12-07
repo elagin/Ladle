@@ -153,9 +153,6 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             case R.id.menu_about:
                 MyApp.toAbout();
                 return true;
-            case R.id.action_share:
-                Log.d(TAG, "menu share");
-                return true;
             case R.id.menu_export:
                 if (MyApp.saveRecipesJSon(this, false))
                     Toast.makeText(this, getString(R.string.export_succsess), Toast.LENGTH_LONG).show();
