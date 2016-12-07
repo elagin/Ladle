@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/rec_name_row"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/rec_total_time"
             android:layout_toRightOf="@+id/rec_img_star"
@@ -27,13 +27,14 @@
 
         <TextView
             android:id="@+id/rec_desc_row"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/rec_name_row"
             android:layout_below="@+id/rec_name_row"
             android:maxLines="2"
             android:text="Описание"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:layout_alignRight="@+id/rec_total_time" />
 
         <TextView
             android:id="@+id/rec_total_time"
@@ -50,7 +51,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignWithParentIfMissing="false"
             android:layout_centerHorizontal="false"
             app:srcCompat="@android:drawable/ic_menu_recent_history"/>
 
