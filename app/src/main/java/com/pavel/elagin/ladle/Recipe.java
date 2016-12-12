@@ -1,5 +1,7 @@
 package com.pavel.elagin.ladle;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,12 @@ public class Recipe implements Serializable {
         }
     }
 
+    public class Step {
+        public String fileName;
+        public String desc;
+        public Integer time;
+    }
+
     private Integer uid;
     private String name;
     private String description;
@@ -35,8 +43,11 @@ public class Recipe implements Serializable {
 
     private List<Ingredient> ingredients;
 
+    private List<Step> stepList;
+
     public Recipe() {
         ingredients = new ArrayList<>();
+        stepList = new ArrayList<>();
     }
 
     public String getName() {
@@ -85,6 +96,10 @@ public class Recipe implements Serializable {
 
     public List<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+    public List<Step> getStepList() {
+        return stepList;
     }
 
     public void clearIngredients() {

@@ -1,12 +1,16 @@
 package com.pavel.elagin.ladle.Activites;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -16,16 +20,22 @@ import com.pavel.elagin.ladle.MyApp;
 import com.pavel.elagin.ladle.R;
 import com.pavel.elagin.ladle.Recipe;
 
+import java.io.File;
 import java.util.List;
+
+import static com.pavel.elagin.ladle.MyApp.getAppContext;
 
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TableLayout table;
+    private TableLayout edit_rec_steps_table;
     private TextView edit_rec_name;
     private TextView edit_rec_descr;
     private TextView edit_rec_total_time_count;
     private TextView edit_rec_steps;
     private Integer recipeID;
+
+    private static final String TAG = "myLogs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +44,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         table = (TableLayout) findViewById(R.id.table_rec_ing);
         table.requestLayout();     // Not sure if this is needed.
+
+        edit_rec_steps_table = (TableLayout) findViewById(R.id.edit_rec_steps_table);
+        edit_rec_steps_table.requestLayout();     // Not sure if this is needed.
 
         ImageButton button_add_ing = (ImageButton) findViewById(R.id.button_add_ing);
         button_add_ing.setOnClickListener(this);
@@ -59,8 +72,16 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 Recipe.Ingredient item = ingredientList.get(i);
                 addIng(item.name, item.count, item.unit);
             }
-        } else
+            List<Recipe.Step> stepList = recipe.getStepList();
+            for (int i = 0; i < stepList.size(); i++) {
+                Recipe.Step item = stepList.get(i);
+                addStep(item);
+            }
+        } else {
             addIng(null, null, null);
+            addStep(null);
+        }
+//        load();
     }
 
     @Override
@@ -131,6 +152,33 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
+    private void addStep(Recipe.Step step) {
+        final int index = edit_rec_steps_table.getChildCount();
+        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
+        ImageButton image_view_step = (ImageButton) row.findViewById(R.id.imageButton);
+
+        if(step != null) {
+            Bitmap bm = decodeSampledBitmapFromUri(step.fileName, 100, 100);
+            //Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 200, 200);
+            image_view_step.setImageBitmap(bm);
+        }
+        edit_rec_steps_table.addView(row);
+        image_view_step.setId(index);
+        image_view_step.setOnClickListener(this);
+//        image_view_step.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+//                    View row = edit_rec_steps_table.getChildAt(i);
+//                    if (row.getId() == v.getId()) {
+//                        edit_rec_steps_table.removeViewAt(i);
+//                        break;
+//                    }
+//                }
+//            }
+//        });
+    }
+
     private void addIng(String name, Double count, String unit) {
         final int index = table.getChildCount();
 
@@ -167,6 +215,73 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.button_add_ing:
                 addIng(null, null, null);
                 break;
+            case R.id.button_add_step:
+                addStep(null);
+                break;
         }
+    }
+
+    public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
+
+        Bitmap bm = null;
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        try {
+            bm = BitmapFactory.decodeFile(path, options);
+            return bm;
+        } catch (OutOfMemoryError e) {
+            try {
+                //options = new BitmapFactory.Options();
+                options.inSampleSize = 2;
+                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+                return bitmap;
+            } catch (Exception ex) {
+                Log.d(TAG, String.valueOf(ex));
+            }
+        }
+        return null;
+    }
+
+    public int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            if (width > height) {
+                inSampleSize = Math.round((float) height / (float) reqHeight);
+            } else {
+                inSampleSize = Math.round((float) width / (float) reqWidth);
+            }
+        }
+
+        return inSampleSize;
+    }
+
+
+    public boolean load() {
+        String targetPath = "/storage/sdcard1/Фото";
+        File targetDirector = new File(targetPath);
+        //File targetDirector = getAppContext().getFilesDir();
+        File[] files = targetDirector.listFiles();
+        for (File file : files) {
+            if (file.isFile() && file.getName().contains(".jpg")) {
+                Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 200, 200);
+//                image_view_step.setImageBitmap(bm);
+//                break;
+            }
+            //image_view_step.add(file.getAbsolutePath());
+        }
+        return true;
     }
 }
