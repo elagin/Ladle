@@ -32,4 +32,6 @@
     <string name="access_error">Ошибка доступа к\n: %1$s</string>
     <string name="recipe">Рецепт:</string>
     <string name="edit">редактировать</string>
+    <string name="perm_read">perm_read</string>
+    <string name="perm_read_label">perm_read_label</string>
 </resources>
