@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -16,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -46,6 +44,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private TextView edit_rec_descr;
     private TextView edit_rec_total_time_count;
     private TextView edit_rec_steps;
+    private ImageButton image_main;
+    private TextView text_image_main_file;
+
     private Integer recipeID;
 
     static final int RESULT_LOAD_IMAGE = 452;
@@ -54,16 +55,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     int TAKE_PHOTO_CODE = 745;
     public static int count = 0;
 
-//    private String dir;
-
-    private ImageView imageView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rec);
-
-        imageView = (ImageView) findViewById(R.id.imageView2);
 
         table = (TableLayout) findViewById(R.id.table_rec_ing);
         table.requestLayout();     // Not sure if this is needed.
@@ -74,6 +69,11 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         ImageButton button_add_ing = (ImageButton) findViewById(R.id.button_add_ing);
         button_add_ing.setOnClickListener(this);
 
+        image_main = (ImageButton) findViewById(R.id.image_main);
+        image_main.setOnClickListener(this);
+
+        text_image_main_file = (TextView) findViewById(R.id.text_image_main_file);
+
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
         edit_rec_steps = (TextView) findViewById(R.id.edit_rec_steps);
@@ -81,8 +81,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         ImageButton button_add_step = (ImageButton) findViewById(R.id.button_add_step);
         button_add_step.setOnClickListener(this);
-        Button button_get_photo = (Button) findViewById(R.id.button_get_photo);
-        button_get_photo.setOnClickListener(this);
+//        Button button_get_photo = (Button) findViewById(R.id.button_get_photo);
+//        button_get_photo.setOnClickListener(this);
 
         Button button_get_photo_cam = (Button) findViewById(R.id.button_get_photo_cam);
         button_get_photo_cam.setOnClickListener(this);
@@ -97,6 +97,15 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
             recipe = MyApp.getRecipe(recipeID);
+
+            if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
+                MyApp.setPic(recipe.getPhoto(), image_main);
+                text_image_main_file.setText(recipe.getPhoto());
+            }
+//            else {
+//                image_main.setVisibility(View.GONE);
+//            }
+
             edit_rec_name.setText(recipe.getName());
             edit_rec_descr.setText(recipe.getDescription());
             if (recipe.getSteps().length() > 0)
@@ -189,6 +198,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         recipe.addStep(photoUrl, descr, Integer.valueOf(time));
                     }
                 }
+
+                String imageFile = text_image_main_file.getText().toString();
+                if (imageFile.length() > 0)
+                    recipe.setPhoto(imageFile);
 
                 if (recipeID == null)
                     recipe.setUid(MyApp.newId());
@@ -284,7 +297,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.button_add_step:
                 addStep(null);
                 break;
-            case R.id.button_get_photo:
+            case R.id.image_main:
                 addPhoto();
                 break;
             case R.id.button_get_photo_cam:
@@ -360,8 +373,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
+//            Bitmap photo = (Bitmap) data.getExtras().get("data");
+//            imageView.setImageBitmap(photo);
         } else if (requestCode == TAKE_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
             // data is null;
             if (data != null) {
@@ -384,8 +397,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             File dst = new File(dataFolder, src.getName());
             try {
                 copy(src, dst);
-                setPic(dst.getAbsolutePath());
-
+                MyApp.setPic(dst.getAbsolutePath(), image_main);
+                text_image_main_file.setText(dst.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -460,29 +473,4 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 //        mediaScanIntent.setData(contentUri);
 //        this.sendBroadcast(mediaScanIntent);
 //    }
-
-    private void setPic(String mCurrentPhotoPath) {
-        ImageView mImageView = (ImageView) findViewById(R.id.imageView2);
-        // Get the dimensions of the View
-        int targetW = mImageView.getWidth();
-        int targetH = mImageView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mImageView.setImageBitmap(bitmap);
-    }
 }

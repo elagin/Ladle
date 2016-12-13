@@ -1,7 +1,5 @@
 package com.pavel.elagin.ladle;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +44,7 @@ public class Recipe implements Serializable {
     private String description;
     private String steps;
     private int totalTime;
+    private String photo;
 
     private List<Ingredient> ingredients;
 
@@ -102,6 +101,14 @@ public class Recipe implements Serializable {
 
     public void setSteps(String steps) {
         this.steps = steps;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public List<Ingredient> getIngredients() {

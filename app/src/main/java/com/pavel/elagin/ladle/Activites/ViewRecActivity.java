@@ -79,12 +79,12 @@ public class ViewRecActivity extends AppCompatActivity {
         buffer.append(recipe.getDescription());
 
         Integer totalTime = recipe.getTotalTime();
-        if(totalTime != null){
+        if (totalTime != null) {
             buffer.append("\n\n");
             buffer.append(getString(R.string.time) + totalTime.toString());
         }
         String steps = recipe.getSteps();
-        if(steps.length() > 0){
+        if (steps.length() > 0) {
             buffer.append("\n\n");
             buffer.append(getString(R.string.preparation) + "\n" + steps);
         }
@@ -116,10 +116,17 @@ public class ViewRecActivity extends AppCompatActivity {
         Recipe recipe;
         if (recipeID != null) {
             recipe = MyApp.getRecipe(recipeID);
+
+            ImageView image_main = (ImageView) findViewById(R.id.image_main);
+            if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
+                MyApp.setPic(recipe.getPhoto(), image_main);
+            } else
+                image_main.setVisibility(View.GONE);
+
             rec_name.setText(recipe.getName());
             rec_descr.setText(recipe.getDescription());
 
-            if(recipe.getSteps().length() > 0)
+            if (recipe.getSteps().length() > 0)
                 rec_steps.setText(recipe.getSteps());
             else
                 rec_steps.setVisibility(View.GONE);
@@ -156,7 +163,7 @@ public class ViewRecActivity extends AppCompatActivity {
         ((TextView) row.findViewById(R.id.edit_step_time)).setText(time.toString());
         ((TextView) row.findViewById(R.id.edit_step_descr)).setText(descr);
 
-        if(fileName != null) {
+        if (fileName != null) {
             Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
             ((ImageView) row.findViewById(R.id.step_photo)).setImageBitmap(bm);
         } else {
