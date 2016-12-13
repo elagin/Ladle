@@ -4,14 +4,34 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--
+        <permission
+            android:name="com.pavel.elagin.ladle.fileprovider.READ"
+            android:description="@string/perm_read"
+            android:label="@string/perm_read_label" />
+        <uses-permission android:name="com.company.app.fileprovider.READ" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.pavel.elagin.ladle.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:readPermission="com.pavel.elagin.ladle.fileprovider.READ">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+    -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false"></uses-feature>
 
     <application
         android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
+        android:installLocation="preferExternal"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:installLocation="preferExternal"
         android:theme="@style/Theme.AppCompat.Light">
         <activity android:name=".Activites.MainActivity">
             <intent-filter>
@@ -31,7 +51,11 @@
         <activity
             android:name=".Activites.AboutActivity"
             android:label="@string/title_activity_about_rec"
-            android:theme="@style/Theme.AppCompat.Light" />
+            android:theme="@style/Theme.AppCompat.Light" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

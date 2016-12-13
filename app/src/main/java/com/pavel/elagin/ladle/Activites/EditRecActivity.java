@@ -1,13 +1,22 @@
 package com.pavel.elagin.ladle.Activites;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -18,11 +27,18 @@ import com.pavel.elagin.ladle.R;
 import com.pavel.elagin.ladle.Recipe;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import static com.pavel.elagin.ladle.MyApp.decodeSampledBitmapFromUri;
 
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "myLogs";
 
     private TableLayout table;
     private TableLayout edit_rec_steps_table;
@@ -32,12 +48,22 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private TextView edit_rec_steps;
     private Integer recipeID;
 
-    private static final String TAG = "myLogs";
+    static final int RESULT_LOAD_IMAGE = 452;
+    static final int REQUEST_IMAGE_CAPTURE = 2;
+
+    int TAKE_PHOTO_CODE = 745;
+    public static int count = 0;
+
+//    private String dir;
+
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_rec);
+
+        imageView = (ImageView) findViewById(R.id.imageView2);
 
         table = (TableLayout) findViewById(R.id.table_rec_ing);
         table.requestLayout();     // Not sure if this is needed.
@@ -55,6 +81,14 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         ImageButton button_add_step = (ImageButton) findViewById(R.id.button_add_step);
         button_add_step.setOnClickListener(this);
+        Button button_get_photo = (Button) findViewById(R.id.button_get_photo);
+        button_get_photo.setOnClickListener(this);
+
+        Button button_get_photo_cam = (Button) findViewById(R.id.button_get_photo_cam);
+        button_get_photo_cam.setOnClickListener(this);
+
+        //dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
+        //dir = getAppContext().getFilesDir().getAbsolutePath();
 
         //MyApp.loadRecipesJSon(true);
         Recipe recipe;
@@ -65,7 +99,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             recipe = MyApp.getRecipe(recipeID);
             edit_rec_name.setText(recipe.getName());
             edit_rec_descr.setText(recipe.getDescription());
-            if(recipe.getSteps().length() > 0)
+            if (recipe.getSteps().length() > 0)
                 edit_rec_steps.setText(recipe.getSteps());
             else
                 edit_rec_steps.setVisibility(View.GONE);
@@ -250,6 +284,32 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.button_add_step:
                 addStep(null);
                 break;
+            case R.id.button_get_photo:
+                addPhoto();
+                break;
+            case R.id.button_get_photo_cam:
+                //dispatchTakePictureIntent();
+
+                //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                //startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+                // Here, the counter will be incremented each time, and the
+                // picture taken by camera will be stored as 1.jpg,2.jpg
+                // and likewise.
+                count++;
+                String file = MyApp.getDataFolder().getAbsolutePath() + "/" + count + ".jpg";
+                File newfile = new File(file);
+                try {
+                    newfile.createNewFile();
+                } catch (IOException e) {
+                    Log.d(TAG, "Save photo " + e.getLocalizedMessage());
+                }
+
+                Uri outputFileUri = Uri.fromFile(newfile);
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                startActivityForResult(cameraIntent, TAKE_PHOTO_CODE);
+                break;
         }
     }
 
@@ -267,5 +327,162 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             //image_view_step.add(file.getAbsolutePath());
         }
         return true;
+    }
+
+    private void addPhoto() {
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+
+//    static final int REQUEST_TAKE_PHOTO = 3;
+//    private void dispatchTakePictureIntent() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the File
+//                //...
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Uri photoURI = FileProvider.getUriForFile(this, "com.pavel.elagin.ladle.fileprovider", photoFile);
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//            }
+//        }
+//    }
+
+    private static final int CAMERA_REQUEST = 1888;
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            imageView.setImageBitmap(photo);
+        } else if (requestCode == TAKE_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
+            // data is null;
+            if (data != null) {
+
+            }
+        }
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            File src = new File(picturePath);
+
+            File dataFolder = MyApp.getDataFolder();
+            dataFolder.mkdirs();
+            File dst = new File(dataFolder, src.getName());
+            try {
+                copy(src, dst);
+                setPic(dst.getAbsolutePath());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cursor.close();
+        }
+    }
+
+    public void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        OutputStream out = new FileOutputStream(dst);
+
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+        }
+        in.close();
+        out.close();
+    }
+
+    /*
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+
+            ImageView imageView = (ImageView) findViewById(R.id.imageView2);
+            imageView.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            ImageView imageView = (ImageView) findViewById(R.id.imageView2);
+            imageView.setImageBitmap(imageBitmap);
+        } else if(requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            setPic();
+        }
+    }
+*/
+    //String mCurrentPhotoPath;
+
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = image.getAbsolutePath();
+//        return image;
+//    }
+
+//    private void galleryAddPic() {
+//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        File f = new File(mCurrentPhotoPath);
+//        Uri contentUri = Uri.fromFile(f);
+//        mediaScanIntent.setData(contentUri);
+//        this.sendBroadcast(mediaScanIntent);
+//    }
+
+    private void setPic(String mCurrentPhotoPath) {
+        ImageView mImageView = (ImageView) findViewById(R.id.imageView2);
+        // Get the dimensions of the View
+        int targetW = mImageView.getWidth();
+        int targetH = mImageView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        mImageView.setImageBitmap(bitmap);
     }
 }

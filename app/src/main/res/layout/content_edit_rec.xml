@@ -111,6 +111,26 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 app:srcCompat="@android:drawable/ic_input_add"/>
+                android:id="@+id/edit_rec_steps" />
+
+            <Button
+                android:text="gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_get_photo" />
+
+            <Button
+                android:text="Cam"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button_get_photo_cam" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:id="@+id/imageView2"
+                android:layout_gravity="center_horizontal" />
 
         </LinearLayout>
     </ScrollView>

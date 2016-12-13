@@ -245,7 +245,7 @@ public class MyApp extends Application {
 
     private static File getExternalFileName(boolean isCreate) {
         //todo: Как сделать работу с /storage/sdcard1 ?
-        File dir = new File(Environment.getExternalStorageDirectory() + "/" + exportFolderName);
+        File dir = getDataFolder();
         if (!dir.exists() && isCreate) {
             if (!dir.mkdir()) {
                 return null;
@@ -253,6 +253,10 @@ public class MyApp extends Application {
         }
         File file = new File(dir.getAbsolutePath() + "/" + fileNameRecipesJSon);
         return file;
+    }
+
+    public static File getDataFolder() {
+        return new File(Environment.getExternalStorageDirectory() + "/" + exportFolderName);
     }
 
     private static Activity getCurrentActivity() {
