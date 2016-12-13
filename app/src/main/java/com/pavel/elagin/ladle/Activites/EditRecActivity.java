@@ -335,7 +335,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (requestCode == RESULT_CAM_MAIN_IMAGE) {
             if (tempCamFileName != null) {
                 if (resultCode == Activity.RESULT_OK) {
-                    MyApp.setPic(tempCamFileName.getPath(), image_main);
+                    changeMainImage(tempCamFileName.getPath());
+//                    MyApp.setPic(tempCamFileName.getPath(), image_main);
                 } else {
                     File file = new File(tempCamFileName.getPath());
                     boolean deleted = file.delete();
@@ -344,9 +345,25 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         } else if (requestCode == RESULT_GALLERY_MAIN_IMAGE && resultCode == RESULT_OK && null != data) {
             String fileName = getFromGallery(data);
-            MyApp.setPic(fileName, image_main);
-            text_image_main_file.setText(fileName);
+            changeMainImage(fileName);
+//            MyApp.setPic(fileName, image_main);
+//            String oldFile = text_image_main_file.getText().toString();
+//            if(oldFile != null && oldFile.length() > 0) {
+//                File file = new File(oldFile);
+//                boolean deleted = file.delete();
+//            }
+//            text_image_main_file.setText(fileName);
         }
+    }
+
+    private void changeMainImage(String fileName) {
+        String oldFile = text_image_main_file.getText().toString();
+        if(oldFile != null && oldFile.length() > 0) {
+            File file = new File(oldFile);
+            boolean deleted = file.delete();
+        }
+        MyApp.setPic(fileName, image_main);
+        text_image_main_file.setText(fileName);
     }
 
     private String getFromGallery(Intent data) {
