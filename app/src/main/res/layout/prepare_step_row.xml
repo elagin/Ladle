@@ -9,7 +9,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@android:drawable/dialog_holo_light_frame">
 
         <LinearLayout
             android:orientation="horizontal"
@@ -18,30 +19,46 @@
             android:layout_weight="1">
 
             <ImageButton
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:srcCompat="@mipmap/ic_launcher"
-                android:id="@+id/imageButton"
-                android:layout_weight="1"/>
+                android:id="@+id/step_photo"
+                android:layout_weight="3"/>
 
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="time"
                 android:ems="5"
-                android:id="@+id/editText2"
+                android:id="@+id/edit_step_time"
                 android:layout_weight="1"
-                android:singleLine="true"/>
+                android:maxLines="1"
+                android:text="30"
+                android:layout_gravity="center_vertical"/>
 
+            <ImageButton
+                android:id="@+id/dell_step"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:onClick="onClick"
+                app:srcCompat="@android:drawable/ic_delete"
+                android:layout_gravity="center_vertical"/>
         </LinearLayout>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:text="Name"
-            android:id="@+id/editText"
-            />
+            android:inputType="textMultiLine"
+            android:text="Размешать"
+            android:id="@+id/edit_step_descr"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_photo_url"
+            android:enabled="false"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -33,6 +33,12 @@ public class Recipe implements Serializable {
         public String fileName;
         public String desc;
         public Integer time;
+
+        public Step(String fileName, String desc, Integer time) {
+            this.fileName = fileName;
+            this.desc = desc;
+            this.time = time;
+        }
     }
 
     private Integer uid;
@@ -76,6 +82,10 @@ public class Recipe implements Serializable {
 
     public void addIngredient(String name, double count, String unit) {
         ingredients.add(new Ingredient(name, count, unit));
+    }
+
+    public void addStep(String fileName, String desc, Integer time) {
+        stepList.add(new Step(fileName, desc, time));
     }
 
     public Integer getUid() {

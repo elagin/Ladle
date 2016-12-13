@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -55,6 +56,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
         edit_rec_steps = (TextView) findViewById(R.id.edit_rec_steps);
         edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
+
+        ImageButton button_add_step = (ImageButton) findViewById(R.id.button_add_step);
+        button_add_step.setOnClickListener(this);
 
         //MyApp.loadRecipesJSon(true);
         Recipe recipe;
@@ -136,6 +140,22 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         recipe.addIngredient(name, Double.valueOf(count), unit);
                     }
                 }
+
+                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+                    View view = edit_rec_steps_table.getChildAt(i);
+                    if (view instanceof TableRow) {
+                        TableRow row = (TableRow) view;
+                        TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
+                        TextView edit_step_descr = (TextView) row.findViewById(R.id.edit_step_descr);
+                        TextView text_photo_url = (TextView) row.findViewById(R.id.text_photo_url);
+
+                        String descr = edit_step_descr.getText().toString();
+                        String time =  edit_step_time.getText().toString();
+                        String photoUrl = text_photo_url.getText().toString();
+                        recipe.addStep(photoUrl, descr, Integer.valueOf(time));
+                    }
+                }
+
                 if (recipeID == null)
                     recipe.setUid(MyApp.newId());
                 else
@@ -155,28 +175,40 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private void addStep(Recipe.Step step) {
         final int index = edit_rec_steps_table.getChildCount();
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
-        ImageButton image_view_step = (ImageButton) row.findViewById(R.id.imageButton);
-
+        ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo);
+        ImageButton dell_step = (ImageButton) row.findViewById(R.id.dell_step);
         if(step != null) {
-            Bitmap bm = decodeSampledBitmapFromUri(step.fileName, 100, 100);
-            //Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 200, 200);
-            image_view_step.setImageBitmap(bm);
+            if(step.fileName != null) {
+                TextView text_photo_url = (TextView) row.findViewById(R.id.text_photo_url);
+                text_photo_url.setText(step.fileName);
+                Bitmap bm = decodeSampledBitmapFromUri(step.fileName, 100, 100);
+                //Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 200, 200);
+                image_view_step.setImageBitmap(bm);
+            }
+            TextView edit_step_descr = (TextView) row.findViewById(R.id.edit_step_descr);
+            edit_step_descr.setText(step.desc);
+            if(step.time != null) {
+                TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
+                edit_step_time.setText(step.time.toString());
+            }
         }
+        row.setId(index);
         edit_rec_steps_table.addView(row);
         image_view_step.setId(index);
-        image_view_step.setOnClickListener(this);
-//        image_view_step.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
-//                    View row = edit_rec_steps_table.getChildAt(i);
-//                    if (row.getId() == v.getId()) {
-//                        edit_rec_steps_table.removeViewAt(i);
-//                        break;
-//                    }
-//                }
-//            }
-//        });
+
+        dell_step.setId(index);
+        dell_step.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+                    View row = edit_rec_steps_table.getChildAt(i);
+                    if (row.getId() == v.getId()) {
+                        edit_rec_steps_table.removeViewAt(i);
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     private void addIng(String name, Double count, String unit) {
