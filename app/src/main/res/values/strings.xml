@@ -34,4 +34,6 @@
     <string name="edit">редактировать</string>
     <string name="perm_read">perm_read</string>
     <string name="perm_read_label">perm_read_label</string>
+    <string name="gallery">Галерея</string>
+    <string name="cam">Камера</string>
 </resources>

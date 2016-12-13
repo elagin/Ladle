@@ -1,5 +1,6 @@
 package com.pavel.elagin.ladle;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,5 +122,14 @@ public class Recipe implements Serializable {
 
     public void clearIngredients() {
         ingredients.clear();
+    }
+
+    public void deleteStep(int id) {
+        Step step = stepList.get(id);
+        if(step.fileName != null && step.fileName.length() > 0) {
+            File file = new File(step.fileName);
+            boolean deleted = file.delete();
+        }
+        stepList.remove(id);
     }
 }
