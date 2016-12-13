@@ -1,17 +1,13 @@
 package com.pavel.elagin.ladle.Activites;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -24,7 +20,7 @@ import com.pavel.elagin.ladle.Recipe;
 import java.io.File;
 import java.util.List;
 
-import static com.pavel.elagin.ladle.MyApp.getAppContext;
+import static com.pavel.elagin.ladle.MyApp.decodeSampledBitmapFromUri;
 
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,7 +65,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             recipe = MyApp.getRecipe(recipeID);
             edit_rec_name.setText(recipe.getName());
             edit_rec_descr.setText(recipe.getDescription());
-            edit_rec_steps.setText(recipe.getSteps());
+            if(recipe.getSteps().length() > 0)
+                edit_rec_steps.setText(recipe.getSteps());
+            else
+                edit_rec_steps.setVisibility(View.GONE);
             edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
             List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
             for (int i = 0; i < ingredientList.size(); i++) {
@@ -84,6 +83,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             addIng(null, null, null);
             addStep(null);
+            edit_rec_steps.setVisibility(View.GONE);
         }
 //        load();
     }
@@ -150,7 +150,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         TextView text_photo_url = (TextView) row.findViewById(R.id.text_photo_url);
 
                         String descr = edit_step_descr.getText().toString();
-                        String time =  edit_step_time.getText().toString();
+                        String time = edit_step_time.getText().toString();
                         String photoUrl = text_photo_url.getText().toString();
                         recipe.addStep(photoUrl, descr, Integer.valueOf(time));
                     }
@@ -177,17 +177,17 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
         ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo);
         ImageButton dell_step = (ImageButton) row.findViewById(R.id.dell_step);
-        if(step != null) {
-            if(step.fileName != null) {
+        if (step != null) {
+            if (step.fileName != null) {
                 TextView text_photo_url = (TextView) row.findViewById(R.id.text_photo_url);
                 text_photo_url.setText(step.fileName);
-                Bitmap bm = decodeSampledBitmapFromUri(step.fileName, 100, 100);
+                Bitmap bm = MyApp.decodeSampledBitmapFromUri(step.fileName, 100, 100);
                 //Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 200, 200);
                 image_view_step.setImageBitmap(bm);
             }
             TextView edit_step_descr = (TextView) row.findViewById(R.id.edit_step_descr);
             edit_step_descr.setText(step.desc);
-            if(step.time != null) {
+            if (step.time != null) {
                 TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
                 edit_step_time.setText(step.time.toString());
             }
@@ -252,54 +252,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
     }
-
-    public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
-
-        Bitmap bm = null;
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        try {
-            bm = BitmapFactory.decodeFile(path, options);
-            return bm;
-        } catch (OutOfMemoryError e) {
-            try {
-                //options = new BitmapFactory.Options();
-                options.inSampleSize = 2;
-                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-                return bitmap;
-            } catch (Exception ex) {
-                Log.d(TAG, String.valueOf(ex));
-            }
-        }
-        return null;
-    }
-
-    public int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-
-        if (height > reqHeight || width > reqWidth) {
-            if (width > height) {
-                inSampleSize = Math.round((float) height / (float) reqHeight);
-            } else {
-                inSampleSize = Math.round((float) width / (float) reqWidth);
-            }
-        }
-
-        return inSampleSize;
-    }
-
 
     public boolean load() {
         String targetPath = "/storage/sdcard1/Фото";

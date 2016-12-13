@@ -1,11 +1,14 @@
 package com.pavel.elagin.ladle.Activites;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,7 +23,8 @@ public class ViewRecActivity extends AppCompatActivity {
 
     private TextView rec_name;
     private TextView rec_descr;
-    private TableLayout table;
+    private TableLayout recTable;
+    private TableLayout stepTable;
     private TextView rec_total_time_count;
     private TextView rec_steps;
 
@@ -31,14 +35,16 @@ public class ViewRecActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_rec);
 
-        table = (TableLayout) findViewById(R.id.table_rec_ing_view);
-        table.requestLayout();     // Not sure if this is needed.
+        recTable = (TableLayout) findViewById(R.id.table_rec_ing_view);
+        recTable.requestLayout();     // Not sure if this is needed.
+
+        stepTable = (TableLayout) findViewById(R.id.table_rec_steps_view);
+        stepTable.requestLayout();     // Not sure if this is needed.
 
         rec_name = (TextView) findViewById(R.id.rec_name);
         rec_descr = (TextView) findViewById(R.id.rec_descr);
         rec_steps = (TextView) findViewById(R.id.rec_steps);
         rec_total_time_count = (TextView) findViewById(R.id.rec_total_time_count);
-        rec_steps = (TextView) findViewById(R.id.rec_steps);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -112,24 +118,52 @@ public class ViewRecActivity extends AppCompatActivity {
             recipe = MyApp.getRecipe(recipeID);
             rec_name.setText(recipe.getName());
             rec_descr.setText(recipe.getDescription());
-            rec_steps.setText(recipe.getSteps());
-            table.removeAllViews();
+
+            if(recipe.getSteps().length() > 0)
+                rec_steps.setText(recipe.getSteps());
+            else
+                rec_steps.setVisibility(View.GONE);
+            recTable.removeAllViews();
             List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
             for (int i = 0; i < ingredientList.size(); i++) {
                 Recipe.Ingredient item = ingredientList.get(i);
                 addIng(item.name, item.count, item.unit);
+            }
+
+            stepTable.removeAllViews();
+            List<Recipe.Step> stepList = recipe.getStepList();
+            for (int i = 0; i < stepList.size(); i++) {
+                Recipe.Step item = stepList.get(i);
+                addStep(item.fileName, item.time, item.desc);
             }
             rec_total_time_count.setText(String.format(getString(R.string.time_format), recipe.getTotalTime().toString()));
         }
     }
 
     private void addIng(String name, Double count, String unit) {
-        final int index = table.getChildCount();
+        final int index = recTable.getChildCount();
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.rec_ing_view_row, null);
         ((TextView) row.findViewById(R.id.ing_name)).setText(name);
         ((TextView) row.findViewById(R.id.ing_count)).setText(count.toString().replace(".0", ""));
         ((TextView) row.findViewById(R.id.ing_unit)).setText(unit);
         row.setId(index);
-        table.addView(row);
+        recTable.addView(row);
+    }
+
+    private void addStep(String fileName, Integer time, String descr) {
+        final int index = stepTable.getChildCount();
+        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.step_view_row, null);
+        ((TextView) row.findViewById(R.id.edit_step_time)).setText(time.toString());
+        ((TextView) row.findViewById(R.id.edit_step_descr)).setText(descr);
+
+        if(fileName != null) {
+            Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
+            ((ImageView) row.findViewById(R.id.step_photo)).setImageBitmap(bm);
+        } else {
+            (row.findViewById(R.id.step_photo)).setVisibility(View.GONE);
+        }
+
+        row.setId(index);
+        stepTable.addView(row);
     }
 }

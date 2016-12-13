@@ -62,6 +62,14 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/rec_steps"
                 android:textSize="20dp"/>
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/table_rec_steps_view"
+                android:stretchColumns="*"
+                android:shrinkColumns="2"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
