@@ -1,6 +1,7 @@
 package com.pavel.elagin.ladle.Activites;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -359,7 +360,11 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
     private void setMainPhotoFromGallery() {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, RESULT_GALLERY_MAIN_IMAGE);
+        try {
+            startActivityForResult(i, RESULT_GALLERY_MAIN_IMAGE);
+        } catch (ActivityNotFoundException ex){
+            Toast.makeText(this, getString(R.string.gallery_not_avaible), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void setMainPhotoFromCam() {
