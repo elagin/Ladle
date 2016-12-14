@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
@@ -47,9 +49,21 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private Uri tempCamFileName;
     private Integer recipeID;
 
+    static final String STATE_MAIN_PHOTO = "main_photo";
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putString(STATE_MAIN_PHOTO, text_image_main_file.getText().toString());
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_edit_rec);
 
         table = (TableLayout) findViewById(R.id.table_rec_ing);
@@ -63,8 +77,30 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         image_main = (ImageButton) findViewById(R.id.image_main);
         image_main.setOnClickListener(viewClickListener);
+        image_main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+
+                // Removing layout listener to avoid multiple calls
+                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    image_main.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+                else {
+                    image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+
+                update();
+            }
+        });
 
         text_image_main_file = (TextView) findViewById(R.id.text_image_main_file);
+        // Check whether we're recreating a previously destroyed instance
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            text_image_main_file.setText(savedInstanceState.getString(STATE_MAIN_PHOTO));
+        }
+
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
@@ -129,6 +165,12 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             showPopupMenu(v);
         }
     };
+
+    private void update() {
+        String mainPhoto = text_image_main_file.getText().toString();
+        if (mainPhoto.length() > 0)
+            MyApp.setPic(mainPhoto, image_main);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -200,7 +242,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.action_save_rec:
                 String recipeName = edit_rec_name.getText().toString();
                 if (recipeName.length() > 0) {
-                    if(saveRecipe(recipeName)) {
+                    if (saveRecipe(recipeName)) {
                         finish();
                         return true;
                     }
@@ -358,7 +400,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
     private void changeMainImage(String fileName) {
         String oldFile = text_image_main_file.getText().toString();
-        if(oldFile != null && oldFile.length() > 0) {
+        if (oldFile != null && oldFile.length() > 0) {
             File file = new File(oldFile);
             boolean deleted = file.delete();
         }
