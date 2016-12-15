@@ -76,6 +76,20 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         ImageButton button_add_ing = (ImageButton) findViewById(R.id.button_add_ing);
         button_add_ing.setOnClickListener(this);
 
+        ImageButton image_main_delete = (ImageButton) findViewById(R.id.image_main_delete);
+        image_main_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                image_main.setImageResource(R.drawable.ic_drawer);
+                String fileName = text_image_main_file.getText().toString();
+                if (fileName.length() > 0) {
+                    File file = new File(fileName);
+                    boolean deleted = file.delete();
+                    text_image_main_file.setText("");
+                }
+            }
+        });
+
         image_main = (ImageButton) findViewById(R.id.image_main);
         image_main.setOnClickListener(viewClickListener);
         image_main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -84,10 +98,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             public void onGlobalLayout() {
 
                 // Removing layout listener to avoid multiple calls
-                if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     image_main.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                }
-                else {
+                } else {
                     image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
 
@@ -101,7 +114,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             // Restore value of members from saved state
             text_image_main_file.setText(savedInstanceState.getString(STATE_MAIN_PHOTO));
         }
-
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
@@ -362,7 +374,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         try {
             startActivityForResult(i, RESULT_GALLERY_MAIN_IMAGE);
-        } catch (ActivityNotFoundException ex){
+        } catch (ActivityNotFoundException ex) {
             Toast.makeText(this, getString(R.string.gallery_not_avaible), Toast.LENGTH_LONG).show();
         }
     }

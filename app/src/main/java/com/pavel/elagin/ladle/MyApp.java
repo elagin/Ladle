@@ -373,7 +373,8 @@ public class MyApp extends Application {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        view.setImageBitmap(bitmap);
+        if (bitmap != null)
+            view.setImageBitmap(bitmap);
     }
 
     public static void copy(File src, File dst) throws IOException {
