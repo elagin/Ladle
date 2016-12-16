@@ -139,18 +139,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 app:srcCompat="@android:drawable/ic_input_add"/>
-<!--
-            <Button
-                android:text="gallery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_get_photo" />
--->
-            <Button
-                android:text="Cam"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_get_photo_cam" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

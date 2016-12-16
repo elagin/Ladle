@@ -114,10 +114,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             mainPhotoFileName = savedInstanceState.getString(STATE_MAIN_PHOTO);
-//            if (mainPhotoFileName != null && mainPhotoFileName.length() > 0)
-//                image_main_delete.setVisibility(View.VISIBLE);
-//            else
-//                image_main_delete.setVisibility(View.GONE);
         }
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
@@ -127,32 +123,15 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         ImageButton button_add_step = (ImageButton) findViewById(R.id.button_add_step);
         button_add_step.setOnClickListener(this);
-//        Button button_get_photo = (Button) findViewById(R.id.button_get_photo);
-//        button_get_photo.setOnClickListener(this);
-
-        Button button_get_photo_cam = (Button) findViewById(R.id.button_get_photo_cam);
-        button_get_photo_cam.setOnClickListener(this);
-
-        //dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
-        //dir = getAppContext().getFilesDir().getAbsolutePath();
-
-        //MyApp.loadRecipesJSon(true);
-        Recipe recipe;
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
-            recipe = MyApp.getRecipe(recipeID);
+            Recipe recipe = MyApp.getRecipe(recipeID);
 
             if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
-                //if (MyApp.setPic(recipe.getPhoto(), image_main))
                 mainPhotoFileName = recipe.getPhoto();
-//                else
-//                    Toast.makeText(this, getString(R.string.error_load_image), Toast.LENGTH_LONG).show();
             }
-//            else {
-//                image_main.setVisibility(View.GONE);
-//            }
 
             edit_rec_name.setText(recipe.getName());
             edit_rec_descr.setText(recipe.getDescription());
@@ -176,7 +155,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             addStep(null);
             edit_rec_steps.setVisibility(View.GONE);
         }
-//        load();
     }
 
     View.OnClickListener viewClickListener = new View.OnClickListener() {

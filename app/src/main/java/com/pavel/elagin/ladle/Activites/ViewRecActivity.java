@@ -2,12 +2,14 @@ package com.pavel.elagin.ladle.Activites;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -27,6 +29,7 @@ public class ViewRecActivity extends AppCompatActivity {
     private TableLayout stepTable;
     private TextView rec_total_time_count;
     private TextView rec_steps;
+    private ImageView image_main;
 
     private Integer recipeID;
 
@@ -37,6 +40,22 @@ public class ViewRecActivity extends AppCompatActivity {
 
         recTable = (TableLayout) findViewById(R.id.table_rec_ing_view);
         recTable.requestLayout();     // Not sure if this is needed.
+
+        image_main = (ImageView) findViewById(R.id.image_main);
+        image_main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+
+                // Removing layout listener to avoid multiple calls
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    image_main.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                update();
+            }
+        });
 
         stepTable = (TableLayout) findViewById(R.id.table_rec_steps_view);
         stepTable.requestLayout();     // Not sure if this is needed.
@@ -113,11 +132,10 @@ public class ViewRecActivity extends AppCompatActivity {
     }
 
     private void update() {
-        Recipe recipe;
         if (recipeID != null) {
-            recipe = MyApp.getRecipe(recipeID);
+            Recipe recipe = MyApp.getRecipe(recipeID);
 
-            ImageView image_main = (ImageView) findViewById(R.id.image_main);
+            image_main = (ImageView) findViewById(R.id.image_main);
             if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
                 MyApp.setPic(recipe.getPhoto(), image_main);
             } else
