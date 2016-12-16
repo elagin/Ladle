@@ -28,17 +28,20 @@
                 android:layout_height="match_parent">
 
                 <ImageButton
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/ic_menu_camera"
-                    android:id="@+id/image_main"/>
+                    android:src="@drawable/ic_menu_camera"
+                    android:id="@+id/image_main"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@android:drawable/btn_dialog"
                     android:id="@+id/image_main_delete"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentRight="false"
+                    android:layout_alignRight="@+id/image_main" />
 
             </RelativeLayout>
 

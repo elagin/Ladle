@@ -46,16 +46,18 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private TextView edit_rec_total_time_count;
     private TextView edit_rec_steps;
     private ImageButton image_main;
-    private TextView text_image_main_file;
+    private ImageButton image_main_delete;
     private Uri tempCamFileName;
     private Integer recipeID;
+
+    private String mainPhotoFileName;
 
     static final String STATE_MAIN_PHOTO = "main_photo";
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
-        savedInstanceState.putString(STATE_MAIN_PHOTO, text_image_main_file.getText().toString());
+        savedInstanceState.putString(STATE_MAIN_PHOTO, mainPhotoFileName);
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -76,16 +78,16 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         ImageButton button_add_ing = (ImageButton) findViewById(R.id.button_add_ing);
         button_add_ing.setOnClickListener(this);
 
-        ImageButton image_main_delete = (ImageButton) findViewById(R.id.image_main_delete);
+        image_main_delete = (ImageButton) findViewById(R.id.image_main_delete);
         image_main_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                image_main.setImageResource(R.drawable.ic_drawer);
-                String fileName = text_image_main_file.getText().toString();
-                if (fileName.length() > 0) {
-                    File file = new File(fileName);
+                image_main.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_camera));
+                if (mainPhotoFileName != null && mainPhotoFileName.length() > 0) {
+                    File file = new File(mainPhotoFileName);
                     boolean deleted = file.delete();
-                    text_image_main_file.setText("");
+                    mainPhotoFileName = "";
+                    image_main_delete.setVisibility(View.GONE);
                 }
             }
         });
@@ -108,11 +110,14 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        text_image_main_file = (TextView) findViewById(R.id.text_image_main_file);
         // Check whether we're recreating a previously destroyed instance
         if (savedInstanceState != null) {
             // Restore value of members from saved state
-            text_image_main_file.setText(savedInstanceState.getString(STATE_MAIN_PHOTO));
+            mainPhotoFileName = savedInstanceState.getString(STATE_MAIN_PHOTO);
+//            if (mainPhotoFileName != null && mainPhotoFileName.length() > 0)
+//                image_main_delete.setVisibility(View.VISIBLE);
+//            else
+//                image_main_delete.setVisibility(View.GONE);
         }
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
@@ -140,8 +145,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             recipe = MyApp.getRecipe(recipeID);
 
             if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
-                MyApp.setPic(recipe.getPhoto(), image_main);
-                text_image_main_file.setText(recipe.getPhoto());
+                //if (MyApp.setPic(recipe.getPhoto(), image_main))
+                mainPhotoFileName = recipe.getPhoto();
+//                else
+//                    Toast.makeText(this, getString(R.string.error_load_image), Toast.LENGTH_LONG).show();
             }
 //            else {
 //                image_main.setVisibility(View.GONE);
@@ -180,9 +187,13 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     };
 
     private void update() {
-        String mainPhoto = text_image_main_file.getText().toString();
-        if (mainPhoto.length() > 0)
-            MyApp.setPic(mainPhoto, image_main);
+        if (mainPhotoFileName != null
+                && mainPhotoFileName.length() > 0
+                && MyApp.setPic(mainPhotoFileName, image_main)) {
+            image_main_delete.setVisibility(View.VISIBLE);
+        } else {
+            image_main_delete.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -235,9 +246,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
 
-        String imageFile = text_image_main_file.getText().toString();
-        if (imageFile.length() > 0)
-            recipe.setPhoto(imageFile);
+        if (mainPhotoFileName != null && mainPhotoFileName.length() > 0)
+            recipe.setPhoto(mainPhotoFileName);
 
         if (recipeID == null)
             recipe.setUid(MyApp.newId());
@@ -395,7 +405,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             if (tempCamFileName != null) {
                 if (resultCode == Activity.RESULT_OK) {
                     changeMainImage(tempCamFileName.getPath());
-//                    MyApp.setPic(tempCamFileName.getPath(), image_main);
                 } else {
                     File file = new File(tempCamFileName.getPath());
                     boolean deleted = file.delete();
@@ -405,24 +414,21 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         } else if (requestCode == RESULT_GALLERY_MAIN_IMAGE && resultCode == RESULT_OK && null != data) {
             String fileName = getFromGallery(data);
             changeMainImage(fileName);
-//            MyApp.setPic(fileName, image_main);
-//            String oldFile = text_image_main_file.getText().toString();
-//            if(oldFile != null && oldFile.length() > 0) {
-//                File file = new File(oldFile);
-//                boolean deleted = file.delete();
-//            }
-//            text_image_main_file.setText(fileName);
         }
     }
 
     private void changeMainImage(String fileName) {
-        String oldFile = text_image_main_file.getText().toString();
+        String oldFile = mainPhotoFileName;
         if (oldFile != null && oldFile.length() > 0) {
             File file = new File(oldFile);
             boolean deleted = file.delete();
         }
-        MyApp.setPic(fileName, image_main);
-        text_image_main_file.setText(fileName);
+        if (MyApp.setPic(fileName, image_main)) {
+            mainPhotoFileName = fileName;
+            image_main_delete.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(this, getString(R.string.error_load_image), Toast.LENGTH_LONG).show();
+        }
     }
 
     private String getFromGallery(Intent data) {
@@ -440,8 +446,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         try {
             MyApp.copy(src, dst);
             return dst.getAbsolutePath();
-//            MyApp.setPic(dst.getAbsolutePath(), image_main);
-//            text_image_main_file.setText(dst.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -348,7 +348,7 @@ public class MyApp extends Application {
         return null;
     }
 
-    public static void setPic(String mCurrentPhotoPath, ImageView view) {
+    public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
         //ImageView mImageView = (ImageView) findViewById(R.id.imageView2);
         // Get the dimensions of the View
         int targetW = view.getWidth();
@@ -373,8 +373,11 @@ public class MyApp extends Application {
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        if (bitmap != null)
+        if (bitmap != null) {
             view.setImageBitmap(bitmap);
+            return true;
+        }
+        return false;
     }
 
     public static void copy(File src, File dst) throws IOException {
