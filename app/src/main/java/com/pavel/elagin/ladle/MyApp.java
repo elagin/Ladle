@@ -9,10 +9,9 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -353,6 +352,11 @@ public class MyApp extends Application {
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
         //ImageView mImageView = (ImageView) findViewById(R.id.imageView2);
         // Get the dimensions of the View
+        View parent = (View) view.getParent();
+
+        //ViewParent parent = view.getParent();
+        ViewGroup.LayoutParams layoutParams = parent.getLayoutParams();
+
         int targetW = view.getWidth();
         if (targetW == 0)
             targetW = 100;
@@ -377,7 +381,7 @@ public class MyApp extends Application {
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         if (bitmap != null) {
             view.setImageBitmap(bitmap);
-            view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
+            //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
             return true;
         }
         return false;

@@ -51,13 +51,16 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private Integer recipeID;
 
     private String mainPhotoFileName;
+    private String stepPhotoFileNames;
 
     static final String STATE_MAIN_PHOTO = "main_photo";
+    static final String STATE_STEPS_PHOTO = "steps_photo";
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save the user's current game state
         savedInstanceState.putString(STATE_MAIN_PHOTO, mainPhotoFileName);
+        savedInstanceState.putString(STATE_STEPS_PHOTO, saveStepPhotoFileNames());
 
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
@@ -114,6 +117,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             mainPhotoFileName = savedInstanceState.getString(STATE_MAIN_PHOTO);
+            stepPhotoFileNames = savedInstanceState.getString(STATE_STEPS_PHOTO);
+            stepPhotoFileNames.split(",");
         }
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
@@ -179,6 +184,21 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.edit_rec_menu, menu);
         return true;
+    }
+
+    private String saveStepPhotoFileNames() {
+        StringBuffer res = new StringBuffer();
+        for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+            View view = edit_rec_steps_table.getChildAt(i);
+            if (view instanceof TableRow) {
+                TableRow row = (TableRow) view;
+                String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
+                if (res.length() > 0)
+                    res.append(",");
+                res.append(photoUrl);
+            }
+        }
+        return res.toString();
     }
 
     private boolean saveRecipe(String recipeName) {
