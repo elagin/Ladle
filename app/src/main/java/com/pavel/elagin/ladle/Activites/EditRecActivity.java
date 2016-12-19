@@ -1,6 +1,5 @@
 package com.pavel.elagin.ladle.Activites;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -38,6 +36,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG = "myLogs";
     static final int RESULT_GALLERY_MAIN_IMAGE = 1;
     static final int RESULT_CAM_MAIN_IMAGE = 2;
+    static final int RESULT_CAM_STEP_IMAGE = 3;
+
 
     private TableLayout table;
     private TableLayout edit_rec_steps_table;
@@ -51,7 +51,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private Integer recipeID;
 
     private String mainPhotoFileName;
-    private String stepPhotoFileNames;
+    //private String stepPhotoFileNameList;
+    private Integer changePhotoStepID;
+    private String stepPhotoFileName;
 
     static final String STATE_MAIN_PHOTO = "main_photo";
     static final String STATE_STEPS_PHOTO = "steps_photo";
@@ -62,9 +64,17 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         savedInstanceState.putString(STATE_MAIN_PHOTO, mainPhotoFileName);
         savedInstanceState.putString(STATE_STEPS_PHOTO, saveStepPhotoFileNames());
 
+//        Bitmap bitmap = new Bitmap();
+//        savedInstanceState.putParcelable("bitmap", bitmap);
+
         // Always call the superclass so it can save the view hierarchy state
         super.onSaveInstanceState(savedInstanceState);
     }
+
+//    public MakingListObject(Parcel in) {
+//        List<Bitmap> list = new ArrayList<>();
+//        in.readTypedList(list, Bitmap.CREATOR); // read
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,8 +127,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             mainPhotoFileName = savedInstanceState.getString(STATE_MAIN_PHOTO);
-            stepPhotoFileNames = savedInstanceState.getString(STATE_STEPS_PHOTO);
-            stepPhotoFileNames.split(",");
+//            stepPhotoFileNameList = savedInstanceState.getString(STATE_STEPS_PHOTO);
+//            stepPhotoFileNameList.split(",");
         }
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
@@ -195,7 +205,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
                 if (res.length() > 0)
                     res.append(",");
+//                if(photoUrl.length() > 0)
                 res.append(photoUrl);
+//                else
+//                    res.append(",");
             }
         }
         return res.toString();
@@ -237,6 +250,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             View view = edit_rec_steps_table.getChildAt(i);
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
+                View photoo = row.findViewById(R.id.step_photo_img);
                 String time = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
                 String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
                 String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
@@ -281,7 +295,21 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private void addStep(Recipe.Step step) {
         final int index = edit_rec_steps_table.getChildCount();
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
-        ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo);
+        ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo_img);
+        image_view_step.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+                    View row = edit_rec_steps_table.getChildAt(i);
+                    if (row.getId() == v.getId()) {
+                        changePhotoStepID = i;
+                        setStepPhotoFromCam();
+                        break;
+                    }
+                }
+            }
+        });
+
         ImageButton dell_step = (ImageButton) row.findViewById(R.id.dell_step);
         if (step != null) {
             if (step.fileName != null) {
@@ -398,20 +426,50 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void setStepPhotoFromCam() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
+            tempCamFileName = MyApp.getNewFileName();
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, tempCamFileName);
+            startActivityForResult(cameraIntent, RESULT_CAM_STEP_IMAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RESULT_CAM_MAIN_IMAGE) {
-            if (tempCamFileName != null) {
-                if (resultCode == Activity.RESULT_OK) {
-                    changeMainImage(tempCamFileName.getPath());
-                } else {
-                    File file = new File(tempCamFileName.getPath());
-                    boolean deleted = file.delete();
+        switch (requestCode) {
+            case RESULT_CAM_MAIN_IMAGE:
+                if (tempCamFileName != null) {
+                    if (resultCode == RESULT_OK) {
+                        changeMainImage(tempCamFileName.getPath());
+                    } else {
+                        File file = new File(tempCamFileName.getPath());
+                        boolean deleted = file.delete();
+                    }
+                    tempCamFileName = null;
                 }
-                tempCamFileName = null;
-            }
-        } else if (requestCode == RESULT_GALLERY_MAIN_IMAGE && resultCode == RESULT_OK && null != data) {
-            String fileName = getFromGallery(data);
-            changeMainImage(fileName);
+                break;
+            case RESULT_GALLERY_MAIN_IMAGE:
+                if (resultCode == RESULT_OK && null != data) {
+                    String fileName = getFromGallery(data);
+                    changeMainImage(fileName);
+                }
+                break;
+            case RESULT_CAM_STEP_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    if (tempCamFileName != null) {
+                        if (resultCode == RESULT_OK) {
+                            changeStepImage(tempCamFileName.getPath());
+                        } else {
+                            File file = new File(tempCamFileName.getPath());
+                            boolean deleted = file.delete();
+                        }
+                        tempCamFileName = null;
+                    }
+                }
+                break;
         }
     }
 
@@ -424,6 +482,38 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (MyApp.setPic(fileName, image_main)) {
             mainPhotoFileName = fileName;
             image_main_delete.setVisibility(View.VISIBLE);
+        } else {
+            Toast.makeText(this, getString(R.string.error_load_image), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void changeStepImage(String fileName) {
+        String oldFile = stepPhotoFileName;
+        if (oldFile != null && oldFile.length() > 0) {
+            File file = new File(oldFile);
+            boolean deleted = file.delete();
+        }
+        TableRow row = (TableRow) edit_rec_steps_table.getChildAt(changePhotoStepID);
+        ImageButton imageButton = (ImageButton) row.findViewById(R.id.step_photo_img);
+
+//        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
+//        ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo_img);
+
+
+//        View view = edit_rec_steps_table.getChildAt(i);
+//        if (view instanceof TableRow) {
+//            TableRow row = (TableRow) view;
+//            String time = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
+//            String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
+//            String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
+//            //recipe.addStep(photoUrl, descr, Integer.valueOf(time));
+//        }
+
+
+        ((TextView) row.findViewById(R.id.text_photo_url)).setText(fileName);
+        if (MyApp.setPic(fileName, imageButton)) {
+//            imageButton.setVisibility(View.VISIBLE);
+            stepPhotoFileName = null;
         } else {
             Toast.makeText(this, getString(R.string.error_load_image), Toast.LENGTH_LONG).show();
         }
@@ -474,7 +564,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-
             @Override
             public void onDismiss(PopupMenu menu) {
                 Toast.makeText(getApplicationContext(), "onDismiss", Toast.LENGTH_SHORT).show();

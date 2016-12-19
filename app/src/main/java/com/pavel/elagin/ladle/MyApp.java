@@ -352,10 +352,10 @@ public class MyApp extends Application {
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
         //ImageView mImageView = (ImageView) findViewById(R.id.imageView2);
         // Get the dimensions of the View
-        View parent = (View) view.getParent();
+        //View parent = (View) view.getParent();
 
         //ViewParent parent = view.getParent();
-        ViewGroup.LayoutParams layoutParams = parent.getLayoutParams();
+        //ViewGroup.LayoutParams layoutParams = parent.getLayoutParams();
 
         int targetW = view.getWidth();
         if (targetW == 0)

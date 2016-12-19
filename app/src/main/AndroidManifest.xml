@@ -43,6 +43,7 @@
         <activity
             android:name=".Activites.EditRecActivity"
             android:label="@string/title_activity_edit_rec"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".Activites.ViewRecActivity"
