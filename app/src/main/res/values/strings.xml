@@ -38,4 +38,5 @@
     <string name="cam">Камера</string>
     <string name="gallery_not_avaible">Галерея не доступна</string>
     <string name="error_load_image">Ошибка загрузки изображения.</string>
+    <string name="clear_folder">Очистить папку</string>
 </resources>

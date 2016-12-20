@@ -11,6 +11,10 @@
         android:orderInCategory="300"
         android:title="@string/import_to_sd"/>
     <item
+        android:id="@+id/menu_clearFolder"
+        android:orderInCategory="500"
+        android:title="@string/clear_folder"/>
+    <item
         android:id="@+id/menu_about"
         android:orderInCategory="800"
         android:title="@string/about"/>

@@ -29,8 +29,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import static com.pavel.elagin.ladle.MyApp.decodeSampledBitmapFromUri;
-
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "myLogs";
@@ -96,8 +94,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 image_main.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_camera));
                 if (mainPhotoFileName != null && mainPhotoFileName.length() > 0) {
-                    File file = new File(mainPhotoFileName);
-                    boolean deleted = file.delete();
+                    MyApp.fileDelete(mainPhotoFileName);
                     mainPhotoFileName = "";
                     image_main_delete.setVisibility(View.GONE);
                 }
@@ -319,8 +316,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         TextView viewFileName = (TextView) row.findViewById(R.id.text_photo_url);
                         String fileName = viewFileName.getText().toString();
                         if (fileName != null && fileName.length() > 0) {
-                            File file = new File(fileName);
-                            boolean deleted = file.delete();
+                            MyApp.fileDelete(fileName);
                             viewFileName.setText("");
                             view.setVisibility(View.GONE);
                             ((ImageButton) row.findViewById(R.id.step_photo_img)).setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_camera));
@@ -346,7 +342,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
                 edit_step_time.setText(step.time.toString());
             }
+        } else {
+            step_photo_delete.setVisibility(View.GONE);
         }
+
         row.setId(index);
         edit_rec_steps_table.addView(row);
 
@@ -410,22 +409,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    public boolean load() {
-        String targetPath = "/storage/sdcard1/Фото";
-        File targetDirector = new File(targetPath);
-        //File targetDirector = getAppContext().getFilesDir();
-        File[] files = targetDirector.listFiles();
-        for (File file : files) {
-            if (file.isFile() && file.getName().contains(".jpg")) {
-                Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 200, 200);
-//                image_view_step.setImageBitmap(bm);
-//                break;
-            }
-            //image_view_step.add(file.getAbsolutePath());
-        }
-        return true;
-    }
-
     private void setMainPhotoFromGallery() {
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         try {
@@ -464,8 +447,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     if (resultCode == RESULT_OK) {
                         changeMainImage(tempCamFileName.getPath());
                     } else {
-                        File file = new File(tempCamFileName.getPath());
-                        boolean deleted = file.delete();
+                        MyApp.fileDelete(tempCamFileName.getPath());
                     }
                     tempCamFileName = null;
                 }
@@ -482,8 +464,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         if (resultCode == RESULT_OK) {
                             changeStepImage(tempCamFileName.getPath());
                         } else {
-                            File file = new File(tempCamFileName.getPath());
-                            boolean deleted = file.delete();
+                            MyApp.fileDelete(tempCamFileName.getPath());
                         }
                         tempCamFileName = null;
                     }
@@ -495,8 +476,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private void changeMainImage(String fileName) {
         String oldFile = mainPhotoFileName;
         if (oldFile != null && oldFile.length() > 0) {
-            File file = new File(oldFile);
-            boolean deleted = file.delete();
+            MyApp.fileDelete(oldFile);
         }
         if (MyApp.setPic(fileName, image_main)) {
             mainPhotoFileName = fileName;
@@ -509,8 +489,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private void changeStepImage(String fileName) {
         String oldFile = stepPhotoFileName;
         if (oldFile != null && oldFile.length() > 0) {
-            File file = new File(oldFile);
-            boolean deleted = file.delete();
+            MyApp.fileDelete(oldFile);
         }
         TableRow row = (TableRow) edit_rec_steps_table.getChildAt(changePhotoStepID);
         ImageButton imageButton = (ImageButton) row.findViewById(R.id.step_photo_img);

@@ -167,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 } else
                     Toast.makeText(this, getString(R.string.import_error), Toast.LENGTH_LONG).show();
                 return true;
+            case R.id.menu_clearFolder:
+                MyApp.deletePhotos();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

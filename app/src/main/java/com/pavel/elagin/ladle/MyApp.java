@@ -244,8 +244,7 @@ public class MyApp extends Application {
             Recipe recipe = recipes.get(i);
             if (recipe.getUid().equals(uid)) {
                 if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
-                    File file = new File(recipe.getPhoto());
-                    boolean deleted = file.delete();
+                    MyApp.fileDelete(recipe.getPhoto());
                 }
                 recipes.remove(i);
                 return;
@@ -409,5 +408,35 @@ public class MyApp extends Application {
         newfile.createNewFile();
         Uri outputFileUri = Uri.fromFile(newfile);
         return outputFileUri;
+    }
+
+    public static boolean fileDelete(String name) {
+        File file = new File(name);
+        return file.delete();
+    }
+
+    public static void deletePhotos() {
+        List<String> files = new ArrayList<>();
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe recipe = recipes.get(i);
+            String mainPhoto = recipe.getPhoto();
+            if (mainPhoto != null && mainPhoto.length() > 0) {
+                files.add(mainPhoto);
+            }
+            List<Recipe.Step> stepsList = recipe.getStepList();
+            for (int j = 0; j < stepsList.size(); j++) {
+                Recipe.Step step = stepsList.get(j);
+                if (step.fileName != null && step.fileName.length() > 0)
+                    files.add(step.fileName);
+            }
+        }
+        File[] filesOnFolder = MyApp.getDataFolder().listFiles();
+        for (int i = 0; i < filesOnFolder.length; i++) {
+            String fileName = filesOnFolder[i].getAbsolutePath();
+            if (fileName.contains(".jpg")) {
+                if (files.indexOf(fileName) == -1)
+                    fileDelete(fileName);
+            }
+        }
     }
 }
