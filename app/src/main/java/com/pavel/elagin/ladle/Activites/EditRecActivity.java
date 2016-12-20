@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -37,7 +38,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     static final int RESULT_GALLERY_MAIN_IMAGE = 1;
     static final int RESULT_CAM_MAIN_IMAGE = 2;
     static final int RESULT_CAM_STEP_IMAGE = 3;
-
 
     private TableLayout table;
     private TableLayout edit_rec_steps_table;
@@ -250,7 +250,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             View view = edit_rec_steps_table.getChildAt(i);
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
-                View photoo = row.findViewById(R.id.step_photo_img);
                 String time = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
                 String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
                 String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
@@ -310,14 +309,11 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        ImageButton dell_step = (ImageButton) row.findViewById(R.id.dell_step);
         if (step != null) {
             if (step.fileName != null) {
                 TextView text_photo_url = (TextView) row.findViewById(R.id.text_photo_url);
                 text_photo_url.setText(step.fileName);
-                Bitmap bm = MyApp.decodeSampledBitmapFromUri(step.fileName, 100, 100);
-                //Bitmap bm = decodeSampledBitmapFromUri(file.getAbsolutePath(), 200, 200);
-                image_view_step.setImageBitmap(bm);
+                MyApp.setPic(step.fileName, image_view_step);
             }
             TextView edit_step_descr = (TextView) row.findViewById(R.id.edit_step_descr);
             edit_step_descr.setText(step.desc);
@@ -328,8 +324,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
         row.setId(index);
         edit_rec_steps_table.addView(row);
-        image_view_step.setId(index);
 
+        ImageButton dell_step = (ImageButton) row.findViewById(R.id.dell_step);
         dell_step.setId(index);
         dell_step.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,7 +334,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     View row = edit_rec_steps_table.getChildAt(i);
                     if (row.getId() == v.getId()) {
                         edit_rec_steps_table.removeViewAt(i);
-
                         break;
                     }
                 }
@@ -437,7 +432,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RESULT_CAM_MAIN_IMAGE:
@@ -495,21 +489,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
         TableRow row = (TableRow) edit_rec_steps_table.getChildAt(changePhotoStepID);
         ImageButton imageButton = (ImageButton) row.findViewById(R.id.step_photo_img);
-
-//        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
-//        ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo_img);
-
-
-//        View view = edit_rec_steps_table.getChildAt(i);
-//        if (view instanceof TableRow) {
-//            TableRow row = (TableRow) view;
-//            String time = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
-//            String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
-//            String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
-//            //recipe.addStep(photoUrl, descr, Integer.valueOf(time));
-//        }
-
-
         ((TextView) row.findViewById(R.id.text_photo_url)).setText(fileName);
         if (MyApp.setPic(fileName, imageButton)) {
 //            imageButton.setVisibility(View.VISIBLE);
