@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -300,7 +299,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             public void onClick(View v) {
                 for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
                     View row = edit_rec_steps_table.getChildAt(i);
-                    if (row.getId() == v.getId()) {
+                    if (row.getId() == ((View) v.getParent().getParent().getParent().getParent()).getId()) {
                         changePhotoStepID = i;
                         setStepPhotoFromCam();
                         break;
@@ -309,11 +308,37 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+        ImageButton step_photo_delete = (ImageButton) row.findViewById(R.id.step_photo_delete);
+        step_photo_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+                    View row = edit_rec_steps_table.getChildAt(i);
+                    if (row.getId() == ((View) view.getParent().getParent().getParent().getParent()).getId()) {
+                        changePhotoStepID = i;
+                        TextView viewFileName = (TextView) row.findViewById(R.id.text_photo_url);
+                        String fileName = viewFileName.getText().toString();
+                        if (fileName != null && fileName.length() > 0) {
+                            File file = new File(fileName);
+                            boolean deleted = file.delete();
+                            viewFileName.setText("");
+                            view.setVisibility(View.GONE);
+                            ((ImageButton) row.findViewById(R.id.step_photo_img)).setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_camera));
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+
         if (step != null) {
-            if (step.fileName != null) {
+            if (step.fileName != null && step.fileName.length() > 0) {
                 TextView text_photo_url = (TextView) row.findViewById(R.id.text_photo_url);
                 text_photo_url.setText(step.fileName);
                 MyApp.setPic(step.fileName, image_view_step);
+                step_photo_delete.setVisibility(View.VISIBLE);
+            } else {
+                step_photo_delete.setVisibility(View.GONE);
             }
             TextView edit_step_descr = (TextView) row.findViewById(R.id.edit_step_descr);
             edit_step_descr.setText(step.desc);
@@ -490,8 +515,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         TableRow row = (TableRow) edit_rec_steps_table.getChildAt(changePhotoStepID);
         ImageButton imageButton = (ImageButton) row.findViewById(R.id.step_photo_img);
         ((TextView) row.findViewById(R.id.text_photo_url)).setText(fileName);
+
+        View step_photo_delete = row.findViewById(R.id.step_photo_delete);
         if (MyApp.setPic(fileName, imageButton)) {
-//            imageButton.setVisibility(View.VISIBLE);
+            step_photo_delete.setVisibility(View.VISIBLE);
             stepPhotoFileName = null;
         } else {
             Toast.makeText(this, getString(R.string.error_load_image), Toast.LENGTH_LONG).show();

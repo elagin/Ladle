@@ -1,16 +1,59 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:app="http://schemas.android.com/apk/res-auto"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@android:drawable/dialog_holo_light_frame">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/step_photo_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:src="@drawable/ic_menu_camera"
+                    android:layout_centerHorizontal="true" />
+
+                <ImageButton
+                    android:id="@+id/step_photo_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="false"
+                    android:layout_alignRight="@+id/step_photo_img"
+                    app:srcCompat="@android:drawable/btn_dialog" />
+
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/dell_step"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:onClick="onClick"
+                app:srcCompat="@android:drawable/ic_delete" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edit_step_descr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -18,46 +61,32 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <ImageButton
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_menu_camera"
-                android:id="@+id/step_photo_img"
-                android:layout_weight="3"/>
+                android:text="@string/time"
+                android:layout_weight="0"
+                android:layout_gravity="center_vertical" />
 
             <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="time"
-                android:ems="5"
                 android:id="@+id/edit_step_time"
-                android:layout_weight="1"
-                android:maxLines="1"
-                android:text="30"
-                android:layout_gravity="center_vertical"/>
-
-            <ImageButton
-                android:id="@+id/dell_step"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:onClick="onClick"
-                app:srcCompat="@android:drawable/ic_delete"
-                android:layout_gravity="center_vertical"/>
+                android:layout_gravity="center_vertical"
+                android:ems="5"
+                android:inputType="time"
+                android:maxLines="1"
+                android:text="30" />
+
         </LinearLayout>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:id="@+id/edit_step_descr"/>
-
         <TextView
+            android:id="@+id/text_photo_url"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/text_photo_url"
             android:enabled="false"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
