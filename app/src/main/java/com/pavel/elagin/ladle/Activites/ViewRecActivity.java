@@ -161,7 +161,10 @@ public class ViewRecActivity extends AppCompatActivity {
                 Recipe.Step item = stepList.get(i);
                 addStep(item.fileName, item.time, item.desc);
             }
-            rec_total_time_count.setText(String.format(getString(R.string.time_format), recipe.getTotalTime().toString()));
+            if (recipe.getTotalTime() != null && recipe.getTotalTime().toString().length() > 0)
+                rec_total_time_count.setText(String.format(getString(R.string.time_format), recipe.getTotalTime().toString()));
+            else
+                rec_total_time_count.setVisibility(View.GONE);
         }
     }
 
@@ -178,7 +181,11 @@ public class ViewRecActivity extends AppCompatActivity {
     private void addStep(String fileName, Integer time, String descr) {
         final int index = stepTable.getChildCount();
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.step_view_row, null);
-        ((TextView) row.findViewById(R.id.edit_step_time)).setText(time.toString());
+        TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
+        if (time != null && time > 0)
+            edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), time.toString()));
+        else
+            edit_step_time.setVisibility(View.GONE);
         ((TextView) row.findViewById(R.id.edit_step_descr)).setText(descr);
 
         if (fileName != null) {

@@ -3,13 +3,13 @@ package com.pavel.elagin.ladle.Activites;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -150,7 +150,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 edit_rec_steps.setText(recipe.getSteps());
             else
                 edit_rec_steps.setVisibility(View.GONE);
-            edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
+            if (recipe.getTotalTime() != null && recipe.getTotalTime().toString().length() > 0)
+                edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
             List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
             for (int i = 0; i < ingredientList.size(); i++) {
                 Recipe.Ingredient item = ingredientList.get(i);
@@ -291,7 +292,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
     private void addStep(Recipe.Step step) {
         final int index = edit_rec_steps_table.getChildCount();
-        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row_constrain, null);
+        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
         ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo_img);
         image_view_step.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -360,6 +361,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     View row = edit_rec_steps_table.getChildAt(i);
                     if (row.getId() == v.getId()) {
                         edit_rec_steps_table.removeViewAt(i);
+                        if (recipeID != null) {
+                            Recipe recipe = MyApp.getRecipe(recipeID);
+                            recipe.deleteStep(v.getId());
+                        }
                         break;
                     }
                 }
@@ -369,7 +374,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
     private void addIng(String name, Double count, String unit) {
         final int index = table.getChildCount();
-
+        Log.d(TAG, "addIng: " + String.valueOf(index));
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.rec_ing_row, null);
         if (name != null)
             ((TextView) row.findViewById(R.id.ing_name)).setText(name);
@@ -389,8 +394,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     View row = table.getChildAt(i);
                     if (row.getId() == v.getId()) {
                         table.removeViewAt(i);
-                        Recipe recipe = MyApp.getRecipe(recipeID);
-                        recipe.deleteStep(v.getId());
                         break;
                     }
                 }

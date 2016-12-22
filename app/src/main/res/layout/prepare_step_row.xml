@@ -1,8 +1,8 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:app="http://schemas.android.com/apk/res-auto"
-          xmlns:tools="http://schemas.android.com/tools"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:background="@android:drawable/editbox_background_normal"
           android:orientation="horizontal">
 
     <RelativeLayout
@@ -13,14 +13,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:background="@android:color/holo_blue_dark"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/dell_step">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/holo_green_dark">
+                android:layout_height="wrap_content">
 
                 <ImageButton
                     android:id="@+id/step_photo_img"
@@ -44,14 +43,12 @@
                 android:id="@+id/edit_step_descr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                />
+                android:scrollHorizontally="false"
+                android:inputType="textMultiLine"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/holo_orange_dark"
                 android:orientation="horizontal">
 
                 <TextView
@@ -59,7 +56,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="0"
                     android:text="@string/time"/>
 
                 <EditText
@@ -69,8 +65,7 @@
                     android:layout_gravity="center_vertical"
                     android:ems="5"
                     android:inputType="time"
-                    android:maxLines="1"
-                    android:text="30"/>
+                    android:maxLines="1"/>
 
             </LinearLayout>
 
@@ -87,12 +82,13 @@
             android:id="@+id/dell_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_purple"
             android:onClick="onClick"
             app:srcCompat="@android:drawable/ic_delete"
             android:layout_alignParentLeft="false"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:layout_margin="@dimen/fab_margin"/>
 
     </RelativeLayout>
 

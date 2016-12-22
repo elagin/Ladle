@@ -125,11 +125,13 @@ public class Recipe implements Serializable {
     }
 
     public void deleteStep(int id) {
-        Step step = stepList.get(id);
-        if(step.fileName != null && step.fileName.length() > 0) {
-            File file = new File(step.fileName);
-            boolean deleted = file.delete();
+        if (stepList.size() > id) {
+            Step step = stepList.get(id);
+            if (step.fileName != null && step.fileName.length() > 0) {
+                File file = new File(step.fileName);
+                boolean deleted = file.delete();
+            }
+            stepList.remove(id);
         }
-        stepList.remove(id);
     }
 }

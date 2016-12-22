@@ -27,6 +27,7 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageButton
                     android:id="@+id/image_main"
                     android:layout_width="wrap_content"
@@ -34,7 +35,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_menu_camera"
-                    tools:layout_editor_absoluteY="12dp"
+                    tools:layout_editor_absoluteY="109dp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 
@@ -78,13 +79,8 @@
                 android:id="@+id/edit_rec_descr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:minLines="1"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:scrollHorizontally="false"
+                android:inputType="textMultiLine"/>
 
             <TextView
                 android:id="@+id/textView3"
@@ -129,16 +125,16 @@
                     android:inputType="number"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/preparation"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
 
             <EditText
                 android:id="@+id/edit_rec_steps"
@@ -150,6 +146,8 @@
             <TableLayout
                 android:id="@+id/edit_rec_steps_table"
                 android:layout_width="match_parent"
+                android:stretchColumns="*"
+                android:shrinkColumns="*"
                 android:layout_height="wrap_content">
             </TableLayout>
 
