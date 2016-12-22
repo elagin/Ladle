@@ -247,6 +247,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
                 String time = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
+                if (time.length() == 0)
+                    time = "0";
                 String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
                 String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
                 recipe.addStep(photoUrl, descr, Integer.valueOf(time));
@@ -289,7 +291,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
     private void addStep(Recipe.Step step) {
         final int index = edit_rec_steps_table.getChildCount();
-        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
+        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row_constrain, null);
         ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo_img);
         image_view_step.setOnClickListener(new View.OnClickListener() {
             @Override
