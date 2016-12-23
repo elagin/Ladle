@@ -161,8 +161,10 @@ public class ViewRecActivity extends AppCompatActivity {
                 Recipe.Step item = stepList.get(i);
                 addStep(item.fileName, item.time, item.desc);
             }
-            if (recipe.getTotalTime() != null && recipe.getTotalTime().toString().length() > 0)
-                rec_total_time_count.setText(String.format(getString(R.string.time_format), recipe.getTotalTime().toString()));
+
+            String totalTime = recipe.getTotalStepTimeString();
+            if (totalTime.length() > 0)
+                rec_total_time_count.setText(totalTime);
             else
                 rec_total_time_count.setVisibility(View.GONE);
         }

@@ -35,18 +35,18 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_menu_camera"
-                    tools:layout_editor_absoluteY="109dp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    app:layout_constraintRight_toRightOf="parent"
+                    tools:layout_editor_absoluteY="109dp"/>
 
                 <ImageButton
                     android:id="@+id/image_main_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/btn_dialog"
                     android:background="@android:color/transparent"
+                    app:layout_constraintRight_toRightOf="@+id/image_main"
                     app:layout_constraintTop_toTopOf="@+id/image_main"
-                    app:layout_constraintRight_toRightOf="@+id/image_main" />
+                    app:srcCompat="@android:drawable/btn_dialog"/>
 
             </android.support.constraint.ConstraintLayout>
 
@@ -79,32 +79,36 @@
                 android:id="@+id/edit_rec_descr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollHorizontally="false"
-                android:inputType="textMultiLine"/>
+                android:inputType="textMultiLine"
+                android:scrollHorizontally="false"/>
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rec_ingred"/>
-
-            <TableLayout
-                android:id="@+id/table_rec_ing"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <ImageButton
-                android:id="@+id/button_add_ing"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                app:srcCompat="@android:drawable/ic_input_add"
-                android:background="@android:color/transparent"/>
+                android:background="@android:drawable/editbox_background_normal"
+                android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rec_ingred"/>
+
+                <TableLayout
+                    android:id="@+id/table_rec_ing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/editbox_background_normal"/>
+
+                <ImageButton
+                    android:id="@+id/button_add_ing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@android:drawable/ic_input_add"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -125,39 +129,42 @@
                     android:inputType="number"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/preparation"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
-
-            <EditText
-                android:id="@+id/edit_rec_steps"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textMultiLine"/>
+                android:background="@android:drawable/editbox_background_normal"
+                android:orientation="vertical">
 
-            <TableLayout
-                android:id="@+id/edit_rec_steps_table"
-                android:layout_width="match_parent"
-                android:stretchColumns="*"
-                android:shrinkColumns="*"
-                android:layout_height="wrap_content">
-            </TableLayout>
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/preparation"/>
 
-            <ImageButton
-                android:id="@+id/button_add_step"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                app:srcCompat="@android:drawable/ic_input_add"
-                android:background="@android:color/transparent"/>
+                <EditText
+                    android:id="@+id/edit_rec_steps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textMultiLine"/>
+
+                <TableLayout
+                    android:id="@+id/edit_rec_steps_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:shrinkColumns="*"
+                    android:stretchColumns="*">
+                </TableLayout>
+
+                <ImageButton
+                    android:id="@+id/button_add_step"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:color/transparent"
+                    android:text="Добавить шаг"
+                    app:srcCompat="@android:drawable/ic_input_add"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

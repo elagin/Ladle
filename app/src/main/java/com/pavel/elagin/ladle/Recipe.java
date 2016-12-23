@@ -134,4 +134,39 @@ public class Recipe implements Serializable {
             stepList.remove(id);
         }
     }
+
+    private int getTotalStepTime() {
+        int res = 0;
+        for (int i = 0; i < stepList.size(); i++) {
+            Step step = stepList.get(i);
+            if (step.time != null)
+                res = res + step.time;
+        }
+        return res;
+    }
+
+    public String getTotalStepTimeString() {
+        StringBuffer res = new StringBuffer();
+        int totalStepTime = getTotalStepTime();
+        int totalTime = 0;
+
+        if (getTotalTime() != null && getTotalTime().toString().length() > 0)
+            totalTime = getTotalTime();
+
+        if (totalTime > 0) {
+            res.append("Время: ");
+            res.append(totalTime);
+            if (totalStepTime > 0) {
+                res.append(" (");
+                res.append(totalStepTime);
+                res.append(")");
+            }
+        } else if (totalStepTime > 0) {
+            res.append("Время: ");
+            res.append(" (");
+            res.append(totalStepTime);
+            res.append(")");
+        }
+        return res.toString();
+    }
 }

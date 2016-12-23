@@ -68,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.recipe_row, null);
                 ((TextView) row.findViewById(R.id.rec_name_row)).setText(item.getName());
                 ((TextView) row.findViewById(R.id.rec_desc_row)).setText(item.getDescription());
-                ((TextView) row.findViewById(R.id.rec_total_time)).setText(item.getTotalTime().toString());
+                String totalTime = item.getTotalStepTimeString();
+                if (totalTime.length() > 0)
+                    ((TextView) row.findViewById(R.id.rec_total_time)).setText(totalTime);
                 row.setId(item.getUid());
                 row.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
