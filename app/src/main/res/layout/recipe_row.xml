@@ -43,7 +43,6 @@
             android:layout_alignParentTop="true"
             android:layout_gravity="center_vertical"
             android:layout_toLeftOf="@+id/imageViewClock"
-            android:text="TextView"
             android:textSize="20dp"/>
 
         <ImageView
