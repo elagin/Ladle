@@ -102,7 +102,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         image_main = (ImageButton) findViewById(R.id.image_main);
-        image_main.setOnClickListener(viewClickListener);
+        image_main.setOnClickListener(imageMainClickListener);
         image_main.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
             @Override
@@ -169,10 +169,17 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    View.OnClickListener viewClickListener = new View.OnClickListener() {
+    View.OnClickListener imageMainClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            showPopupMenu(v);
+            showPopupMenuImageMain(v);
+        }
+    };
+
+    View.OnClickListener imageStepClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showPopupMenuImageStep(v);
         }
     };
 
@@ -301,12 +308,15 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     View row = edit_rec_steps_table.getChildAt(i);
                     if (row.getId() == ((View) v.getParent().getParent().getParent().getParent()).getId()) {
                         changePhotoStepID = i;
-                        setStepPhotoFromCam();
+                        //setStepPhotoFromCam();
+                        showPopupMenuImageStep(v);
                         break;
                     }
                 }
             }
         });
+
+//        imageStepClickListener
 
         ImageButton step_photo_delete = (ImageButton) row.findViewById(R.id.step_photo_delete);
         step_photo_delete.setOnClickListener(new View.OnClickListener() {
@@ -531,7 +541,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         return null;
     }
 
-    private void showPopupMenu(final View view) {
+    private void showPopupMenuImageMain(final View view) {
         PopupMenu popupMenu = new PopupMenu(this, view);
         popupMenu.inflate(R.menu.cam_gallery_popupmenu); // For Android 4.0
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -553,12 +563,44 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-                Toast.makeText(getApplicationContext(), "onDismiss", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+//            @Override
+//            public void onDismiss(PopupMenu menu) {
+//                Toast.makeText(getApplicationContext(), "onDismiss", Toast.LENGTH_SHORT).show();
+//            }
+//        });
         popupMenu.show();
     }
+
+    private void showPopupMenuImageStep(final View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        popupMenu.inflate(R.menu.cam_gallery_popupmenu); // For Android 4.0
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (view.getId() == R.id.step_photo_img) {
+                    switch (item.getItemId()) {
+                        case R.id.menu_cam:
+                            setStepPhotoFromCam();
+                            return true;
+                        case R.id.menu_gallery:
+                            //setMainPhotoFromGallery();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+                return true;
+            }
+        });
+
+//        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+//            @Override
+//            public void onDismiss(PopupMenu menu) {
+//                Toast.makeText(getApplicationContext(), "onDismiss", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        popupMenu.show();
+    }
+
 }
