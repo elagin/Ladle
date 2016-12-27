@@ -20,8 +20,8 @@
     <string name="share">Поделиться</string>
     <string name="about">О приложении</string>
     <string name="action_settings">Настройки</string>
-    <string name="export_to_sd">Экспорт</string>
-    <string name="import_to_sd">Импорт</string>
+    <string name="export_to_sd">Экспорт ⇧</string>
+    <string name="import_from_sd">Импорт ⇩</string>
     <string name="title_activity_about_rec">О приложении</string>
     <string name="about_info">Приложение для хранения кулинарных рецептов.</string>
     <string name="about_feedback">elagin.pasha@gmail.com</string>

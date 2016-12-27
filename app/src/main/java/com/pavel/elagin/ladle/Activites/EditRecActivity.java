@@ -35,6 +35,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     static final int RESULT_GALLERY_MAIN_IMAGE = 1;
     static final int RESULT_CAM_MAIN_IMAGE = 2;
     static final int RESULT_CAM_STEP_IMAGE = 3;
+    static final int RESULT_GALLERY_STEP_IMAGE = 4;
 
     private TableLayout table;
     private TableLayout edit_rec_steps_table;
@@ -455,6 +456,15 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void setStepPhotoFromGallery() {
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        try {
+            startActivityForResult(i, RESULT_GALLERY_STEP_IMAGE);
+        } catch (ActivityNotFoundException ex) {
+            Toast.makeText(this, getString(R.string.gallery_not_avaible), Toast.LENGTH_LONG).show();
+        }
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case RESULT_CAM_MAIN_IMAGE:
@@ -483,6 +493,12 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         }
                         tempCamFileName = null;
                     }
+                }
+                break;
+            case RESULT_GALLERY_STEP_IMAGE:
+                if (resultCode == RESULT_OK && null != data) {
+                    String fileName = getFromGallery(data);
+                    changeStepImage(fileName);
                 }
                 break;
         }
@@ -584,7 +600,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                             setStepPhotoFromCam();
                             return true;
                         case R.id.menu_gallery:
-                            //setMainPhotoFromGallery();
+                            setStepPhotoFromGallery();
                             return true;
                         default:
                             return false;
@@ -593,13 +609,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 return true;
             }
         });
-
-//        popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-//            @Override
-//            public void onDismiss(PopupMenu menu) {
-//                Toast.makeText(getApplicationContext(), "onDismiss", Toast.LENGTH_SHORT).show();
-//            }
-//        });
         popupMenu.show();
     }
 

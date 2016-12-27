@@ -9,7 +9,7 @@
     <item
         android:id="@+id/menu_import"
         android:orderInCategory="300"
-        android:title="@string/import_to_sd"/>
+        android:title="@string/import_from_sd"/>
     <item
         android:id="@+id/menu_clearFolder"
         android:orderInCategory="500"
