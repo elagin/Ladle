@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pavel.elagin.ladle.ConfirmDialogFragment;
+import com.pavel.elagin.ladle.ConfirmDialogImportFragment;
 import com.pavel.elagin.ladle.MyApp;
 import com.pavel.elagin.ladle.R;
 import com.pavel.elagin.ladle.Recipe;
@@ -25,7 +26,7 @@ import java.util.List;
 
 import static com.pavel.elagin.ladle.MyApp.getAppContext;
 
-public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.ConfirmDialogListener {
+public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.ConfirmDialogListener, ConfirmDialogImportFragment.ConfirmDialogImportListener {
 
     private TableLayout table;
 
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 row.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        showNoticeDialog(v.getId());
+                        showNoticeDeleteRecipeDialog(v.getId());
                         return true;
                     }
                 });
@@ -111,13 +112,22 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         }
     }
 
-    private void showNoticeDialog(int id) {
+    private void showNoticeDeleteRecipeDialog(int id) {
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new ConfirmDialogFragment();
         Recipe recipe = MyApp.getRecipe(id);
         Bundle bundle = new Bundle();
         bundle.putInt("id", id);
-        bundle.putString("name", recipe.getName());
+        bundle.putString("message", String.format(getString(R.string.delete_confirm), recipe.getName()));
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "ConfirmDialogFragment");
+    }
+
+    private void showNoticeImportRecipeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment dialog = new ConfirmDialogImportFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("message", String.format(getString(R.string.rewrite_recipe)));
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), "ConfirmDialogFragment");
     }
@@ -144,6 +154,20 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         Log.d(TAG, "User touched the dialog's negative button");
     }
 
+    // The dialog fragment receives a reference to this Activity through the
+    // Fragment.onAttach() callback, which it uses to call the following methods
+    // defined by the NoticeDialogFragment.NoticeDialogListener interface
+    @Override
+    public void onDialogImportPositiveClick(DialogFragment dialog, int id) {
+        Log.d(TAG, "User touched the dialog's positive button");
+        loadRecipes();
+    }
+
+    @Override
+    public void onDialogImportNegativeClick(DialogFragment dialog) {
+        Log.d(TAG, "User touched the dialog's negative button");
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -162,12 +186,11 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                     Toast.makeText(this, getString(R.string.export_error), Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_import:
-                if (MyApp.loadRecipesJSon(false)) {
-                    Toast.makeText(this, getString(R.string.import_succsess), Toast.LENGTH_LONG).show();
-                    MyApp.saveRecipesJSon(this, true);
-                    fillTable();
-                } else
-                    Toast.makeText(this, getString(R.string.import_error), Toast.LENGTH_LONG).show();
+                if (MyApp.getRecipes().size() > 0) {
+                    showNoticeImportRecipeDialog();
+                } else {
+                    loadRecipes();
+                }
                 return true;
             case R.id.menu_clearFolder:
                 MyApp.deletePhotos();
@@ -175,5 +198,14 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void loadRecipes() {
+        if (MyApp.loadRecipesJSon(false)) {
+            Toast.makeText(this, getString(R.string.import_succsess), Toast.LENGTH_LONG).show();
+            MyApp.saveRecipesJSon(this, true);
+            fillTable();
+        } else
+            Toast.makeText(this, getString(R.string.import_error), Toast.LENGTH_LONG).show();
     }
 }

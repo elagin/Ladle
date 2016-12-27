@@ -188,7 +188,8 @@ public class MyApp extends Application {
             is = new ObjectInputStream(fis);
             String json = (String) is.readObject();
             RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
-            recipes = holder.mContactList;
+            if (holder.mContactList.size() > 0)
+                recipes = holder.mContactList;
             return true;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

@@ -14,7 +14,10 @@
     <string name="rec_unit_ing_is_empty">Не указаны единицы измерения.</string>
     <string name="rec_name_is_empty">Не указано название рецепта.</string>
     <string name="delete">Удалить</string>
-    <string name="delete_confirm">Действительно удалить: %1$s?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="rewrite_recipe">Перезаписать существующие рецепты ?</string>
+    <string name="delete_confirm">Действительно удалить: %1$s ?</string>
     <string name="cancel">Отмена</string>
     <string name="preparation">Приготовление:</string>
     <string name="share">Поделиться</string>
