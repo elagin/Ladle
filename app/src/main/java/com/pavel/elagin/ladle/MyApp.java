@@ -6,11 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,6 +22,7 @@ import com.pavel.elagin.ladle.Activites.ViewRecActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -349,6 +350,23 @@ public class MyApp extends Application {
         return null;
     }
 
+    public static float getDegree(String exifOrientation) {
+        float degree = 0;
+        if (exifOrientation.equals("6"))
+            degree = 90;
+        else if (exifOrientation.equals("3"))
+            degree = 180;
+        else if (exifOrientation.equals("8"))
+            degree = 270;
+        return degree;
+    }
+
+    public static Bitmap createRotatedBitmap(Bitmap bm, float degree) {
+        Matrix matrix = new Matrix();
+        matrix.preRotate(degree);
+        return Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
+    }
+
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
         //ImageView mImageView = (ImageView) findViewById(R.id.imageView2);
         // Get the dimensions of the View
@@ -363,6 +381,7 @@ public class MyApp extends Application {
         int targetH = view.getHeight();
         if (targetH == 0)
             targetH = 100;
+
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
@@ -377,17 +396,31 @@ public class MyApp extends Application {
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        if (bitmap != null) {
-            view.setImageBitmap(bitmap);
-            //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
-            return true;
+        //Bitmap bitmap = decodeSampledBitmapFromUri(mCurrentPhotoPath, targetW, targetH);
+        try {
+            Bitmap bitmap;
+            ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
+            String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+            bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+            if (bitmap != null) {
+                float degree = getDegree(exifOrientation);
+                if (degree != 0)
+                    bitmap = createRotatedBitmap(bitmap, degree);
+                if (bitmap != null) {
+                    view.setImageBitmap(bitmap);
+                    //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
+                    return true;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
     }
 
-    public static void copy(File src, File dst) throws IOException {
+    public static void fileCopy(File src, File dst) throws IOException {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
 

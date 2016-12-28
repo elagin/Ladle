@@ -548,7 +548,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         dataFolder.mkdirs();
         File dst = new File(dataFolder, src.getName());
         try {
-            MyApp.copy(src, dst);
+            MyApp.fileCopy(src, dst);
             return dst.getAbsolutePath();
         } catch (IOException e) {
             e.printStackTrace();
