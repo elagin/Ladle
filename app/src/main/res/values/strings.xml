@@ -45,4 +45,5 @@
     <string name="clear_folder">Очистить папку</string>
     <string name="about_thanks"><![CDATA[Спасибо:<br/>за идею: моей жене Катерине<br/>за логотип: <a href=\"http:\\pd4pic.com\">http:\\pd4pic.com</a>]]></string>
     <string name="about_wish">Приятного аппетита.</string>
+    <string name="rec_tag">Метки</string>
 </resources>

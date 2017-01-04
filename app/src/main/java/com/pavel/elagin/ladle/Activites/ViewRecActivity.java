@@ -25,6 +25,7 @@ public class ViewRecActivity extends AppCompatActivity {
 
     private TextView rec_name;
     private TextView rec_descr;
+    private TextView rec_tags;
     private TableLayout recTable;
     private TableLayout stepTable;
     private TextView rec_total_time_count;
@@ -62,6 +63,7 @@ public class ViewRecActivity extends AppCompatActivity {
 
         rec_name = (TextView) findViewById(R.id.rec_name);
         rec_descr = (TextView) findViewById(R.id.rec_descr);
+        rec_tags = (TextView) findViewById(R.id.rec_tags);
         rec_steps = (TextView) findViewById(R.id.rec_steps);
         rec_total_time_count = (TextView) findViewById(R.id.rec_total_time_count);
 
@@ -143,6 +145,7 @@ public class ViewRecActivity extends AppCompatActivity {
 
             rec_name.setText(recipe.getName());
             rec_descr.setText(recipe.getDescription());
+            rec_tags.setText(recipe.getTags());
 
             if (recipe.getSteps().length() > 0)
                 rec_steps.setText(recipe.getSteps());

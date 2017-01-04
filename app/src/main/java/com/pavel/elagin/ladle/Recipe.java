@@ -46,6 +46,7 @@ public class Recipe implements Serializable {
     private String steps;
     private int totalTime;
     private String photo;
+    private String tags;
 
     private List<Ingredient> ingredients;
 
@@ -122,6 +123,14 @@ public class Recipe implements Serializable {
 
     public void clearIngredients() {
         ingredients.clear();
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 
     public void deleteStep(int id) {

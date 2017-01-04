@@ -41,6 +41,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private TableLayout edit_rec_steps_table;
     private TextView edit_rec_name;
     private TextView edit_rec_descr;
+    private TextView edit_rec_tags;
     private TextView edit_rec_total_time_count;
     private TextView edit_rec_steps;
     private ImageButton image_main;
@@ -130,6 +131,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
+        edit_rec_tags = (TextView) findViewById(R.id.edit_rec_tags) ;
         edit_rec_steps = (TextView) findViewById(R.id.edit_rec_steps);
         edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
 
@@ -147,6 +149,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
             edit_rec_name.setText(recipe.getName());
             edit_rec_descr.setText(recipe.getDescription());
+            edit_rec_tags.setText(recipe.getTags());
             if (recipe.getSteps().length() > 0)
                 edit_rec_steps.setText(recipe.getSteps());
             else
@@ -223,6 +226,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         Recipe recipe = new Recipe();
         recipe.setName(recipeName);
         recipe.setDescription(edit_rec_descr.getText().toString());
+        recipe.setTags(edit_rec_tags.getText().toString());
         recipe.setSteps(edit_rec_steps.getText().toString());
         String totalTime = edit_rec_total_time_count.getText().toString();
         if (totalTime.length() > 0)
