@@ -31,6 +31,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -262,12 +263,27 @@ public class MyApp extends Application {
                 return null;
             }
         }
-        File file = new File(dir.getAbsolutePath() + "/" + fileNameRecipesJSon);
+        File file = new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
         return file;
     }
 
     public static File getDataFolder() {
-        return new File(Environment.getExternalStorageDirectory() + "/" + exportFolderName);
+        String extStore = System.getenv("EXTERNAL_STORAGE");
+        String secStore = System.getenv("SECONDARY_STORAGE");
+        String strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
+        String strSDCardPath2 = System.getenv("MEDIA_STORAGE");
+        String strSDCardPath3 = System.getenv("ENV_MEDIA_STORAGE");
+        String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
+        //externalStorageDirectory.substring(externalStorageDirectory.lastIndexOf(File.separator))+ File.separator + pathList.get(0);
+//        return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
+
+        List<String> pathList = getExternalMounts();
+        if (pathList.size() > 0) {
+            String sdCard = pathList.get(0).substring(pathList.get(0).lastIndexOf(File.separator));
+            String path = externalStorageDirectory.substring(0, externalStorageDirectory.lastIndexOf(File.separator));
+            return new File(path + sdCard + File.separator + exportFolderName);
+        } else
+            return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
     }
 
     private static Activity getCurrentActivity() {
@@ -437,7 +453,7 @@ public class MyApp extends Application {
     public static Uri getNewFileName() throws IOException {
         Long timestamp = System.currentTimeMillis();
         String newFileName = timestamp.toString();
-        String file = MyApp.getDataFolder().getAbsolutePath() + "/" + newFileName + ".jpg";
+        String file = MyApp.getDataFolder().getAbsolutePath() + File.separator + newFileName + ".jpg";
         File newfile = new File(file);
         newfile.createNewFile();
         Uri outputFileUri = Uri.fromFile(newfile);
@@ -472,5 +488,40 @@ public class MyApp extends Application {
                     fileDelete(fileName);
             }
         }
+    }
+
+    public static List<String> getExternalMounts() {
+        final List<String> out = new ArrayList<>();
+        String reg = "(?i).*vold.*(vfat|ntfs|exfat|fat32|ext3|ext4).*rw.*";
+        String s = "";
+        try {
+            final Process process = new ProcessBuilder().command("mount")
+                    .redirectErrorStream(true).start();
+            process.waitFor();
+            final InputStream is = process.getInputStream();
+            final byte[] buffer = new byte[1024];
+            while (is.read(buffer) != -1) {
+                s = s + new String(buffer);
+            }
+            is.close();
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        // parse output
+        final String[] lines = s.split("\n");
+        for (String line : lines) {
+            if (!line.toLowerCase(Locale.US).contains("asec")) {
+                if (line.matches(reg)) {
+                    String[] parts = line.split(" ");
+                    for (String part : parts) {
+                        if (part.startsWith("/"))
+                            if (!part.toLowerCase(Locale.US).contains("vold"))
+                                out.add(part);
+                    }
+                }
+            }
+        }
+        return out;
     }
 }

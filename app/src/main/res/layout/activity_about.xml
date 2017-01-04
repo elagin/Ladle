@@ -25,14 +25,33 @@
         android:id="@+id/about_thanks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/about_thanks"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/about_thanks" />
 
     <TextView
         android:id="@+id/about_wish"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/about_wish"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/about_wish" />
+
+    <Button
+        android:id="@+id/button_tech_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tech_info" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/about_tech_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:visibility="gone" />
+
+    </ScrollView>
 
 </LinearLayout>
