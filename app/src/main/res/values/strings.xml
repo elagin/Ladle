@@ -47,4 +47,19 @@
     <string name="about_wish">Приятного аппетита.</string>
     <string name="rec_tag">Метки</string>
     <string name="tech_info">Тех. информация</string>
+    <string name="title_activity_settings">Настройки</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Главные</string>
+
+  <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_title_sync_folder">Хранение данных</string>
+
+    <string name="pref_title_ringtone">Звук таймера</string>
+    <string name="pref_ringtone_silent">Тишина</string>
+
+    <string name="settings">Настройки</string>
 </resources>

@@ -9,8 +9,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pavel.elagin.ladle.Activites.AboutActivity;
 import com.pavel.elagin.ladle.Activites.EditRecActivity;
+import com.pavel.elagin.ladle.Activites.SettingsActivity;
 import com.pavel.elagin.ladle.Activites.ViewRecActivity;
 
 import java.io.File;
@@ -30,9 +33,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * Created by pavel on 25.11.16.
@@ -255,6 +263,32 @@ public class MyApp extends Application {
         }
     }
 
+    private static final long K = 1024;
+    private static final long M = K * K;
+    private static final long G = M * K;
+    private static final long T = G * K;
+
+    public static String convertToStringRepresentation(final long value) {
+        final long[] dividers = new long[]{T, G, M, K, 1};
+        final String[] units = new String[]{"TB", "GB", "MB", "KB", "B"};
+        if (value < 1)
+            throw new IllegalArgumentException("Invalid file size: " + value);
+        String result = null;
+        for (int i = 0; i < dividers.length; i++) {
+            final long divider = dividers[i];
+            if (value >= divider) {
+                result = format(value, divider, units[i]);
+                break;
+            }
+        }
+        return result;
+    }
+
+    private static String format(final long value, final long divider, final String unit) {
+        final double result = divider > 1 ? (double) value / (double) divider : (double) value;
+        return String.format("%.1f %s", Double.valueOf(result), unit);
+    }
+
     private static File getExternalFileName(boolean isCreate) {
         //todo: Как сделать работу с /storage/sdcard1 ?
         File dir = getDataFolder();
@@ -264,7 +298,27 @@ public class MyApp extends Application {
             }
         }
         File file = new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
+
+        try {
+            long folderSize = folderSize(dir.getCanonicalFile());
+            String size = convertToStringRepresentation(folderSize);
+            size.length();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return file;
+    }
+
+    public static List<String> getStoreList() {
+        List<String> res = new ArrayList<>();
+        String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
+        List<String> pathList = getExternalMounts();
+        for (String item : pathList) {
+            String sdCard = pathList.get(0).substring(pathList.get(0).lastIndexOf(File.separator));
+            String path = externalStorageDirectory.substring(0, externalStorageDirectory.lastIndexOf(File.separator));
+            res.add(path + sdCard + File.separator + exportFolderName);
+        }
+        return res;
     }
 
     public static File getDataFolder() {
@@ -284,6 +338,17 @@ public class MyApp extends Application {
             return new File(path + sdCard + File.separator + exportFolderName);
         } else
             return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
+    }
+
+    public static long folderSize(File directory) {
+        long length = 0;
+        for (File file : directory.listFiles()) {
+            if (file.isFile())
+                length += file.length();
+            else
+                length += folderSize(file);
+        }
+        return length;
     }
 
     private static Activity getCurrentActivity() {
@@ -312,6 +377,11 @@ public class MyApp extends Application {
 
     public static void toAbout() {
         Intent intent = new Intent(getAppContext(), AboutActivity.class);
+        getCurrentActivity().startActivity(intent);
+    }
+
+    public static void toSettings() {
+        Intent intent = new Intent(getAppContext(), SettingsActivity.class);
         getCurrentActivity().startActivity(intent);
     }
 
@@ -495,8 +565,7 @@ public class MyApp extends Application {
         String reg = "(?i).*vold.*(vfat|ntfs|exfat|fat32|ext3|ext4).*rw.*";
         String s = "";
         try {
-            final Process process = new ProcessBuilder().command("mount")
-                    .redirectErrorStream(true).start();
+            final Process process = new ProcessBuilder().command("mount").redirectErrorStream(true).start();
             process.waitFor();
             final InputStream is = process.getInputStream();
             final byte[] buffer = new byte[1024];
@@ -523,5 +592,106 @@ public class MyApp extends Application {
             }
         }
         return out;
+    }
+
+    private String getInternalDirectoryPath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
+    private String getSDcardDirectoryPath() {
+        return System.getenv("SECONDARY_STORAGE");
+    }
+
+
+    public static List<String> getSdCards() {
+        List<String> sVold = new ArrayList<>();
+        //sVold.add("/mnt/sdcard");
+        try {
+            Scanner scanner = new Scanner(new File("/system/etc/vold.fstab"));
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                if (line.startsWith("dev_mount")) {
+                    String[] lineElements = line.split(" ");
+                    String element = lineElements[2];
+
+                    if (element.contains(":"))
+                        element = element.substring(0, element.indexOf(":"));
+
+                    if (element.contains("usb"))
+                        continue;
+
+                    // don't add the default vold path
+                    // it's already in the list.
+                    if (!sVold.contains(element))
+                        sVold.add(element);
+                }
+            }
+        } catch (Exception e) {
+            // swallow - don't care
+            e.printStackTrace();
+        }
+        return sVold;
+    }
+
+    private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
+
+    /**
+     * Raturns all available SD-Cards in the system (include emulated)
+     * <p>
+     * Warning: Hack! Based on Android source code of version 4.3 (API 18)
+     * Because there is no standart way to get it.
+     * TODO: Test on future Android versions 4.4+
+     *
+     * @return paths to all available SD-Cards in the system (include emulated)
+     */
+    public static String[] getStorageDirectories() {
+        // Final set of paths
+        final Set<String> rv = new HashSet<String>();
+        // Primary physical SD-CARD (not emulated)
+        final String rawExternalStorage = System.getenv("EXTERNAL_STORAGE");
+        // All Secondary SD-CARDs (all exclude primary) separated by ":"
+        final String rawSecondaryStoragesStr = System.getenv("SECONDARY_STORAGE");
+        // Primary emulated SD-CARD
+        final String rawEmulatedStorageTarget = System.getenv("EMULATED_STORAGE_TARGET");
+        if (TextUtils.isEmpty(rawEmulatedStorageTarget)) {
+            // Device has physical external storage; use plain paths.
+            if (TextUtils.isEmpty(rawExternalStorage)) {
+                // EXTERNAL_STORAGE undefined; falling back to default.
+                rv.add("/storage/sdcard0");
+            } else {
+                rv.add(rawExternalStorage);
+            }
+        } else {
+            // Device has emulated storage; external storage paths should have
+            // userId burned into them.
+            final String rawUserId;
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                rawUserId = "";
+            } else {
+                final String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                final String[] folders = DIR_SEPORATOR.split(path);
+                final String lastFolder = folders[folders.length - 1];
+                boolean isDigit = false;
+                try {
+                    Integer.valueOf(lastFolder);
+                    isDigit = true;
+                } catch (NumberFormatException ignored) {
+                }
+                rawUserId = isDigit ? lastFolder : "";
+            }
+            // /storage/emulated/0[1,2,...]
+            if (TextUtils.isEmpty(rawUserId)) {
+                rv.add(rawEmulatedStorageTarget);
+            } else {
+                rv.add(rawEmulatedStorageTarget + File.separator + rawUserId);
+            }
+        }
+        // Add all secondary storages
+        if (!TextUtils.isEmpty(rawSecondaryStoragesStr)) {
+            // All Secondary SD-CARDs splited into array
+            final String[] rawSecondaryStorages = rawSecondaryStoragesStr.split(File.pathSeparator);
+            Collections.addAll(rv, rawSecondaryStorages);
+        }
+        return rv.toArray(new String[rv.size()]);
     }
 }

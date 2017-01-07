@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.pavel.elagin.ladle.MyApp;
 import com.pavel.elagin.ladle.R;
 
 import java.io.File;
@@ -42,7 +43,8 @@ public class AboutActivity extends AppCompatActivity {
                     about_tech_info.setVisibility(View.VISIBLE);
             }
         });
-
+        MyApp.getStorageDirectories();
+        MyApp.getSdCards();
         String msg = "";
 /*
         msg += "System properties\n";
@@ -67,7 +69,6 @@ public class AboutActivity extends AppCompatActivity {
             msg += k + ": " + v + "\n";
         }
 */
-        TextView about_wish = (TextView) findViewById(R.id.about_wish);
         msg += android.os.Build.MODEL + " " + Build.VERSION.RELEASE + "\n";
         String androidStorageName = "ANDROID_STORAGE";
         if (androidStorageName != null && androidStorageName.length() > 0) {

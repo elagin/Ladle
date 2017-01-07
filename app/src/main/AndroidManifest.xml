@@ -24,7 +24,7 @@
     -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"></uses-feature>
+        android:required="false" />
 
     <application
         android:name=".MyApp"
@@ -54,6 +54,14 @@
             android:name=".Activites.AboutActivity"
             android:label="@string/title_activity_about_rec"
             android:theme="@style/Theme.AppCompat.Light" />
+        <activity
+            android:name=".Activites.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".Activites.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.pavel.elagin.ladle.Activites.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
