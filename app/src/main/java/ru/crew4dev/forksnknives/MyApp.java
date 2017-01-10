@@ -68,10 +68,15 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         recipes = new ArrayList<>();
+        new Preferences(this);
     }
 
     public static Context getAppContext() {
         return instance.getApplicationContext();
+    }
+
+    public static String getFileDir() {
+        return instance.getApplicationContext().getFilesDir().getAbsolutePath();
     }
 
     private static void saveRecipes() {
@@ -186,6 +191,7 @@ public class MyApp extends Application {
     }
 
     public static boolean loadRecipesJSon(boolean isLocal) {
+        String folder = Preferences.getSyncFolder();
         FileInputStream fis = null;
         ObjectInputStream is = null;
         try {

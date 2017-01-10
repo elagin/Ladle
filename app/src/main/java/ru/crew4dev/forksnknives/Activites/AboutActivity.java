@@ -44,7 +44,7 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
         MyApp.getStorageDirectories();
-        MyApp.getSdCards();
+        //MyApp.getSdCards();
         String msg = "";
 /*
         msg += "System properties\n";

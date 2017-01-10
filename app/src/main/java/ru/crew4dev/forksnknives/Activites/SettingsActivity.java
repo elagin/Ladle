@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import ru.crew4dev.forksnknives.MyApp;
 import ru.crew4dev.forksnknives.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -194,6 +195,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 //            bindPreferenceSummaryToValue(findPreference("example_list"));
 
             final ListPreference listPreference = (ListPreference) findPreference("sync_folder");
+            listPreference.setSummary(listPreference.getValue());
             bindPreferenceSummaryToValue(listPreference);
             setListPreferenceData(listPreference);
 
@@ -201,13 +203,25 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         }
 
         protected static void setListPreferenceData(ListPreference lp) {
-            List<String> pathList = MyApp.getExternalMounts();
-            CharSequence[] entries = pathList.toArray(new CharSequence[pathList.size()]);
-            //CharSequence[] entries = { "English", "French" };
-            CharSequence[] entryValues = pathList.toArray(new CharSequence[pathList.size()]);
-            lp.setEntries(entries);
-            lp.setDefaultValue("1");
-            lp.setEntryValues(entryValues);
+            List<String> entries = new ArrayList<>();
+            List<String> entryValues = new ArrayList<>();
+
+            entries.add("Внутреняя память");
+            entryValues.add(MyApp.getFileDir());
+            List<String> externalMounts = MyApp.getExternalMounts();
+
+            if(externalMounts.size() > 0) {
+                entries.add("Карта памяти");
+                entryValues.add(externalMounts.get(0));
+            }
+            lp.setEntries(entries.toArray(new CharSequence[entries.size()]));
+            lp.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+
+//            CharSequence[] entries = externalMounts.toArray(new CharSequence[externalMounts.size()]);
+//            CharSequence[] entryValues = externalMounts.toArray(new CharSequence[externalMounts.size()]);
+//            lp.setEntries(entries);
+//            lp.setDefaultValue("1");
+//            lp.setEntryValues(entryValues);
         }
 
         @Override
