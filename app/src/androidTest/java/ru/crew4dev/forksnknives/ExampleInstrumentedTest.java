@@ -1,4 +1,4 @@
-package com.pavel.elagin.ladle;
+package ru.crew4dev.forksnknives;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.pavel.elagin.ladle", appContext.getPackageName());
+        assertEquals("ru.crew4dev.forksnknives", appContext.getPackageName());
     }
 }

@@ -1,4 +1,4 @@
-package com.pavel.elagin.ladle.Activites;
+package ru.crew4dev.forksnknives.Activites;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

@@ -1,17 +1,17 @@
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
     <header
-        android:fragment="com.pavel.elagin.ladle.Activites.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="ru.crew4dev.forksnknives.Activites.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_general" />
     <!--
         <header
-            android:fragment="com.pavel.elagin.ladle.Activites.SettingsActivity$NotificationPreferenceFragment"
+            android:fragment="ru.crew4dev.forksnknives.Activites.SettingsActivity$NotificationPreferenceFragment"
             android:icon="@drawable/ic_notifications_black_24dp"
             android:title="@string/pref_header_notifications" />
 
         <header
-            android:fragment="com.pavel.elagin.ladle.Activites.SettingsActivity$DataSyncPreferenceFragment"
+            android:fragment="ru.crew4dev.forksnknives.Activites.SettingsActivity$DataSyncPreferenceFragment"
             android:icon="@drawable/ic_sync_black_24dp"
             android:title="@string/pref_header_data_sync" />
     -->

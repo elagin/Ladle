@@ -1,4 +1,4 @@
-package com.pavel.elagin.ladle.Activites;
+package ru.crew4dev.forksnknives.Activites;
 
 
 import android.annotation.TargetApi;
@@ -21,8 +21,8 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import com.pavel.elagin.ladle.MyApp;
-import com.pavel.elagin.ladle.R;
+import ru.crew4dev.forksnknives.MyApp;
+import ru.crew4dev.forksnknives.R;
 
 import java.util.List;
 

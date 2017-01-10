@@ -1,4 +1,4 @@
-package com.pavel.elagin.ladle;
+package ru.crew4dev.forksnknives;
 
 import org.junit.Test;
 

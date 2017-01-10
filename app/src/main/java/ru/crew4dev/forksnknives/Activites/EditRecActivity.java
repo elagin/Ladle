@@ -1,4 +1,4 @@
-package com.pavel.elagin.ladle.Activites;
+package ru.crew4dev.forksnknives.Activites;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -21,9 +21,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pavel.elagin.ladle.MyApp;
-import com.pavel.elagin.ladle.R;
-import com.pavel.elagin.ladle.Recipe;
+import ru.crew4dev.forksnknives.MyApp;
+import ru.crew4dev.forksnknives.R;
+import ru.crew4dev.forksnknives.Recipe;
 
 import java.io.File;
 import java.io.IOException;
