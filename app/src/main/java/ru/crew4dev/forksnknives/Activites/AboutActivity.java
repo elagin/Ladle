@@ -1,5 +1,7 @@
 package ru.crew4dev.forksnknives.Activites;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +24,16 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        PackageManager manager = MyApp.getAppContext().getPackageManager();
+        String version;
+        try {
+            PackageInfo info = manager.getPackageInfo(MyApp.getAppContext().getPackageName(), 0);
+            version = info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            version = MyApp.getAppContext().getString(R.string.unknown_code_version);
+        }
+        ((TextView) this.findViewById(R.id.app_info)).setText(getString(R.string.code_version_prefix) + ": " + version);
 
         TextView about_feedback = (TextView) findViewById(R.id.about_feedback);
         about_feedback.setText(Html.fromHtml(getString(R.string.feedback)));

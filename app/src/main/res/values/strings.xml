@@ -62,4 +62,6 @@
     <string name="pref_ringtone_silent">Тишина</string>
 
     <string name="settings">Настройки</string>
+    <string name="unknown_code_version">Не определено</string>
+    <string name="code_version_prefix">Текущая версия</string>
 </resources>

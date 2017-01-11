@@ -67,8 +67,7 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rec_ingred"
-                android:textSize="20dp" />
+                android:text="@string/rec_ingred"/>
 
             <TableLayout
                 android:id="@+id/table_rec_ing_view"
@@ -92,8 +91,7 @@
                 android:id="@+id/rec_preparation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/preparation"
-                android:textSize="20dp" />
+                android:text="@string/preparation"/>
 
             <TextView
                 android:id="@+id/rec_steps"
