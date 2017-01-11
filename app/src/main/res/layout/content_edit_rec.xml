@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ru.crew4dev.forksnknives.Activites.EditRecActivity"
+    tools:context="ru.crew4dev.forksnknife.Activites.EditRecActivity"
     tools:showIn="@layout/activity_edit_rec">
 
     <ScrollView

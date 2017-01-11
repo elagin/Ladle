@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives;
+package ru.crew4dev.forksnknife;
 
 import java.io.File;
 import java.io.Serializable;

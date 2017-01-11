@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives.Activites;
+package ru.crew4dev.forksnknife.Activites;
 
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,8 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import ru.crew4dev.forksnknives.MyApp;
-import ru.crew4dev.forksnknives.R;
+import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.R;
 
 import java.io.File;
 

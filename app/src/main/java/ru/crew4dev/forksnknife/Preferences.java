@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives;
+package ru.crew4dev.forksnknife;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

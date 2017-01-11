@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives;
+package ru.crew4dev.forksnknife;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

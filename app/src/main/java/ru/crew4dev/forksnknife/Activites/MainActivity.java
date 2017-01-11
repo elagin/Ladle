@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives.Activites;
+package ru.crew4dev.forksnknife.Activites;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,15 +16,15 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ru.crew4dev.forksnknives.ConfirmDialogFragment;
-import ru.crew4dev.forksnknives.ConfirmDialogImportFragment;
-import ru.crew4dev.forksnknives.MyApp;
-import ru.crew4dev.forksnknives.R;
-import ru.crew4dev.forksnknives.Recipe;
+import ru.crew4dev.forksnknife.ConfirmDialogFragment;
+import ru.crew4dev.forksnknife.ConfirmDialogImportFragment;
+import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.R;
+import ru.crew4dev.forksnknife.Recipe;
 
 import java.util.List;
 
-import static ru.crew4dev.forksnknives.MyApp.getAppContext;
+import static ru.crew4dev.forksnknife.MyApp.getAppContext;
 
 public class MainActivity extends AppCompatActivity implements ConfirmDialogFragment.ConfirmDialogListener, ConfirmDialogImportFragment.ConfirmDialogImportListener {
 

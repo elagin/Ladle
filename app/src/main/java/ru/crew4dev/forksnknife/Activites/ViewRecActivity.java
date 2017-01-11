@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives.Activites;
+package ru.crew4dev.forksnknife.Activites;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,9 +15,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import ru.crew4dev.forksnknives.MyApp;
-import ru.crew4dev.forksnknives.R;
-import ru.crew4dev.forksnknives.Recipe;
+import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.R;
+import ru.crew4dev.forksnknife.Recipe;
 
 import java.util.List;
 

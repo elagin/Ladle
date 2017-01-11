@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives;
+package ru.crew4dev.forksnknife;
 
 import android.app.Activity;
 import android.app.Application;
@@ -18,10 +18,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.crew4dev.forksnknives.Activites.AboutActivity;
-import ru.crew4dev.forksnknives.Activites.EditRecActivity;
-import ru.crew4dev.forksnknives.Activites.SettingsActivity;
-import ru.crew4dev.forksnknives.Activites.ViewRecActivity;
+import ru.crew4dev.forksnknife.Activites.AboutActivity;
+import ru.crew4dev.forksnknife.Activites.EditRecActivity;
+import ru.crew4dev.forksnknife.Activites.SettingsActivity;
+import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
 
 import java.io.File;
 import java.io.FileInputStream;

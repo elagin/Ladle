@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives.Activites;
+package ru.crew4dev.forksnknife.Activites;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

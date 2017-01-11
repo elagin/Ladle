@@ -1,4 +1,4 @@
-package ru.crew4dev.forksnknives.Activites;
+package ru.crew4dev.forksnknife.Activites;
 
 
 import android.annotation.TargetApi;
@@ -21,8 +21,8 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import ru.crew4dev.forksnknives.MyApp;
-import ru.crew4dev.forksnknives.R;
+import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.R;
 
 import java.util.ArrayList;
 import java.util.List;
