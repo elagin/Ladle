@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/dialog_holo_light_frame">
+        android:background="@android:drawable/editbox_background">
 
         <ImageView
             android:id="@+id/rec_img_star"

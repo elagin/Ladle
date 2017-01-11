@@ -95,7 +95,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/editbox_background_normal"
                 android:orientation="vertical">
 
                 <TextView
@@ -107,8 +106,7 @@
                 <TableLayout
                     android:id="@+id/table_rec_ing"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/editbox_background_normal"/>
+                    android:layout_height="wrap_content"/>
 
                 <ImageButton
                     android:id="@+id/button_add_ing"
@@ -142,7 +140,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/editbox_background_normal"
                 android:orientation="vertical">
 
                 <TextView
