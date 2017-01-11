@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ladle</string>
+    <string name="app_name">Forks and Knife</string>
     <string name="title_activity_edit_rec">Редактирование</string>
     <string name="title_activity_view_rec">Просмотр</string>
     <string name="rec_name">Название:</string>
@@ -43,7 +43,7 @@
     <string name="gallery_not_avaible">Галерея не доступна</string>
     <string name="error_load_image">Ошибка загрузки изображения.</string>
     <string name="clear_folder">Очистить папку</string>
-    <string name="about_thanks"><![CDATA[Спасибо:<br/>за идею: моей жене Катерине<br/>за логотип: <a href=\"http:\\pd4pic.com\">http:\\pd4pic.com</a>]]></string>
+    <string name="about_thanks"><![CDATA[Спасибо:<br/>за идею: моей жене Катерине<br/>за логотип: <a href=\"http://www.freepik.com\">http://www.freepik.com</a>]]></string>
     <string name="about_wish">Приятного аппетита.</string>
     <string name="rec_tag">Метки</string>
     <string name="tech_info">Тех. информация</string>
