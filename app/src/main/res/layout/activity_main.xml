@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:stretchColumns="*"
-        android:shrinkColumns="2"
+        android:shrinkColumns="*"
         android:id="@+id/main_rec_table"/>
 
 </LinearLayout>

@@ -65,8 +65,9 @@
                 android:id="@+id/edit_rec_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:scrollHorizontally="false"
                 android:ems="10"
-                android:inputType="text"/>
+                android:inputType="textMultiLine"/>
 
             <TextView
                 android:layout_width="wrap_content"

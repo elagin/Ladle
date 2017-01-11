@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerHorizontal="false"
-            app:srcCompat="@android:drawable/ic_menu_recent_history"/>
+            app:srcCompat="@drawable/ic_clock"/>
 
     </RelativeLayout>
 </TableRow>

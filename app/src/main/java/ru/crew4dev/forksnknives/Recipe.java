@@ -163,7 +163,6 @@ public class Recipe implements Serializable {
             totalTime = getTotalTime();
 
         if (totalTime > 0) {
-            res.append("Время: ");
             res.append(totalTime);
             if (totalStepTime > 0) {
                 res.append(" (");
@@ -171,7 +170,6 @@ public class Recipe implements Serializable {
                 res.append(")");
             }
         } else if (totalStepTime > 0) {
-            res.append("Время: ");
             res.append(" (");
             res.append(totalStepTime);
             res.append(")");

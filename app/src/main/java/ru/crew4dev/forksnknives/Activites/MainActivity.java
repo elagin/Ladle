@@ -70,8 +70,12 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 ((TextView) row.findViewById(R.id.rec_name_row)).setText(item.getName());
                 ((TextView) row.findViewById(R.id.rec_desc_row)).setText(item.getDescription());
                 String totalTime = item.getTotalStepTimeString();
-                if (totalTime.length() > 0)
+                if (totalTime.length() > 0) {
                     ((TextView) row.findViewById(R.id.rec_total_time)).setText(totalTime);
+                } else {
+                    (row.findViewById(R.id.imageViewClock)).setVisibility(View.GONE);
+                    (row.findViewById(R.id.rec_total_time)).setVisibility(View.GONE);
+                }
                 row.setId(item.getUid());
                 row.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
