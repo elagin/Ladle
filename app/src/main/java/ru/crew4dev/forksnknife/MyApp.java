@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import ru.crew4dev.forksnknife.Activites.AboutActivity;
 import ru.crew4dev.forksnknife.Activites.EditRecActivity;
 import ru.crew4dev.forksnknife.Activites.SettingsActivity;
@@ -54,7 +55,7 @@ public class MyApp extends Application {
 
     private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
-    private final static String exportFolderName = "Ladle";
+    private final static String exportFolderName = "forksnknife";
 
     static {
         //currentActivity = null;
@@ -79,28 +80,29 @@ public class MyApp extends Application {
         return instance.getApplicationContext().getFilesDir().getAbsolutePath();
     }
 
-    private static void saveRecipes() {
-        FileOutputStream fos = null;
-        ObjectOutputStream os = null;
+    /*
+        private static void saveRecipes() {
+            FileOutputStream fos = null;
+            ObjectOutputStream os = null;
 
-        try {
-            fos = getAppContext().openFileOutput(fileNameRecipes, Context.MODE_PRIVATE);
-            os = new ObjectOutputStream(fos);
-            os.writeObject(recipes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
             try {
-                if (os != null)
-                    os.close();
-                if (fos != null)
-                    fos.close();
+                fos = getAppContext().openFileOutput(fileNameRecipes, Context.MODE_PRIVATE);
+                os = new ObjectOutputStream(fos);
+                os.writeObject(recipes);
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (os != null)
+                        os.close();
+                    if (fos != null)
+                        fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
-
+    */
     public static boolean saveRecipesJSon(Context context, boolean isLocal) {
         boolean res = false;
         FileOutputStream fos = null;
@@ -111,6 +113,7 @@ public class MyApp extends Application {
                 fos = getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE);
             } else {
                 if (isExternalStorageWritable()) {
+//                    exportPhotos();
                     fos = new FileOutputStream(getExternalFileName(true));
                 } else {
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -122,7 +125,7 @@ public class MyApp extends Application {
                 os = new ObjectOutputStream(fos);
                 os.writeObject(getJSonData());
                 res = true;
-                saveRecipes();
+                //saveRecipes();
                 return res;
             }
         } catch (IOException e) {
@@ -166,30 +169,31 @@ public class MyApp extends Application {
         return false;
     }
 
-    public static void loadRecipes() {
-        FileInputStream fis = null;
-        ObjectInputStream is = null;
-        try {
-            fis = getAppContext().openFileInput(fileNameRecipes);
-            is = new ObjectInputStream(fis);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (is != null) {
+    /*
+        public static void loadRecipes() {
+            FileInputStream fis = null;
+            ObjectInputStream is = null;
             try {
-                recipes = (List<Recipe>) is.readObject();
-                is.close();
-                fis.close();
-            } catch (java.io.InvalidClassException e) {
-                File file = new File(getAppContext().getFilesDir(), fileNameRecipes);
-                file.delete();
-            } catch (IOException | ClassNotFoundException e) {
+                fis = getAppContext().openFileInput(fileNameRecipes);
+                is = new ObjectInputStream(fis);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
 
+            if (is != null) {
+                try {
+                    recipes = (List<Recipe>) is.readObject();
+                    is.close();
+                    fis.close();
+                } catch (java.io.InvalidClassException e) {
+                    File file = new File(getAppContext().getFilesDir(), fileNameRecipes);
+                    file.delete();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    */
     public static boolean loadRecipesJSon(boolean isLocal) {
         String folder = Preferences.getSyncFolder();
         FileInputStream fis = null;
@@ -268,7 +272,7 @@ public class MyApp extends Application {
             }
         }
     }
-
+/*
     private static final long K = 1024;
     private static final long M = K * K;
     private static final long G = M * K;
@@ -277,9 +281,10 @@ public class MyApp extends Application {
     public static String convertToStringRepresentation(final long value) {
         final long[] dividers = new long[]{T, G, M, K, 1};
         final String[] units = new String[]{"TB", "GB", "MB", "KB", "B"};
-        if (value < 1)
-            throw new IllegalArgumentException("Invalid file size: " + value);
         String result = null;
+        if (value < 1) {
+            return value + " " + units[units.length - 1];
+        }
         for (int i = 0; i < dividers.length; i++) {
             final long divider = dividers[i];
             if (value >= divider) {
@@ -294,7 +299,7 @@ public class MyApp extends Application {
         final double result = divider > 1 ? (double) value / (double) divider : (double) value;
         return String.format("%.1f %s", Double.valueOf(result), unit);
     }
-
+*/
     private static File getExternalFileName(boolean isCreate) {
         //todo: Как сделать работу с /storage/sdcard1 ?
         File dir = getDataFolder();
@@ -304,14 +309,13 @@ public class MyApp extends Application {
             }
         }
         File file = new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
-
+/*
         try {
             long folderSize = folderSize(dir.getCanonicalFile());
-            String size = convertToStringRepresentation(folderSize);
-            size.length();
         } catch (IOException e) {
             e.printStackTrace();
         }
+*/
         return file;
     }
 
@@ -512,6 +516,25 @@ public class MyApp extends Application {
         return false;
     }
 
+    /*
+        public static boolean fileMove(String src, String dst) throws IOException {
+            int pos1 = dst.lastIndexOf("/");
+            String res = dst.substring(0, pos1 + 1);
+            File dir = new File(dst.substring(0, pos1 + 1));
+            if (!dir.exists()) {
+                if (!dir.mkdir()) {
+                    return false;
+                }
+            }
+            try {
+                fileCopy(new File(src), new File(dst));
+                return fileDelete(src);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    */
     public static void fileCopy(File src, File dst) throws IOException {
         InputStream in = new FileInputStream(src);
         OutputStream out = new FileOutputStream(dst);
@@ -541,7 +564,7 @@ public class MyApp extends Application {
         return file.delete();
     }
 
-    public static void deletePhotos() {
+    private static List<String> getAllFiles() {
         List<String> files = new ArrayList<>();
         for (int i = 0; i < recipes.size(); i++) {
             Recipe recipe = recipes.get(i);
@@ -556,6 +579,43 @@ public class MyApp extends Application {
                     files.add(step.fileName);
             }
         }
+        return files;
+    }
+/*
+    public static boolean exportPhotos() {
+        for (int i = 0; i < recipes.size(); i++) {
+            Recipe recipe = recipes.get(i);
+            String mainPhoto = recipe.getPhoto();
+            if (mainPhoto != null && mainPhoto.length() > 0) {
+                String newMainPhoto = mainPhoto.replace("Ladle", exportFolderName);
+//                try {
+//                    fileMove(mainPhoto, newMainPhoto);
+                recipe.setPhoto(newMainPhoto);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    return false;
+//                }
+            }
+            List<Recipe.Step> stepsList = recipe.getStepList();
+            for (int j = 0; j < stepsList.size(); j++) {
+                Recipe.Step step = stepsList.get(j);
+                if (step.fileName != null && step.fileName.length() > 0) {
+                    String newStepPhoto = step.fileName.replace("Ladle", exportFolderName);
+//                    try {
+//                        fileMove(step.fileName, newStepPhoto);
+                    step.fileName = newStepPhoto;
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                        return false;
+//                    }
+                }
+            }
+        }
+        return true;
+    }
+*/
+    public static void deletePhotos() {
+        List<String> files = getAllFiles();
         File[] filesOnFolder = MyApp.getDataFolder().listFiles();
         for (int i = 0; i < filesOnFolder.length; i++) {
             String fileName = filesOnFolder[i].getAbsolutePath();
