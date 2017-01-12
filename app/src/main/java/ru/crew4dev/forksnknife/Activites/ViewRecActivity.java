@@ -193,6 +193,9 @@ public class ViewRecActivity extends AppCompatActivity {
             edit_step_time.setVisibility(View.GONE);
         ((TextView) row.findViewById(R.id.edit_step_descr)).setText(descr);
 
+        Integer stepNumber = index + 1;
+        ((TextView) row.findViewById(R.id.edit_step_number)).setText(stepNumber.toString());
+
         if (fileName != null) {
             Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
             ((ImageView) row.findViewById(R.id.step_photo)).setImageBitmap(bm);
