@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,13 +207,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             List<String> entries = new ArrayList<>();
             List<String> entryValues = new ArrayList<>();
 
-            entries.add("Внутреняя память");
-            entryValues.add(MyApp.getFileDir());
-            List<String> externalMounts = MyApp.getExternalMounts();
-
-            if(externalMounts.size() > 0) {
+            File internal = MyApp.getInternalStorage();
+            if(internal != null) {
+                entries.add("Внутреняя память");
+                entryValues.add(internal.getAbsolutePath());
+            }
+            File external = MyApp.getExternalStorage();
+            if(external != null) {
                 entries.add("Карта памяти");
-                entryValues.add(externalMounts.get(0));
+                entryValues.add(external.getAbsolutePath());
             }
             lp.setEntries(entries.toArray(new CharSequence[entries.size()]));
             lp.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));

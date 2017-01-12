@@ -5,13 +5,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.io.File;
+
 /**
  * Created by elagin on 10.01.17.
  */
 @SuppressLint("CommitPrefEdits")
 public class Preferences {
 
-    public final static  String syncFolder;
+    public final static String syncFolder;
 
     private static SharedPreferences preferences;
 
@@ -24,7 +26,25 @@ public class Preferences {
     }
 
     public static String getSyncFolder() {
-        return preferences.getString(syncFolder, "");
+        String folder;
+        folder = preferences.getString(syncFolder, "");
+        if (folder.length() > 0)
+            return folder;
+        else {
+            File externalStorage = MyApp.getExternalStorage();
+            if (externalStorage != null) {
+                folder = externalStorage.getAbsolutePath();
+            } else {
+                File internalStorage = MyApp.getInternalStorage();
+                if (internalStorage != null)
+                    folder = internalStorage.getAbsolutePath();
+                else {
+                    folder = MyApp.getFileDir();
+                }
+            }
+        }
+        setSyncFolder(folder);
+        return folder;
     }
 
     public static void setSyncFolder(String value) {

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
 
@@ -131,7 +132,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         edit_rec_name = (TextView) findViewById(R.id.edit_rec_name);
         edit_rec_descr = (TextView) findViewById(R.id.edit_rec_descr);
-        edit_rec_tags = (TextView) findViewById(R.id.edit_rec_tags) ;
+        edit_rec_tags = (TextView) findViewById(R.id.edit_rec_tags);
         edit_rec_steps = (TextView) findViewById(R.id.edit_rec_steps);
         edit_rec_total_time_count = (TextView) findViewById(R.id.edit_rec_total_time_count);
 
@@ -548,7 +549,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
         File src = new File(cursor.getString(columnIndex));
-        File dataFolder = MyApp.getDataFolder();
+        File dataFolder = new File(Preferences.getSyncFolder());
         dataFolder.mkdirs();
         File dst = new File(dataFolder, src.getName());
         try {

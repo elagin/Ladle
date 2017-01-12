@@ -55,7 +55,7 @@ public class MyApp extends Application {
 
     private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
-    private final static String exportFolderName = "forksnknife";
+    private final static String exportFolderName = "Forksnknife";
 
     static {
         //currentActivity = null;
@@ -195,7 +195,6 @@ public class MyApp extends Application {
         }
     */
     public static boolean loadRecipesJSon(boolean isLocal) {
-        String folder = Preferences.getSyncFolder();
         FileInputStream fis = null;
         ObjectInputStream is = null;
         try {
@@ -272,37 +271,38 @@ public class MyApp extends Application {
             }
         }
     }
-/*
-    private static final long K = 1024;
-    private static final long M = K * K;
-    private static final long G = M * K;
-    private static final long T = G * K;
 
-    public static String convertToStringRepresentation(final long value) {
-        final long[] dividers = new long[]{T, G, M, K, 1};
-        final String[] units = new String[]{"TB", "GB", "MB", "KB", "B"};
-        String result = null;
-        if (value < 1) {
-            return value + " " + units[units.length - 1];
-        }
-        for (int i = 0; i < dividers.length; i++) {
-            final long divider = dividers[i];
-            if (value >= divider) {
-                result = format(value, divider, units[i]);
-                break;
+    /*
+        private static final long K = 1024;
+        private static final long M = K * K;
+        private static final long G = M * K;
+        private static final long T = G * K;
+
+        public static String convertToStringRepresentation(final long value) {
+            final long[] dividers = new long[]{T, G, M, K, 1};
+            final String[] units = new String[]{"TB", "GB", "MB", "KB", "B"};
+            String result = null;
+            if (value < 1) {
+                return value + " " + units[units.length - 1];
             }
+            for (int i = 0; i < dividers.length; i++) {
+                final long divider = dividers[i];
+                if (value >= divider) {
+                    result = format(value, divider, units[i]);
+                    break;
+                }
+            }
+            return result;
         }
-        return result;
-    }
 
-    private static String format(final long value, final long divider, final String unit) {
-        final double result = divider > 1 ? (double) value / (double) divider : (double) value;
-        return String.format("%.1f %s", Double.valueOf(result), unit);
-    }
-*/
+        private static String format(final long value, final long divider, final String unit) {
+            final double result = divider > 1 ? (double) value / (double) divider : (double) value;
+            return String.format("%.1f %s", Double.valueOf(result), unit);
+        }
+    */
     private static File getExternalFileName(boolean isCreate) {
         //todo: Как сделать работу с /storage/sdcard1 ?
-        File dir = getDataFolder();
+        File dir = new File(Preferences.getSyncFolder());
         if (!dir.exists() && isCreate) {
             if (!dir.mkdir()) {
                 return null;
@@ -331,7 +331,12 @@ public class MyApp extends Application {
         return res;
     }
 
-    public static File getDataFolder() {
+    public static File getInternalStorage() {
+        return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
+    }
+
+
+    public static File getExternalStorage() {
         String extStore = System.getenv("EXTERNAL_STORAGE");
         String secStore = System.getenv("SECONDARY_STORAGE");
         String strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
@@ -347,7 +352,7 @@ public class MyApp extends Application {
             String path = externalStorageDirectory.substring(0, externalStorageDirectory.lastIndexOf(File.separator));
             return new File(path + sdCard + File.separator + exportFolderName);
         } else
-            return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
+            return null;
     }
 
     public static long folderSize(File directory) {
@@ -552,7 +557,7 @@ public class MyApp extends Application {
     public static Uri getNewFileName() throws IOException {
         Long timestamp = System.currentTimeMillis();
         String newFileName = timestamp.toString();
-        String file = MyApp.getDataFolder().getAbsolutePath() + File.separator + newFileName + ".jpg";
+        String file = Preferences.getSyncFolder() + File.separator + newFileName + ".jpg";
         File newfile = new File(file);
         newfile.createNewFile();
         Uri outputFileUri = Uri.fromFile(newfile);
@@ -581,42 +586,43 @@ public class MyApp extends Application {
         }
         return files;
     }
-/*
-    public static boolean exportPhotos() {
-        for (int i = 0; i < recipes.size(); i++) {
-            Recipe recipe = recipes.get(i);
-            String mainPhoto = recipe.getPhoto();
-            if (mainPhoto != null && mainPhoto.length() > 0) {
-                String newMainPhoto = mainPhoto.replace("Ladle", exportFolderName);
-//                try {
-//                    fileMove(mainPhoto, newMainPhoto);
-                recipe.setPhoto(newMainPhoto);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    return false;
-//                }
-            }
-            List<Recipe.Step> stepsList = recipe.getStepList();
-            for (int j = 0; j < stepsList.size(); j++) {
-                Recipe.Step step = stepsList.get(j);
-                if (step.fileName != null && step.fileName.length() > 0) {
-                    String newStepPhoto = step.fileName.replace("Ladle", exportFolderName);
-//                    try {
-//                        fileMove(step.fileName, newStepPhoto);
-                    step.fileName = newStepPhoto;
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                        return false;
-//                    }
+
+    /*
+        public static boolean exportPhotos() {
+            for (int i = 0; i < recipes.size(); i++) {
+                Recipe recipe = recipes.get(i);
+                String mainPhoto = recipe.getPhoto();
+                if (mainPhoto != null && mainPhoto.length() > 0) {
+                    String newMainPhoto = mainPhoto.replace("Ladle", exportFolderName);
+    //                try {
+    //                    fileMove(mainPhoto, newMainPhoto);
+                    recipe.setPhoto(newMainPhoto);
+    //                } catch (IOException e) {
+    //                    e.printStackTrace();
+    //                    return false;
+    //                }
+                }
+                List<Recipe.Step> stepsList = recipe.getStepList();
+                for (int j = 0; j < stepsList.size(); j++) {
+                    Recipe.Step step = stepsList.get(j);
+                    if (step.fileName != null && step.fileName.length() > 0) {
+                        String newStepPhoto = step.fileName.replace("Ladle", exportFolderName);
+    //                    try {
+    //                        fileMove(step.fileName, newStepPhoto);
+                        step.fileName = newStepPhoto;
+    //                    } catch (IOException e) {
+    //                        e.printStackTrace();
+    //                        return false;
+    //                    }
+                    }
                 }
             }
+            return true;
         }
-        return true;
-    }
-*/
+    */
     public static void deletePhotos() {
         List<String> files = getAllFiles();
-        File[] filesOnFolder = MyApp.getDataFolder().listFiles();
+        File[] filesOnFolder = new File(Preferences.getSyncFolder()).listFiles();
         for (int i = 0; i < filesOnFolder.length; i++) {
             String fileName = filesOnFolder[i].getAbsolutePath();
             if (fileName.contains(".jpg")) {
