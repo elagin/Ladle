@@ -17,7 +17,7 @@ android {
         applicationId "ru.crew4dev.forksnknives"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 3
+        versionCode 4
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
