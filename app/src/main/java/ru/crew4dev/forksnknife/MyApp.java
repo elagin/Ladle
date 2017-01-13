@@ -24,6 +24,8 @@ import ru.crew4dev.forksnknife.Activites.EditRecActivity;
 import ru.crew4dev.forksnknife.Activites.SettingsActivity;
 import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -105,16 +107,16 @@ public class MyApp extends Application {
     */
     public static boolean saveRecipesJSon(Context context, boolean isLocal) {
         boolean res = false;
-        FileOutputStream fos = null;
+        BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
 
         try {
             if (isLocal) {
-                fos = getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE);
+                fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
             } else {
                 if (isExternalStorageWritable()) {
 //                    exportPhotos();
-                    fos = new FileOutputStream(getExternalFileName(true));
+                    fos = new BufferedOutputStream(new FileOutputStream(getExternalFileName(true)));
                 } else {
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath();
                     Toast.makeText(context, String.format(context.getString(R.string.access_error), path), Toast.LENGTH_LONG).show();
@@ -195,14 +197,14 @@ public class MyApp extends Application {
         }
     */
     public static boolean loadRecipesJSon(boolean isLocal) {
-        FileInputStream fis = null;
+        BufferedInputStream fis = null;
         ObjectInputStream is = null;
         try {
             if (isLocal) {
-                fis = getAppContext().openFileInput(fileNameRecipesJSon);
+                fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
             } else {
                 if (isExternalStorageReadable())
-                    fis = new FileInputStream(getExternalFileName(false));
+                    fis = new BufferedInputStream(new FileInputStream(getExternalFileName(false)));
             }
             is = new ObjectInputStream(fis);
             String json = (String) is.readObject();
@@ -541,8 +543,8 @@ public class MyApp extends Application {
         }
     */
     public static void fileCopy(File src, File dst) throws IOException {
-        InputStream in = new FileInputStream(src);
-        OutputStream out = new FileOutputStream(dst);
+        BufferedInputStream in = new BufferedInputStream (new FileInputStream(src));
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(dst));
 
         // Transfer bytes from in to out
         byte[] buf = new byte[1024];

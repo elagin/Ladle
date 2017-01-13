@@ -238,17 +238,17 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
                 String name = ((TextView) row.findViewById(R.id.ing_name)).getText().toString();
-                if (name.length() == 0) {
+                if (name.isEmpty()) {
                     Toast.makeText(this, getString(R.string.rec_name_ing_is_empty), Toast.LENGTH_LONG).show();
                     return false;
                 }
                 String count = ((TextView) row.findViewById(R.id.ing_count)).getText().toString();
-                if (count.length() == 0) {
+                if (count.isEmpty()) {
                     Toast.makeText(this, getString(R.string.rec_volume_ing_is_empty), Toast.LENGTH_LONG).show();
                     return false;
                 }
                 String unit = ((TextView) row.findViewById(R.id.ing_unit)).getText().toString();
-                if (unit.length() == 0) {
+                if (unit.isEmpty()) {
                     Toast.makeText(this, getString(R.string.rec_unit_ing_is_empty), Toast.LENGTH_LONG).show();
                     return false;
                 }
@@ -261,9 +261,14 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
                 String time = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
-                if (time.length() == 0)
+                if (time.isEmpty())
                     time = "0";
                 String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
+                if (descr.isEmpty()) {
+                    Integer stepNumber = i + 1;
+                    Toast.makeText(this, String.format(getString(R.string.rec_step_descr_is_empty), stepNumber.toString()), Toast.LENGTH_LONG).show();
+                    return false;
+                }
                 String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
                 recipe.addStep(photoUrl, descr, Integer.valueOf(time));
             }
@@ -296,6 +301,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, getString(R.string.rec_name_is_empty), Toast.LENGTH_LONG).show();
                     return false;
                 }
+                break;
             case R.id.action_cancel_rec:
                 finish();
                 return true;

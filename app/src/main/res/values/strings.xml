@@ -13,6 +13,7 @@
     <string name="rec_volume_ing_is_empty">Не указан объем ингредиента.</string>
     <string name="rec_unit_ing_is_empty">Не указаны единицы измерения.</string>
     <string name="rec_name_is_empty">Не указано название рецепта.</string>
+    <string name="rec_step_descr_is_empty">В шаге %1$s не указано описание.</string>
     <string name="delete">Удалить</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
