@@ -260,9 +260,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             View view = edit_rec_steps_table.getChildAt(i);
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
-                String time = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
-                if (time.isEmpty())
-                    time = "0";
+                Integer time = null;
+                String timeStr = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
+                if (!timeStr.isEmpty())
+                    time = Integer.valueOf(timeStr);
                 String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
                 if (descr.isEmpty()) {
                     Integer stepNumber = i + 1;
@@ -270,7 +271,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     return false;
                 }
                 String photoUrl = ((TextView) row.findViewById(R.id.text_photo_url)).getText().toString();
-                recipe.addStep(photoUrl, descr, Integer.valueOf(time));
+                recipe.addStep(photoUrl, descr, time);
             }
         }
 

@@ -42,6 +42,12 @@
                 android:text="Descr"
                 android:textSize="20dp" />
 
+            <TextView
+                android:id="@+id/rec_total_time_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -76,12 +82,6 @@
                 android:layout_height="wrap_content"
                 android:shrinkColumns="1"
                 android:stretchColumns="*" />
-
-            <TextView
-                android:id="@+id/rec_total_time_count"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp" />
 
             <View
                 android:layout_width="match_parent"
