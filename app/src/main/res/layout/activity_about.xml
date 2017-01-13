@@ -13,18 +13,12 @@
     <TextView
         android:id="@+id/app_info"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/about_info" />
-
-    <TextView
-        android:id="@+id/about_feedback"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/about_feedback" />
 
     <TextView
         android:id="@+id/about_thanks"

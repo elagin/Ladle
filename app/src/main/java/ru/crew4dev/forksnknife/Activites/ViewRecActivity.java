@@ -26,6 +26,7 @@ public class ViewRecActivity extends AppCompatActivity {
     private TextView rec_name;
     private TextView rec_descr;
     private TextView rec_tags;
+    private TextView rec_tags_label;
     private TableLayout recTable;
     private TableLayout stepTable;
     private TextView rec_total_time_count;
@@ -64,6 +65,7 @@ public class ViewRecActivity extends AppCompatActivity {
         rec_name = (TextView) findViewById(R.id.rec_name);
         rec_descr = (TextView) findViewById(R.id.rec_descr);
         rec_tags = (TextView) findViewById(R.id.rec_tags);
+        rec_tags_label = (TextView) findViewById(R.id.rec_tags_label);
         rec_steps = (TextView) findViewById(R.id.rec_steps);
         rec_total_time_count = (TextView) findViewById(R.id.rec_total_time_count);
 
@@ -144,9 +146,16 @@ public class ViewRecActivity extends AppCompatActivity {
                 image_main.setVisibility(View.GONE);
 
             rec_name.setText(recipe.getName());
-            rec_descr.setText(recipe.getDescription());
-            rec_tags.setText(recipe.getTags());
-
+            if (recipe.getDescription().length() > 0)
+                rec_descr.setText(recipe.getDescription());
+            else
+                rec_descr.setVisibility(View.GONE);
+            if (recipe.getTags().length() > 0) {
+                rec_tags.setText(recipe.getTags());
+            } else {
+                rec_tags_label.setVisibility(View.GONE);
+                rec_tags.setVisibility(View.GONE);
+            }
             if (recipe.getSteps().length() > 0)
                 rec_steps.setText(recipe.getSteps());
             else
@@ -195,14 +204,12 @@ public class ViewRecActivity extends AppCompatActivity {
 
         Integer stepNumber = index + 1;
         ((TextView) row.findViewById(R.id.edit_step_number)).setText(stepNumber.toString());
-
         if (fileName != null) {
             Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
             ((ImageView) row.findViewById(R.id.step_photo)).setImageBitmap(bm);
         } else {
             (row.findViewById(R.id.step_photo)).setVisibility(View.GONE);
         }
-
         row.setId(index);
         stepTable.addView(row);
     }

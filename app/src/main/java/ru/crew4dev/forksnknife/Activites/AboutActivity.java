@@ -35,10 +35,6 @@ public class AboutActivity extends AppCompatActivity {
         }
         ((TextView) this.findViewById(R.id.app_info)).setText(getString(R.string.code_version_prefix) + ": " + version);
 
-        TextView about_feedback = (TextView) findViewById(R.id.about_feedback);
-        about_feedback.setText(Html.fromHtml(getString(R.string.feedback)));
-        about_feedback.setMovementMethod(LinkMovementMethod.getInstance());
-
         TextView about_logo_rights = (TextView) findViewById(R.id.about_thanks);
         about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks)));
         about_logo_rights.setMovementMethod(LinkMovementMethod.getInstance());
