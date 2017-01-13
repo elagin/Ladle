@@ -112,7 +112,8 @@ public class MyApp extends Application {
 
         try {
             if (isLocal) {
-                fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
+                //fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
+                fos = new BufferedOutputStream(new FileOutputStream(Preferences.getSyncFolder() + File.separator + fileNameRecipesJSon));
             } else {
                 if (isExternalStorageWritable()) {
 //                    exportPhotos();
@@ -163,11 +164,8 @@ public class MyApp extends Application {
     /* Checks if external storage is available to at least read */
     private static boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
     /*
@@ -200,7 +198,8 @@ public class MyApp extends Application {
         ObjectInputStream is = null;
         try {
             if (isLocal) {
-                fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
+                //fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
+                fis = new BufferedInputStream(new FileInputStream(Preferences.getSyncFolder() + File.separator + fileNameRecipesJSon));
             } else {
                 if (isExternalStorageReadable())
                     fis = new BufferedInputStream(new FileInputStream(getExternalFileName(false)));
