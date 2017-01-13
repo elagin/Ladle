@@ -6,9 +6,7 @@
     <string name="rec_descr">Описание:</string>
     <string name="rec_ingred">Ингредиенты:</string>
     <string name="time">Время, мин.:</string>
-    <string name="time_format">Время: %1$s мин.</string>
     <string name="time_format_w_mins">%1$s мин.</string>
-    <string name="title_activity_main3">Main3Activity</string>
     <string name="rec_name_ing_is_empty">Не указано название ингредиента.</string>
     <string name="rec_volume_ing_is_empty">Не указан объем ингредиента.</string>
     <string name="rec_unit_ing_is_empty">Не указаны единицы измерения.</string>
@@ -28,7 +26,6 @@
     <string name="import_from_sd">Импорт ⇩</string>
     <string name="title_activity_about_rec">О приложении</string>
     <string name="about_info">Приложение для хранения кулинарных рецептов.</string>
-    <string name="about_feedback">crew4dev@gmail.com</string>
     <string name="feedback"><![CDATA[<a href=\"mailto:crew4dev@gmail.com\">Связаться с автором.</a>]]></string>
     <string name="import_succsess">Данные успешно импортированы.</string>
     <string name="import_error">Ошибка импорта данных.</string>
@@ -37,8 +34,6 @@
     <string name="access_error">Ошибка доступа к\n: %1$s</string>
     <string name="recipe">Рецепт:</string>
     <string name="edit">редактировать</string>
-    <string name="perm_read">perm_read</string>
-    <string name="perm_read_label">perm_read_label</string>
     <string name="gallery">Галерея</string>
     <string name="cam">Камера</string>
     <string name="gallery_not_avaible">Галерея не доступна</string>

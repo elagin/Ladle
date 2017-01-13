@@ -33,10 +33,10 @@ import java.util.List;
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "myLogs";
-    static final int RESULT_GALLERY_MAIN_IMAGE = 1;
-    static final int RESULT_CAM_MAIN_IMAGE = 2;
-    static final int RESULT_CAM_STEP_IMAGE = 3;
-    static final int RESULT_GALLERY_STEP_IMAGE = 4;
+    private static final int RESULT_GALLERY_MAIN_IMAGE = 1;
+    private static final int RESULT_CAM_MAIN_IMAGE = 2;
+    private static final int RESULT_CAM_STEP_IMAGE = 3;
+    private static final int RESULT_GALLERY_STEP_IMAGE = 4;
 
     private TableLayout table;
     private TableLayout edit_rec_steps_table;
@@ -55,8 +55,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private Integer changePhotoStepID;
     private String stepPhotoFileName;
 
-    static final String STATE_MAIN_PHOTO = "main_photo";
-    static final String STATE_STEPS_PHOTO = "steps_photo";
+    private static final String STATE_MAIN_PHOTO = "main_photo";
+    private static final String STATE_STEPS_PHOTO = "steps_photo";
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -206,7 +206,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private String saveStepPhotoFileNames() {
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
             View view = edit_rec_steps_table.getChildAt(i);
             if (view instanceof TableRow) {
@@ -339,9 +339,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     if (row.getId() == ((View) view.getParent().getParent().getParent().getParent()).getId()) {
                         changePhotoStepID = i;
                         TextView viewFileName = (TextView) row.findViewById(R.id.text_photo_url);
-                        String fileName = viewFileName.getText().toString();
-                        if (fileName != null && fileName.length() > 0) {
-                            MyApp.fileDelete(fileName);
+                        if (viewFileName.getText().length() > 0) {
+                            MyApp.fileDelete(viewFileName.getText().toString());
                             viewFileName.setText("");
                             view.setVisibility(View.GONE);
                             ((ImageButton) row.findViewById(R.id.step_photo_img)).setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_camera));

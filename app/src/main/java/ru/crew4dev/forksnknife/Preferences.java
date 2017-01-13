@@ -13,7 +13,7 @@ import java.io.File;
 @SuppressLint("CommitPrefEdits")
 public class Preferences {
 
-    public final static String syncFolder;
+    private final static String syncFolder;
 
     private static SharedPreferences preferences;
 

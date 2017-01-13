@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         // Create an instance of the dialog fragment and show it
         DialogFragment dialog = new ConfirmDialogImportFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("message", String.format(getString(R.string.rewrite_recipe)));
+        bundle.putString("message", getString(R.string.rewrite_recipe));
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), "ConfirmDialogFragment");
     }

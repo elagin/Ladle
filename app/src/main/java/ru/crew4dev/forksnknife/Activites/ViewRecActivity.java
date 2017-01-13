@@ -98,18 +98,19 @@ public class ViewRecActivity extends AppCompatActivity {
 
     private void shareRecipe() {
         Recipe recipe = MyApp.getRecipe(recipeID);
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(recipe.getDescription());
+        StringBuilder buffer = new StringBuilder();
+        if (recipe.getDescription() != null && recipe.getDescription().length() > 0)
+            buffer.append(recipe.getDescription());
 
         Integer totalTime = recipe.getTotalTime();
         if (totalTime != null) {
             buffer.append("\n\n");
-            buffer.append(getString(R.string.time) + totalTime.toString());
+            buffer.append(getString(R.string.time)).append(totalTime.toString());
         }
         String steps = recipe.getSteps();
         if (steps.length() > 0) {
             buffer.append("\n\n");
-            buffer.append(getString(R.string.preparation) + "\n" + steps);
+            buffer.append(getString(R.string.preparation)).append("\n").append(steps);
         }
 
         List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
@@ -118,7 +119,7 @@ public class ViewRecActivity extends AppCompatActivity {
         for (int i = 0; i < ingredientList.size(); i++) {
             Recipe.Ingredient item = ingredientList.get(i);
             buffer.append("\n");
-            buffer.append(item.name + " " + item.count + " " + item.unit);
+            buffer.append(item.name).append(" ").append(item.count).append(" ").append(item.unit);
         }
         buffer.append("\n--------\n");
         buffer.append(getString(R.string.about_info));

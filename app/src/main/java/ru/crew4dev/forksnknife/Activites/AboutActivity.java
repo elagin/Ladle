@@ -15,10 +15,11 @@ import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.R;
 
 import java.io.File;
+import java.util.List;
 
 public class AboutActivity extends AppCompatActivity {
 
-    TextView about_tech_info;
+    private TextView about_tech_info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class AboutActivity extends AppCompatActivity {
         });
         MyApp.getStorageDirectories();
         //MyApp.getSdCards();
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
 /*
         msg += "System properties\n";
         msg += "-------------\n";
@@ -77,16 +78,40 @@ public class AboutActivity extends AppCompatActivity {
             msg += k + ": " + v + "\n";
         }
 */
-        msg += android.os.Build.MODEL + " " + Build.VERSION.RELEASE + "\n";
-        String androidStorageName = "ANDROID_STORAGE";
-        if (androidStorageName != null && androidStorageName.length() > 0) {
-            String androidStorage = System.getenv(androidStorageName);
-            File storages = new File(androidStorage);
-            String[] storeFolders = storages.list();
-            for (int x = 0; x < storeFolders.length; x++) {
-                msg += androidStorage + File.separator + storeFolders[x] + "\n";
+        msg.append(android.os.Build.MODEL).append(" ").append(Build.VERSION.RELEASE).append("\n");
+
+        File internal = MyApp.getInternalStorage();
+        if (internal != null) {
+            msg.append("Внутреняя память: ");
+            int pos = internal.getAbsolutePath().lastIndexOf("/");
+            msg.append(internal.getAbsolutePath().substring(0, pos));
+            msg.append("\n");
+        }
+        File external = MyApp.getExternalStorage();
+        if (external != null) {
+            msg.append("Внешняя память: ");
+            int pos = external.getAbsolutePath().lastIndexOf("/");
+            msg.append(external.getAbsolutePath().substring(0, pos));
+            msg.append("\n");
+        }
+        List<String> mounts = MyApp.getExternalMounts();
+        if (!mounts.isEmpty()) {
+            msg.append("Монтированные: ");
+            for (String item : mounts) {
+                msg.append(item);
+                msg.append("\n");
             }
         }
+
+//        String androidStorageName = "ANDROID_STORAGE";
+//        if (androidStorageName != null && androidStorageName.length() > 0) {
+//            String androidStorage = System.getenv(androidStorageName);
+//            File storages = new File(androidStorage);
+//            String[] storeFolders = storages.list();
+//            for (String storeFolder : storeFolders) {
+//                msg.append(androidStorage).append(File.separator).append(storeFolder).append("\n");
+//            }
+//        }
         about_tech_info.setText(msg);
     }
 }

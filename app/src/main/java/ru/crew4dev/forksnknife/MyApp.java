@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.Preference;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -28,7 +29,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +55,7 @@ public class MyApp extends Application {
     private static List<Recipe> recipes;
     private final static Random random = new Random();
 
-    private final static String fileNameRecipes = "recipe_list.txt";
+    //    private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
     private final static String exportFolderName = "Forksnknife";
 
@@ -120,20 +120,19 @@ public class MyApp extends Application {
                 } else {
                     String path = Environment.getExternalStorageDirectory().getAbsolutePath();
                     Toast.makeText(context, String.format(context.getString(R.string.access_error), path), Toast.LENGTH_LONG).show();
-                    return res;
+                    return false;
                 }
             }
             if (fos != null) {
                 os = new ObjectOutputStream(fos);
                 os.writeObject(getJSonData());
-                res = true;
                 //saveRecipes();
-                return res;
+                return true;
             }
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            return res;
+            return false;
         } finally {
             try {
                 if (os != null)
@@ -261,17 +260,19 @@ public class MyApp extends Application {
         recipes.add(recipe);
     }
 
-    public static void removeRecipe(int uid) {
+    public static boolean removeRecipe(int uid) {
+        boolean res = true;
         for (int i = 0; i < recipes.size(); i++) {
             Recipe recipe = recipes.get(i);
             if (recipe.getUid().equals(uid)) {
                 if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
-                    MyApp.fileDelete(recipe.getPhoto());
+                    res = MyApp.fileDelete(recipe.getPhoto());
                 }
                 recipes.remove(i);
-                return;
+                return res;
             }
         }
+        return true;
     }
 
     /*
@@ -310,15 +311,14 @@ public class MyApp extends Application {
                 return null;
             }
         }
-        File file = new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
-/*
+        /*
         try {
             long folderSize = folderSize(dir.getCanonicalFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
 */
-        return file;
+        return new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
     }
 
     public static List<String> getStoreList() {
@@ -339,11 +339,11 @@ public class MyApp extends Application {
 
 
     public static File getExternalStorage() {
-        String extStore = System.getenv("EXTERNAL_STORAGE");
-        String secStore = System.getenv("SECONDARY_STORAGE");
-        String strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
-        String strSDCardPath2 = System.getenv("MEDIA_STORAGE");
-        String strSDCardPath3 = System.getenv("ENV_MEDIA_STORAGE");
+//        String extStore = System.getenv("EXTERNAL_STORAGE");
+//        String secStore = System.getenv("SECONDARY_STORAGE");
+//        String strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
+//        String strSDCardPath2 = System.getenv("MEDIA_STORAGE");
+//        String strSDCardPath3 = System.getenv("ENV_MEDIA_STORAGE");
         String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
         //externalStorageDirectory.substring(externalStorageDirectory.lastIndexOf(File.separator))+ File.separator + pathList.get(0);
 //        return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
@@ -406,7 +406,7 @@ public class MyApp extends Application {
         return random.nextInt(Integer.MAX_VALUE);
     }
 
-    public static int calculateInSampleSize(
+    private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -426,7 +426,7 @@ public class MyApp extends Application {
 
     public static Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
 
-        Bitmap bm = null;
+        Bitmap bm;
         // First decode with inJustDecodeBounds=true to check dimensions
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -453,18 +453,22 @@ public class MyApp extends Application {
         return null;
     }
 
-    public static float getDegree(String exifOrientation) {
+    private static float getDegree(String exifOrientation) {
         float degree = 0;
-        if (exifOrientation.equals("6"))
-            degree = 90;
-        else if (exifOrientation.equals("3"))
-            degree = 180;
-        else if (exifOrientation.equals("8"))
-            degree = 270;
+        switch (exifOrientation) {
+            case "6":
+                degree = 90;
+                break;
+            case "3":
+                degree = 180;
+                break;
+            case "8":
+                degree = 270;
+        }
         return degree;
     }
 
-    public static Bitmap createRotatedBitmap(Bitmap bm, float degree) {
+    private static Bitmap createRotatedBitmap(Bitmap bm, float degree) {
         Matrix matrix = new Matrix();
         matrix.preRotate(degree);
         return Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), matrix, true);
@@ -515,8 +519,6 @@ public class MyApp extends Application {
                     return true;
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -543,7 +545,7 @@ public class MyApp extends Application {
         }
     */
     public static void fileCopy(File src, File dst) throws IOException {
-        BufferedInputStream in = new BufferedInputStream (new FileInputStream(src));
+        BufferedInputStream in = new BufferedInputStream(new FileInputStream(src));
         OutputStream out = new BufferedOutputStream(new FileOutputStream(dst));
 
         // Transfer bytes from in to out
@@ -562,8 +564,7 @@ public class MyApp extends Application {
         String file = Preferences.getSyncFolder() + File.separator + newFileName + ".jpg";
         File newfile = new File(file);
         newfile.createNewFile();
-        Uri outputFileUri = Uri.fromFile(newfile);
-        return outputFileUri;
+        return Uri.fromFile(newfile);
     }
 
     public static boolean fileDelete(String name) {
@@ -622,16 +623,18 @@ public class MyApp extends Application {
             return true;
         }
     */
-    public static void deletePhotos() {
+    public static boolean deletePhotos() {
+        boolean res = true;
         List<String> files = getAllFiles();
         File[] filesOnFolder = new File(Preferences.getSyncFolder()).listFiles();
-        for (int i = 0; i < filesOnFolder.length; i++) {
-            String fileName = filesOnFolder[i].getAbsolutePath();
+        for (File aFilesOnFolder : filesOnFolder) {
+            String fileName = aFilesOnFolder.getAbsolutePath();
             if (fileName.contains(".jpg")) {
                 if (files.indexOf(fileName) == -1)
-                    fileDelete(fileName);
+                    res = fileDelete(fileName);
             }
         }
+        return res;
     }
 
     public static List<String> getExternalMounts() {
@@ -747,7 +750,7 @@ public class MyApp extends Application {
                 final String lastFolder = folders[folders.length - 1];
                 boolean isDigit = false;
                 try {
-                    Integer.valueOf(lastFolder);
+                    //Integer.valueOf(lastFolder);
                     isDigit = true;
                 } catch (NumberFormatException ignored) {
                 }

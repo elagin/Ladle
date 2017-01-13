@@ -44,7 +44,7 @@ public class Recipe implements Serializable {
     private String name;
     private String description;
     private String steps;
-    private int totalTime;
+    private Integer totalTime;
     private String photo;
     private String tags;
 
@@ -77,7 +77,7 @@ public class Recipe implements Serializable {
         return totalTime;
     }
 
-    public void setTotalTime(int totalTime) {
+    public void setTotalTime(Integer totalTime) {
         this.totalTime = totalTime;
     }
 
@@ -155,7 +155,7 @@ public class Recipe implements Serializable {
     }
 
     public String getTotalStepTimeString() {
-        StringBuffer res = new StringBuffer();
+        StringBuilder res = new StringBuilder();
         int totalStepTime = getTotalStepTime();
         int totalTime = 0;
 
