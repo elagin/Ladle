@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.Preference;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -106,7 +105,6 @@ public class MyApp extends Application {
         }
     */
     public static boolean saveRecipesJSon(Context context, boolean isLocal) {
-        boolean res = false;
         BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
 
@@ -124,12 +122,10 @@ public class MyApp extends Application {
                     return false;
                 }
             }
-            if (fos != null) {
-                os = new ObjectOutputStream(fos);
-                os.writeObject(getJSonData());
-                //saveRecipes();
-                return true;
-            }
+            os = new ObjectOutputStream(fos);
+            os.writeObject(getJSonData());
+            //saveRecipes();
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -145,13 +141,10 @@ public class MyApp extends Application {
                 e.printStackTrace();
             }
         }
-        return res;
     }
 
     private static String getJSonData() {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(new RecipeJsonDataHolder(recipes));
     }
 
@@ -193,6 +186,7 @@ public class MyApp extends Application {
             }
         }
     */
+
     public static boolean loadRecipesJSon(boolean isLocal) {
         BufferedInputStream fis = null;
         ObjectInputStream is = null;
@@ -722,7 +716,7 @@ public class MyApp extends Application {
      */
     public static String[] getStorageDirectories() {
         // Final set of paths
-        final Set<String> rv = new HashSet<String>();
+        final Set<String> rv = new HashSet<>();
         // Primary physical SD-CARD (not emulated)
         final String rawExternalStorage = System.getenv("EXTERNAL_STORAGE");
         // All Secondary SD-CARDs (all exclude primary) separated by ":"

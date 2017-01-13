@@ -33,11 +33,13 @@
     <string name="export_error">Ошибка экспорта данных.</string>
     <string name="access_error">Ошибка доступа к\n: %1$s</string>
     <string name="recipe">Рецепт:</string>
+    <string name="error_recipe_is_not_found">Рецепт не найден.</string>
     <string name="edit">редактировать</string>
     <string name="gallery">Галерея</string>
     <string name="cam">Камера</string>
     <string name="gallery_not_avaible">Галерея не доступна</string>
     <string name="error_load_image">Ошибка загрузки изображения.</string>
+    <string name="error_create_folder">Ошибка создания папки %1$s</string>
     <string name="clear_folder">Очистить папку</string>
     <string name="about_thanks"><![CDATA[Спасибо:<br/>за идею: моей жене Катерине<br/>за логотип: <a href=\"http://www.freepik.com\">http://www.freepik.com</a>]]></string>
     <string name="about_wish">Приятного аппетита.</string>

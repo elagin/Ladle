@@ -17,6 +17,8 @@ import ru.crew4dev.forksnknife.R;
 import java.io.File;
 import java.util.List;
 
+import static android.text.Html.FROM_HTML_MODE_COMPACT;
+
 public class AboutActivity extends AppCompatActivity {
 
     private TextView about_tech_info;
@@ -37,7 +39,7 @@ public class AboutActivity extends AppCompatActivity {
         ((TextView) this.findViewById(R.id.app_info)).setText(getString(R.string.code_version_prefix) + ": " + version);
 
         TextView about_logo_rights = (TextView) findViewById(R.id.about_thanks);
-        about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks)));
+        about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks), FROM_HTML_MODE_COMPACT));
         about_logo_rights.setMovementMethod(LinkMovementMethod.getInstance());
 
         about_tech_info = (TextView) findViewById(R.id.about_tech_info);

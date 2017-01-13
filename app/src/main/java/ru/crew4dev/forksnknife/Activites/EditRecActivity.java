@@ -4,9 +4,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
@@ -95,7 +95,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         image_main_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                image_main.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_camera));
+                image_main.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_camera, null));
                 if (mainPhotoFileName != null && mainPhotoFileName.length() > 0) {
                     MyApp.fileDelete(mainPhotoFileName);
                     mainPhotoFileName = "";
@@ -110,14 +110,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onGlobalLayout() {
-
                 // Removing layout listener to avoid multiple calls
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    image_main.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-
+                image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 update();
             }
         });
@@ -143,6 +137,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
             Recipe recipe = MyApp.getRecipe(recipeID);
+            if(recipe == null) {
+                Toast.makeText(this, getString(R.string.error_recipe_is_not_found), Toast.LENGTH_LONG).show();
+                return;
+            }
 
             if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
                 mainPhotoFileName = recipe.getPhoto();
@@ -344,7 +342,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                             MyApp.fileDelete(viewFileName.getText().toString());
                             viewFileName.setText("");
                             view.setVisibility(View.GONE);
-                            ((ImageButton) row.findViewById(R.id.step_photo_img)).setImageDrawable(getResources().getDrawable(R.drawable.ic_menu_camera));
+                            ((ImageButton) row.findViewById(R.id.step_photo_img)).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_camera, null));
                         }
                         break;
                     }
@@ -551,20 +549,24 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        File src = new File(cursor.getString(columnIndex));
-        File dataFolder = new File(Preferences.getSyncFolder());
-        dataFolder.mkdirs();
-        File dst = new File(dataFolder, src.getName());
-        try {
-            MyApp.fileCopy(src, dst);
-            return dst.getAbsolutePath();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            File src = new File(cursor.getString(columnIndex));
+            File dataFolder = new File(Preferences.getSyncFolder());
+            if (dataFolder.mkdirs()) {
+                File dst = new File(dataFolder, src.getName());
+                try {
+                    MyApp.fileCopy(src, dst);
+                    return dst.getAbsolutePath();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Toast.makeText(this, String.format(getString(R.string.error_create_folder), dataFolder.getAbsoluteFile()), Toast.LENGTH_LONG).show();
+            }
+            cursor.close();
         }
-        cursor.close();
         return null;
     }
 

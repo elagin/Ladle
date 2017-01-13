@@ -2,7 +2,6 @@ package ru.crew4dev.forksnknife.Activites;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -14,12 +13,13 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
 
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
-
-import java.util.List;
 
 public class ViewRecActivity extends AppCompatActivity {
 
@@ -48,13 +48,8 @@ public class ViewRecActivity extends AppCompatActivity {
 
             @Override
             public void onGlobalLayout() {
-
                 // Removing layout listener to avoid multiple calls
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    image_main.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
+                image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 update();
             }
         });
@@ -98,6 +93,11 @@ public class ViewRecActivity extends AppCompatActivity {
 
     private void shareRecipe() {
         Recipe recipe = MyApp.getRecipe(recipeID);
+        if(recipe == null) {
+            Toast.makeText(this, getString(R.string.error_recipe_is_not_found), Toast.LENGTH_LONG).show();
+            return;
+        }
+
         StringBuilder buffer = new StringBuilder();
         if (recipe.getDescription() != null && recipe.getDescription().length() > 0)
             buffer.append(recipe.getDescription());
@@ -174,7 +174,7 @@ public class ViewRecActivity extends AppCompatActivity {
                 Recipe.Step item = stepList.get(i);
                 addStep(item.fileName, item.time, item.desc);
             }
-            if(stepList.isEmpty())
+            if (stepList.isEmpty())
                 findViewById(R.id.rec_preparation).setVisibility(View.GONE);
 
             String totalTime = recipe.getTotalStepTimeString();
