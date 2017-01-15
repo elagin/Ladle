@@ -39,7 +39,10 @@ public class AboutActivity extends AppCompatActivity {
         ((TextView) this.findViewById(R.id.app_info)).setText(getString(R.string.code_version_prefix) + ": " + version);
 
         TextView about_logo_rights = (TextView) findViewById(R.id.about_thanks);
-        about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks), FROM_HTML_MODE_COMPACT));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
+            about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks)));
+        else
+            about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks), FROM_HTML_MODE_COMPACT));
         about_logo_rights.setMovementMethod(LinkMovementMethod.getInstance());
 
         about_tech_info = (TextView) findViewById(R.id.about_tech_info);
