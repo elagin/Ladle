@@ -2,6 +2,7 @@ package ru.crew4dev.forksnknife.Activites;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -49,7 +50,11 @@ public class ViewRecActivity extends AppCompatActivity {
             @Override
             public void onGlobalLayout() {
                 // Removing layout listener to avoid multiple calls
-                image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    image_main.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
                 update();
             }
         });
@@ -93,7 +98,7 @@ public class ViewRecActivity extends AppCompatActivity {
 
     private void shareRecipe() {
         Recipe recipe = MyApp.getRecipe(recipeID);
-        if(recipe == null) {
+        if (recipe == null) {
             Toast.makeText(this, getString(R.string.error_recipe_is_not_found), Toast.LENGTH_LONG).show();
             return;
         }

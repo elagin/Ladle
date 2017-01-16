@@ -19,11 +19,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ru.crew4dev.forksnknife.Activites.AboutActivity;
-import ru.crew4dev.forksnknife.Activites.EditRecActivity;
-import ru.crew4dev.forksnknife.Activites.SettingsActivity;
-import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -43,6 +38,11 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import ru.crew4dev.forksnknife.Activites.AboutActivity;
+import ru.crew4dev.forksnknife.Activites.EditRecActivity;
+import ru.crew4dev.forksnknife.Activites.SettingsActivity;
+import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
 
 /**
  * Created by pavel on 25.11.16.
@@ -732,8 +732,7 @@ public class MyApp extends Application {
                 rv.add(rawExternalStorage);
             }
         } else {
-            // Device has emulated storage; external storage paths should have
-            // userId burned into them.
+            // Device has emulated storage; external storage paths should have userId burned into them.
             final String rawUserId;
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 rawUserId = "";
@@ -763,5 +762,18 @@ public class MyApp extends Application {
             Collections.addAll(rv, rawSecondaryStorages);
         }
         return rv.toArray(new String[rv.size()]);
+    }
+
+    public static File getExistsFolder(String path) {
+        if (path.isEmpty())
+            return null;
+        File folder = new File(path);
+        if (folder.exists())
+            return folder;
+        else {
+            if (folder.mkdirs())
+                return folder;
+        }
+        return null;
     }
 }

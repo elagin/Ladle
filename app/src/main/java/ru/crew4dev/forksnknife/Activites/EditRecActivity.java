@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.res.ResourcesCompat;
@@ -21,14 +22,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -111,7 +112,11 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onGlobalLayout() {
                 // Removing layout listener to avoid multiple calls
-                image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    image_main.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    image_main.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
                 update();
             }
         });
@@ -137,7 +142,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
             Recipe recipe = MyApp.getRecipe(recipeID);
-            if(recipe == null) {
+            if (recipe == null) {
                 Toast.makeText(this, getString(R.string.error_recipe_is_not_found), Toast.LENGTH_LONG).show();
                 return;
             }
@@ -489,7 +494,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             case RESULT_GALLERY_MAIN_IMAGE:
                 if (resultCode == RESULT_OK && null != data) {
                     String fileName = getFromGallery(data);
-                    changeMainImage(fileName);
+                    if (fileName != null)
+                        changeMainImage(fileName);
                 }
                 break;
             case RESULT_CAM_STEP_IMAGE:
@@ -551,19 +557,18 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            File src = new File(cursor.getString(columnIndex));
-            File dataFolder = new File(Preferences.getSyncFolder());
-            if (dataFolder.mkdirs()) {
+            File src = new File(cursor.getString(cursor.getColumnIndex(filePathColumn[0])));
+            String syncFolder = Preferences.getSyncFolder();
+            if (!syncFolder.isEmpty()) {
+                File dataFolder = new File(syncFolder);
                 File dst = new File(dataFolder, src.getName());
                 try {
                     MyApp.fileCopy(src, dst);
                     return dst.getAbsolutePath();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Toast.makeText(this, String.format(getString(R.string.error_copy_file), dataFolder.getAbsoluteFile()), Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(this, String.format(getString(R.string.error_create_folder), dataFolder.getAbsoluteFile()), Toast.LENGTH_LONG).show();
             }
             cursor.close();
         }

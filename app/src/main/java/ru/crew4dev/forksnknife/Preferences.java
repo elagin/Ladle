@@ -26,28 +26,28 @@ public class Preferences {
     }
 
     public static String getSyncFolder() {
-        String folder;
-        folder = preferences.getString(syncFolder, "");
-        if (folder.length() > 0)
-            return folder;
-        else {
+        String path = preferences.getString(syncFolder, "");
+        if (path.isEmpty()) {
             File externalStorage = MyApp.getExternalStorage();
             if (externalStorage != null) {
-                folder = externalStorage.getAbsolutePath();
+                path = externalStorage.getAbsolutePath();
             } else {
                 File internalStorage = MyApp.getInternalStorage();
                 if (internalStorage != null)
-                    folder = internalStorage.getAbsolutePath();
+                    path = internalStorage.getAbsolutePath();
                 else {
-                    folder = MyApp.getFileDir();
+                    path = MyApp.getFileDir();
                 }
             }
+            File folder = MyApp.getExistsFolder(path);
+            if (folder != null)
+                setSyncFolder(path);
+            return folder.getAbsolutePath();
         }
-        setSyncFolder(folder);
-        return folder;
+        return path;
     }
 
     public static void setSyncFolder(String value) {
-        preferences.edit().putString(syncFolder, value);
+        preferences.edit().putString(syncFolder, value).commit();
     }
 }
