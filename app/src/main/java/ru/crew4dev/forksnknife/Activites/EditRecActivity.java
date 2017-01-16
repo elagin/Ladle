@@ -255,7 +255,12 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, getString(R.string.rec_unit_ing_is_empty), Toast.LENGTH_LONG).show();
                     return false;
                 }
-                recipe.addIngredient(name, Double.valueOf(count), unit);
+                try {
+                    recipe.addIngredient(name, Double.valueOf(count), unit);
+                } catch (NumberFormatException ex) {
+                    Toast.makeText(this, String.format(getString(R.string.error_parse_volume), name), Toast.LENGTH_LONG).show();
+                    return false;
+                }
             }
         }
 

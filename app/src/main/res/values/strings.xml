@@ -39,6 +39,7 @@
     <string name="cam">Камера</string>
     <string name="gallery_not_avaible">Галерея не доступна</string>
     <string name="error_load_image">Ошибка загрузки изображения.</string>
+    <string name="error_parse_volume">Не верный объем ингредиента: %1$s.</string>
     <string name="error_create_folder">Ошибка создания папки %1$s</string>
     <string name="error_copy_file">Ошибка копировния файла %1$s</string>
     <string name="clear_folder">Очистить папку</string>
