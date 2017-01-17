@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import ru.crew4dev.forksnknife.MyApp;
-import ru.crew4dev.forksnknife.R;
-
 import java.io.File;
 import java.util.List;
+
+import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.Preferences;
+import ru.crew4dev.forksnknife.R;
 
 import static android.text.Html.FROM_HTML_MODE_COMPACT;
 
@@ -84,6 +85,15 @@ public class AboutActivity extends AppCompatActivity {
         }
 */
         msg.append(android.os.Build.MODEL).append(" ").append(Build.VERSION.RELEASE).append("\n");
+
+        msg.append("Данные: ");
+        try {
+            msg.append(Preferences.getSyncFolder());
+            msg.append("\n");
+        } catch (Exception e) {
+            msg.append(e.getLocalizedMessage());
+            msg.append("\n");
+        }
 
         File internal = MyApp.getInternalStorage();
         if (internal != null) {

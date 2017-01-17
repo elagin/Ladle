@@ -113,20 +113,20 @@ public class MyApp extends Application {
                 //fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
                 fos = new BufferedOutputStream(new FileOutputStream(Preferences.getSyncFolder() + File.separator + fileNameRecipesJSon));
             } else {
-                if (isExternalStorageWritable()) {
-//                    exportPhotos();
-                    fos = new BufferedOutputStream(new FileOutputStream(getExternalFileName(true)));
-                } else {
-                    String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-                    Toast.makeText(context, String.format(context.getString(R.string.access_error), path), Toast.LENGTH_LONG).show();
-                    return false;
-                }
+//                if (isExternalStorageWritable()) {
+////                    exportPhotos();
+//                    fos = new BufferedOutputStream(new FileOutputStream(getExternalFileName(true)));
+//                } else {
+//                    String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+//                    Toast.makeText(context, String.format(context.getString(R.string.error_access), path), Toast.LENGTH_LONG).show();
+//                    return false;
+//                }
             }
             os = new ObjectOutputStream(fos);
             os.writeObject(getJSonData());
             //saveRecipes();
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             return false;
@@ -187,7 +187,7 @@ public class MyApp extends Application {
         }
     */
 
-    public static boolean loadRecipesJSon(boolean isLocal) {
+    public static boolean loadRecipesJSon(boolean isLocal, Context context) {
         BufferedInputStream fis = null;
         ObjectInputStream is = null;
         try {
@@ -195,8 +195,8 @@ public class MyApp extends Application {
                 //fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
                 fis = new BufferedInputStream(new FileInputStream(Preferences.getSyncFolder() + File.separator + fileNameRecipesJSon));
             } else {
-                if (isExternalStorageReadable())
-                    fis = new BufferedInputStream(new FileInputStream(getExternalFileName(false)));
+//                if (isExternalStorageReadable())
+//                    fis = new BufferedInputStream(new FileInputStream(getExternalFileName(false)));
             }
             is = new ObjectInputStream(fis);
             String json = (String) is.readObject();
@@ -204,7 +204,9 @@ public class MyApp extends Application {
             if (holder.mContactList.size() > 0)
                 recipes = holder.mContactList;
             return true;
-        } catch (IOException | ClassNotFoundException e) {
+
+        } catch (Exception e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } finally {
             if (is != null) {
@@ -296,23 +298,23 @@ public class MyApp extends Application {
             return String.format("%.1f %s", Double.valueOf(result), unit);
         }
     */
-    private static File getExternalFileName(boolean isCreate) {
-        //todo: Как сделать работу с /storage/sdcard1 ?
-        File dir = new File(Preferences.getSyncFolder());
-        if (!dir.exists() && isCreate) {
-            if (!dir.mkdir()) {
-                return null;
-            }
-        }
-        /*
-        try {
-            long folderSize = folderSize(dir.getCanonicalFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
-        return new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
-    }
+//    private static File getExternalFileName(boolean isCreate) {
+//        //todo: Как сделать работу с /storage/sdcard1 ?
+//        File dir = new File(Preferences.getSyncFolder());
+//        if (!dir.exists() && isCreate) {
+//            if (!dir.mkdir()) {
+//                return null;
+//            }
+//        }
+//        /*
+//        try {
+//            long folderSize = folderSize(dir.getCanonicalFile());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//*/
+//        return new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
+//    }
 
     public static List<String> getStoreList() {
         List<String> res = new ArrayList<>();
@@ -619,13 +621,18 @@ public class MyApp extends Application {
     public static boolean deletePhotos() {
         boolean res = true;
         List<String> files = getAllFiles();
-        File[] filesOnFolder = new File(Preferences.getSyncFolder()).listFiles();
-        for (File aFilesOnFolder : filesOnFolder) {
-            String fileName = aFilesOnFolder.getAbsolutePath();
-            if (fileName.contains(".jpg")) {
-                if (files.indexOf(fileName) == -1)
-                    res = fileDelete(fileName);
+        File[] filesOnFolder = new File[0];
+        try {
+            filesOnFolder = new File(Preferences.getSyncFolder()).listFiles();
+            for (File aFilesOnFolder : filesOnFolder) {
+                String fileName = aFilesOnFolder.getAbsolutePath();
+                if (fileName.contains(".jpg")) {
+                    if (files.indexOf(fileName) == -1)
+                        res = fileDelete(fileName);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return res;
     }
@@ -766,14 +773,16 @@ public class MyApp extends Application {
 
     public static File getExistsFolder(String path) {
         if (path.isEmpty())
-            return null;
+            throw new IllegalArgumentException();
         File folder = new File(path);
         if (folder.exists())
             return folder;
         else {
-            if (folder.mkdirs())
+            if (folder.mkdirs()) {
                 return folder;
+            } else {
+                throw new SecurityException(path);
+            }
         }
-        return null;
     }
 }

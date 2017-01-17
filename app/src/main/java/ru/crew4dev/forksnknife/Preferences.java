@@ -25,7 +25,7 @@ public class Preferences {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static String getSyncFolder() {
+    public static String getSyncFolder() throws IllegalArgumentException, SecurityException {
         String path = preferences.getString(syncFolder, "");
         if (path.isEmpty()) {
             File externalStorage = MyApp.getExternalStorage();
@@ -39,13 +39,19 @@ public class Preferences {
                     path = MyApp.getFileDir();
                 }
             }
+        }
+        try {
             File folder = MyApp.getExistsFolder(path);
-            if (folder != null)
+            if (folder != null) {
                 setSyncFolder(path);
-            return folder.getAbsolutePath();
+                return folder.getAbsolutePath();
+            }
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(ex);
         }
         return path;
     }
+
 
     public static void setSyncFolder(String value) {
         preferences.edit().putString(syncFolder, value).commit();

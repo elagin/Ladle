@@ -558,13 +558,13 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     private String getFromGallery(Intent data) {
         Uri selectedImage = data.getData();
         String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
         Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
             File src = new File(cursor.getString(cursor.getColumnIndex(filePathColumn[0])));
-            String syncFolder = Preferences.getSyncFolder();
-            if (!syncFolder.isEmpty()) {
+            String syncFolder = "";
+            try {
+                syncFolder = Preferences.getSyncFolder();
                 File dataFolder = new File(syncFolder);
                 File dst = new File(dataFolder, src.getName());
                 try {
@@ -574,6 +574,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     e.printStackTrace();
                     Toast.makeText(this, String.format(getString(R.string.error_copy_file), dataFolder.getAbsoluteFile()), Toast.LENGTH_LONG).show();
                 }
+            } catch (Exception e) {
+                Toast.makeText(this, String.format(getString(R.string.error_work_folder), e.getLocalizedMessage()), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
             }
             cursor.close();
         }

@@ -16,13 +16,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import ru.crew4dev.forksnknife.ConfirmDialogFragment;
 import ru.crew4dev.forksnknife.ConfirmDialogImportFragment;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
-
-import java.util.List;
 
 import static ru.crew4dev.forksnknife.MyApp.getAppContext;
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         table = (TableLayout) findViewById(R.id.main_rec_table);
         table.requestLayout();     // Not sure if this is needed.
 
-        MyApp.loadRecipesJSon(true);
+        MyApp.loadRecipesJSon(true, this);
         registerForContextMenu(table);
     }
 
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 if (MyApp.saveRecipesJSon(this, false))
                     Toast.makeText(this, getString(R.string.export_succsess), Toast.LENGTH_LONG).show();
                 else
-                    Toast.makeText(this, getString(R.string.export_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.error_export), Toast.LENGTH_LONG).show();
                 return true;
             case R.id.menu_import:
                 if (MyApp.getRecipes().size() > 0) {
@@ -208,11 +208,11 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     }
 
     private void loadRecipes() {
-        if (MyApp.loadRecipesJSon(false)) {
+        if (MyApp.loadRecipesJSon(false, this)) {
             Toast.makeText(this, getString(R.string.import_succsess), Toast.LENGTH_LONG).show();
             MyApp.saveRecipesJSon(this, true);
             fillTable();
         } else
-            Toast.makeText(this, getString(R.string.import_error), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_import), Toast.LENGTH_LONG).show();
     }
 }
