@@ -1,6 +1,8 @@
 package ru.crew4dev.forksnknife.Activites;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -214,5 +216,19 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             fillTable();
         } else
             Toast.makeText(this, getString(R.string.error_import), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length == 0) return;
+        switch (requestCode) {
+            case MyApp.SDCARD_PERMISSION:
+                if (this.checkSelfPermission(Manifest.permission_group.LOCATION) != PackageManager.PERMISSION_GRANTED)
+                    MyApp.permissionRequested = false;
+                break;
+            default:
+                //initSecuredComponents();
+        }
     }
 }

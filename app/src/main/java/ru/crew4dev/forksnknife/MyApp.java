@@ -1,9 +1,11 @@
 package ru.crew4dev.forksnknife;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -12,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -53,6 +56,9 @@ public class MyApp extends Application {
     private static Activity currentActivity;
     private static List<Recipe> recipes;
     private final static Random random = new Random();
+
+    public static boolean permissionRequested = false;
+    public static final int SDCARD_PERMISSION = 1;
 
     //    private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
@@ -190,6 +196,8 @@ public class MyApp extends Application {
     public static boolean loadRecipesJSon(boolean isLocal, Context context) {
         BufferedInputStream fis = null;
         ObjectInputStream is = null;
+        if(!permissionGranted())
+            return false;
         try {
             if (isLocal) {
                 //fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
@@ -784,5 +792,16 @@ public class MyApp extends Application {
                 throw new SecurityException(path);
             }
         }
+    }
+
+    private static boolean permissionGranted() {
+        if (Build.VERSION.SDK_INT < 23) return true;
+        if (ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return true;
+        if (!permissionRequested) {
+            MyApp.getCurrentActivity().requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MyApp.SDCARD_PERMISSION);
+            permissionRequested = true;
+        }
+        return ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 }
