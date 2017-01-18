@@ -55,7 +55,7 @@
     <!-- Example General settings -->
     <string name="pref_header_general">Главные</string>
 
-  <!-- Example settings for Data & Sync -->
+    <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
     <string name="pref_title_sync_folder">Хранение данных</string>
 
@@ -65,4 +65,8 @@
     <string name="settings">Настройки</string>
     <string name="unknown_code_version">Не определено</string>
     <string name="code_version_prefix">Текущая версия</string>
+
+    <string name="title_activity_coocking">CoockingActivity</string>
+    <string name="next_button">Дальше</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

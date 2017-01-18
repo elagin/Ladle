@@ -45,6 +45,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import ru.crew4dev.forksnknife.Activites.AboutActivity;
+import ru.crew4dev.forksnknife.Activites.CoockingActivity;
 import ru.crew4dev.forksnknife.Activites.EditRecActivity;
 import ru.crew4dev.forksnknife.Activites.SettingsActivity;
 import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
@@ -423,6 +424,14 @@ public class MyApp extends Application {
         getCurrentActivity().startActivity(intent);
     }
 
+    public static void toCoocking(int id) {
+        Intent intent = new Intent(getAppContext(), CoockingActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("recipeID", id);
+        intent.putExtras(bundle);
+        getCurrentActivity().startActivity(intent);
+    }
+
     public static void toAbout() {
         Intent intent = new Intent(getAppContext(), AboutActivity.class);
         getCurrentActivity().startActivity(intent);
@@ -506,13 +515,14 @@ public class MyApp extends Application {
     }
 
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
-
-        //view еще не размещен.
-        if (view.getWidth() == 0)
-            return true;
+        //view еще не размещен, но тогда не будут вставляться в View у которых не используется getViewTreeObserver
+//        if (view.getWidth() == 0)
+//            return true;
 
         int targetW = view.getWidth();
+        if (targetW == 0) targetW = 100;
         int targetH = view.getHeight();
+        if (targetH == 0) targetH = 100;
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();

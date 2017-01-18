@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 row.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        showNoticeDeleteRecipeDialog(v.getId());
+                        //showNoticeDeleteRecipeDialog(v.getId());
+                        MyApp.toCoocking(v.getId());
                         return true;
                     }
                 });
