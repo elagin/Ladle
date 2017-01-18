@@ -118,6 +118,7 @@ public class AboutActivity extends AppCompatActivity {
         }
         List<String> mounts = MyApp.getExternalMounts();
         if (!mounts.isEmpty()) {
+            msg.append("\n");
             msg.append("Монтированные: ");
             for (String item : mounts) {
                 msg.append(item);

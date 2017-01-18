@@ -90,14 +90,14 @@ public class MyApp extends Application {
 
     private static void readStorages() {
         File dataDir = MyApp.getAppContext().getFilesDir();
-        if(dataDir != null && dataDir.canWrite())
+        if (dataDir != null && dataDir.canWrite())
             storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
         File internal = MyApp.getInternalStorage();
-        if(internal != null && internal.canWrite()) {
+        if (internal != null && internal.canWrite()) {
             storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
         }
         File external = MyApp.getExternalStorage();
-        if(external != null && external.canWrite()) {
+        if (external != null && external.canWrite()) {
             storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
         }
     }
@@ -224,7 +224,7 @@ public class MyApp extends Application {
     public static boolean loadRecipesJSon(boolean isLocal, Context context) {
         BufferedInputStream fis = null;
         ObjectInputStream is = null;
-        if(!permissionGranted())
+        if (!permissionGranted())
             return false;
         try {
             if (isLocal) {
@@ -506,53 +506,59 @@ public class MyApp extends Application {
     }
 
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
-        //ImageView mImageView = (ImageView) findViewById(R.id.imageView2);
-        // Get the dimensions of the View
-        //View parent = (View) view.getParent();
 
-        //ViewParent parent = view.getParent();
-        //ViewGroup.LayoutParams layoutParams = parent.getLayoutParams();
+        //view еще не размещен.
+        if (view.getWidth() == 0)
+            return true;
 
         int targetW = view.getWidth();
-        if (targetW == 0)
-            targetW = 100;
         int targetH = view.getHeight();
-        if (targetH == 0)
-            targetH = 100;
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
 
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+        int photoW;
+        int photoH;
+        float degree;
+        try {
+            ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
+            String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+            degree = getDegree(exifOrientation);
+            BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+            if (degree == 90 || degree == 270) {
+                photoW = bmOptions.outHeight;
+                photoH = bmOptions.outWidth;
+            } else {
+                photoW = bmOptions.outWidth;
+                photoH = bmOptions.outHeight;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        final int scaleFactor = Math.min(Math.round((float) photoW / targetW), Math.round((float) photoH / targetH));
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
-        //Bitmap bitmap = decodeSampledBitmapFromUri(mCurrentPhotoPath, targetW, targetH);
-        try {
-            Bitmap bitmap;
-            ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
-            String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-            if (bitmap != null) {
-                float degree = getDegree(exifOrientation);
-                if (degree != 0)
-                    bitmap = createRotatedBitmap(bitmap, degree);
-                if (bitmap != null) {
-                    view.setImageBitmap(bitmap);
-                    //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
-                    return true;
-                }
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        if (bitmap != null) {
+            if (degree != 0) {
+                bitmap = Bitmap.createScaledBitmap(bitmap, photoH / scaleFactor, photoW / scaleFactor, false);
+                bitmap = createRotatedBitmap(bitmap, degree);
+            } else {
+                bitmap = Bitmap.createScaledBitmap(bitmap, photoW / scaleFactor, photoH / scaleFactor, false);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (bitmap != null) {
+                view.setImageBitmap(bitmap);
+                //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
+                return true;
+            }
         }
+
         return false;
     }
 
