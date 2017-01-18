@@ -4,6 +4,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -65,7 +66,7 @@ public class AboutActivity extends AppCompatActivity {
                     about_tech_info.setVisibility(View.VISIBLE);
             }
         });
-        MyApp.getStorageDirectories();
+        //MyApp.getStorageDirectories();
         //MyApp.getSdCards();
         StringBuilder msg = new StringBuilder();
 /*
@@ -92,7 +93,6 @@ public class AboutActivity extends AppCompatActivity {
         }
 */
         msg.append(android.os.Build.MODEL).append(" ").append(Build.VERSION.RELEASE).append("\n");
-
         msg.append("Данные: ");
         try {
             msg.append(Preferences.getSyncFolder());
@@ -104,17 +104,17 @@ public class AboutActivity extends AppCompatActivity {
 
         File internal = MyApp.getInternalStorage();
         if (internal != null) {
+            msg.append("\n");
             msg.append("Внутреняя память: ");
             int pos = internal.getAbsolutePath().lastIndexOf("/");
             msg.append(internal.getAbsolutePath().substring(0, pos));
-            msg.append("\n");
         }
         File external = MyApp.getExternalStorage();
         if (external != null) {
+            msg.append("\n");
             msg.append("Внешняя память: ");
             int pos = external.getAbsolutePath().lastIndexOf("/");
             msg.append(external.getAbsolutePath().substring(0, pos));
-            msg.append("\n");
         }
         List<String> mounts = MyApp.getExternalMounts();
         if (!mounts.isEmpty()) {
@@ -123,6 +123,20 @@ public class AboutActivity extends AppCompatActivity {
                 msg.append(item);
                 msg.append("\n");
             }
+        }
+
+        File dataDir = MyApp.getAppContext().getFilesDir();
+        if (dataDir != null && dataDir.canWrite()) {
+            msg.append("\n");
+            msg.append("getFilesDir: ");
+            msg.append(dataDir.getAbsolutePath());
+        }
+
+        File externalStoragePublicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        if (externalStoragePublicDirectory.canWrite()) {
+            msg.append("\n");
+            msg.append("externalStoragePublicDirectory: ");
+            msg.append(externalStoragePublicDirectory.getAbsolutePath());
         }
 
 //        String androidStorageName = "ANDROID_STORAGE";

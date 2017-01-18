@@ -21,12 +21,16 @@ import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.R;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import static ru.crew4dev.forksnknife.MyApp.DATA_STORAGE;
+import static ru.crew4dev.forksnknife.MyApp.EXTERNAL_STORAGE;
+import static ru.crew4dev.forksnknife.MyApp.INTERNAL_STORAGE;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -60,7 +64,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                         index >= 0
                                 ? listPreference.getEntries()[index]
                                 : null);
-
+                //return false; for rollback
             } else if (preference instanceof RingtonePreference) {
                 // For ringtone preferences, look up the correct display value
                 // using RingtoneManager.
@@ -207,16 +211,26 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             List<String> entries = new ArrayList<>();
             List<String> entryValues = new ArrayList<>();
 
-            File internal = MyApp.getInternalStorage();
-            if(internal != null) {
-                entries.add("Внутреняя память");
-                entryValues.add(internal.getAbsolutePath());
+            final Map<Integer, String> storages = MyApp.getStorages();
+            for (Map.Entry<Integer, String> entry : storages.entrySet())
+            {
+                switch (entry.getKey()) {
+                    case DATA_STORAGE:
+                        entries.add("Устройство");
+                        entryValues.add(entry.getValue());
+                    break;
+                    case INTERNAL_STORAGE:
+                        entries.add("Внутреняя память");
+                        entryValues.add(entry.getValue());
+                        break;
+                    case EXTERNAL_STORAGE:
+                        entries.add("Карта памяти");
+                        entryValues.add(entry.getValue());
+                        break;
+                    default:
+                }
             }
-            File external = MyApp.getExternalStorage();
-            if(external != null) {
-                entries.add("Карта памяти");
-                entryValues.add(external.getAbsolutePath());
-            }
+
             lp.setEntries(entries.toArray(new CharSequence[entries.size()]));
             lp.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
 

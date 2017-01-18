@@ -34,9 +34,11 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
@@ -60,6 +62,12 @@ public class MyApp extends Application {
     public static boolean permissionRequested = false;
     public static final int SDCARD_PERMISSION = 1;
 
+    public static final int DATA_STORAGE = 0;
+    public static final int INTERNAL_STORAGE = 1;
+    public static final int EXTERNAL_STORAGE = 2;
+
+    private static Map<Integer, String> storages = new HashMap<>();
+
     //    private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
     private final static String exportFolderName = "Forksnknife";
@@ -77,7 +85,27 @@ public class MyApp extends Application {
         super.onCreate();
         recipes = new ArrayList<>();
         new Preferences(this);
+        readStorages();
     }
+
+    private static void readStorages() {
+        File dataDir = MyApp.getAppContext().getFilesDir();
+        if(dataDir != null && dataDir.canWrite())
+            storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
+        File internal = MyApp.getInternalStorage();
+        if(internal != null && internal.canWrite()) {
+            storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
+        }
+        File external = MyApp.getExternalStorage();
+        if(external != null && external.canWrite()) {
+            storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
+        }
+    }
+
+    public static Map<Integer, String> getStorages() {
+        return storages;
+    }
+
 
     public static Context getAppContext() {
         return instance.getApplicationContext();
@@ -324,17 +352,17 @@ public class MyApp extends Application {
 //        return new File(dir.getAbsolutePath() + File.separator + fileNameRecipesJSon);
 //    }
 
-    public static List<String> getStoreList() {
-        List<String> res = new ArrayList<>();
-        String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
-        List<String> pathList = getExternalMounts();
-        for (String item : pathList) {
-            String sdCard = pathList.get(0).substring(pathList.get(0).lastIndexOf(File.separator));
-            String path = externalStorageDirectory.substring(0, externalStorageDirectory.lastIndexOf(File.separator));
-            res.add(path + sdCard + File.separator + exportFolderName);
-        }
-        return res;
-    }
+//    public static List<String> getStoreList() {
+//        List<String> res = new ArrayList<>();
+//        String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        List<String> pathList = getExternalMounts();
+//        for (String item : pathList) {
+//            String sdCard = pathList.get(0).substring(pathList.get(0).lastIndexOf(File.separator));
+//            String path = externalStorageDirectory.substring(0, externalStorageDirectory.lastIndexOf(File.separator));
+//            res.add(path + sdCard + File.separator + exportFolderName);
+//        }
+//        return res;
+//    }
 
     public static File getInternalStorage() {
         return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
@@ -799,7 +827,7 @@ public class MyApp extends Application {
         if (ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
             return true;
         if (!permissionRequested) {
-            MyApp.getCurrentActivity().requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, MyApp.SDCARD_PERMISSION);
+            MyApp.getCurrentActivity().requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MyApp.SDCARD_PERMISSION);
             permissionRequested = true;
         }
         return ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
