@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:yourapp="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_coocking_rec"
+        android:icon="@android:drawable/ic_media_play"
+        android:title="@string/title_activity_coocking"
+        android:visible="true"
+        yourapp:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_share_rec"
         android:icon="@android:drawable/ic_menu_share"
         android:title="@string/share"

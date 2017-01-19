@@ -1,6 +1,4 @@
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -10,7 +8,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/edit_step_number"
+            android:id="@+id/coocking_step_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
@@ -22,7 +20,7 @@
             android:layout_height="wrap_content"
             android:background="@android:drawable/editbox_background"
             android:orientation="vertical"
-            android:layout_toRightOf="@+id/edit_step_number">
+            android:layout_toRightOf="@+id/coocking_step_number">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -31,13 +29,13 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/step_photo"
+                    android:id="@+id/coocking_step_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_menu_camera" />
 
                 <TextView
-                    android:id="@+id/edit_step_time"
+                    android:id="@+id/coocking_step_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -49,7 +47,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/edit_step_descr"
+                android:id="@+id/coocking_step_descr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

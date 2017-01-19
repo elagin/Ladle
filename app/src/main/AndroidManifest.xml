@@ -69,8 +69,8 @@
         <activity
             android:name="ru.crew4dev.forksnknife.Activites.CoockingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_coocking"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:label="@string/title_activity_coocking">
+        </activity>
     </application>
 
 </manifest>

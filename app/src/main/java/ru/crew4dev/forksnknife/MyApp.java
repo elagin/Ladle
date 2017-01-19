@@ -568,7 +568,6 @@ public class MyApp extends Application {
                 return true;
             }
         }
-
         return false;
     }
 

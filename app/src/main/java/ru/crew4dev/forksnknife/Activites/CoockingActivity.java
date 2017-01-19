@@ -1,7 +1,6 @@
 package ru.crew4dev.forksnknife.Activites;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -70,6 +69,7 @@ public class CoockingActivity extends AppCompatActivity {
     };
     private boolean mVisible;
 
+    private Recipe recipe;
     private Integer recipeID;
     private Integer stepNumber;
 
@@ -116,6 +116,26 @@ public class CoockingActivity extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        findViewById(R.id.next_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stepNumber < recipe.getStepList().size() - 1) {
+                    stepNumber = stepNumber + 1;
+                    update();
+                }
+            }
+        });
+
+        findViewById(R.id.prev_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stepNumber > 0) {
+                    stepNumber = stepNumber - 1;
+                    update();
+                }
+            }
+        });
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -184,22 +204,32 @@ public class CoockingActivity extends AppCompatActivity {
 
     private void update() {
         if (recipeID != null) {
-            Recipe recipe = MyApp.getRecipe(recipeID);
-            Recipe.Step step = recipe.getStepList().get(stepNumber);
-            TextView edit_step_time = (TextView) findViewById(R.id.edit_step_time);
-            if (step.time != null && step.time > 0)
-                edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
-            else
-                edit_step_time.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.edit_step_descr)).setText(step.desc);
+            recipe = MyApp.getRecipe(recipeID);
+            if (recipe.getStepList().size() > 0) {
+                Recipe.Step step = recipe.getStepList().get(stepNumber);
 
-            Integer id = stepNumber + 1;
-            ((TextView) findViewById(R.id.edit_step_number)).setText(id.toString());
-            if (step.fileName != null) {
-                Bitmap bm = MyApp.decodeSampledBitmapFromUri(step.fileName, 100, 100);
-                ((ImageView) findViewById(R.id.step_photo)).setImageBitmap(bm);
+                TextView edit_step_time = (TextView) findViewById(R.id.coocking_step_time);
+                if (step.time != null && step.time > 0)
+                    edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
+                else
+                    edit_step_time.setVisibility(View.GONE);
+
+                ((TextView) findViewById(R.id.coocking_step_descr)).setText(step.desc);
+
+                Integer id = stepNumber + 1;
+                Integer totalSteps = recipe.getStepList().size();
+                ((TextView) findViewById(R.id.coocking_step_number)).setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
+                if (step.fileName != null && step.fileName.length() > 0) {
+                    MyApp.setPic(step.fileName, (ImageView) findViewById(R.id.coocking_step_photo));
+                } else {
+                    (findViewById(R.id.coocking_step_photo)).setVisibility(View.GONE);
+                }
+                findViewById(R.id.next_button).setEnabled(stepNumber < recipe.getStepList().size() - 1);
+                findViewById(R.id.prev_button).setEnabled(stepNumber != 0);
             } else {
-                (findViewById(R.id.step_photo)).setVisibility(View.GONE);
+                findViewById(R.id.coocking_step_photo).setVisibility(View.GONE);
+                findViewById(R.id.next_button).setVisibility(View.GONE);
+                findViewById(R.id.prev_button).setVisibility(View.GONE);
             }
         }
     }

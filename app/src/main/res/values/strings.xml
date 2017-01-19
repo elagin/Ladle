@@ -12,6 +12,7 @@
     <string name="rec_unit_ing_is_empty">Не указаны единицы измерения.</string>
     <string name="rec_name_is_empty">Не указано название рецепта.</string>
     <string name="rec_step_descr_is_empty">В шаге %1$s не указано описание.</string>
+    <string name="rec_steps_empty">Не создано ни одного шага.</string>
     <string name="delete">Удалить</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
@@ -50,6 +51,8 @@
     <string name="tech_info">Тех. информация</string>
     <string name="title_activity_settings">Настройки</string>
 
+    <string name="coocking_step_info">%1$s из %2$s</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
@@ -66,7 +69,8 @@
     <string name="unknown_code_version">Не определено</string>
     <string name="code_version_prefix">Текущая версия</string>
 
-    <string name="title_activity_coocking">CoockingActivity</string>
+    <string name="title_activity_coocking">Приготовление</string>
+    <string name="prev_button">Назад</string>
     <string name="next_button">Дальше</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
