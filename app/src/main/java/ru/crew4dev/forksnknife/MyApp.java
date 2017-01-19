@@ -507,12 +507,10 @@ public class MyApp extends Application {
 
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
 
-        //view еще не размещен.
-        if (view.getWidth() == 0)
-            return true;
-
         int targetW = view.getWidth();
+        if (targetW == 0) targetW = 100;
         int targetH = view.getHeight();
+        if (targetH == 0) targetH = 100;
 
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
