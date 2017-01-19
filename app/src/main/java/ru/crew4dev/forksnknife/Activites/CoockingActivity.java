@@ -1,15 +1,19 @@
 package ru.crew4dev.forksnknife.Activites;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ru.crew4dev.forksnknife.AnimateViews;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
@@ -38,6 +42,10 @@ public class CoockingActivity extends AppCompatActivity {
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+    private ImageButton coocking_step_photo;
+    private ImageButton float_photo;
+    private View leftCreateWizard;
+
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -68,6 +76,8 @@ public class CoockingActivity extends AppCompatActivity {
         }
     };
     private boolean mVisible;
+    private boolean inCreate;
+    private boolean isVisiblePhoto;
 
     private Recipe recipe;
     private Integer recipeID;
@@ -99,8 +109,9 @@ public class CoockingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_coocking);
-
+        inCreate = true;
         mVisible = true;
+        isVisiblePhoto = false;
         //mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
@@ -109,6 +120,50 @@ public class CoockingActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 toggle();
+            }
+        });
+
+        coocking_step_photo = (ImageButton) findViewById(R.id.coocking_step_photo);
+        coocking_step_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isVisiblePhoto) {
+                    AnimateViews.hide(leftCreateWizard, AnimateViews.LEFT);
+                    isVisiblePhoto = false;
+                }
+                else {
+                    AnimateViews.show(leftCreateWizard, AnimateViews.LEFT);
+                    isVisiblePhoto = true;
+                }
+            }
+        });
+
+        coocking_step_photo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Removing layout listener to avoid multiple calls
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    coocking_step_photo.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    coocking_step_photo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                update();
+            }
+        });
+
+        leftCreateWizard = findViewById(R.id.alignment_type);
+        float_photo = (ImageButton)findViewById(R.id.float_photo);
+        float_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isVisiblePhoto) {
+                    AnimateViews.hide(leftCreateWizard, AnimateViews.LEFT);
+                    isVisiblePhoto = false;
+                }
+//                else {
+//                    AnimateViews.show(leftCreateWizard, AnimateViews.LEFT);
+//                    isVisiblePhoto = true;
+//                }
             }
         });
 
@@ -199,6 +254,23 @@ public class CoockingActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (inCreate) {
+            ViewTreeObserver vto = leftCreateWizard.getViewTreeObserver();
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    leftCreateWizard.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    leftCreateWizard.setTranslationX(-leftCreateWizard.getWidth());
+//                    rightCreateWizard.setTranslationX(rightCreateWizard.getWidth());
+//                    bottomCreate.setTranslationY(bottomCreate.getHeight());
+//                    textNotify.setTranslationY(-textNotify.getHeight());
+//                    AnimateViews.hide(targetView);
+//                    AnimateViews.show(leftMain);
+//                    myApp.getMap().goToUser();
+                    inCreate = false;
+                }
+            });
+        }
         update();
     }
 
@@ -209,8 +281,10 @@ public class CoockingActivity extends AppCompatActivity {
                 Recipe.Step step = recipe.getStepList().get(stepNumber);
 
                 TextView edit_step_time = (TextView) findViewById(R.id.coocking_step_time);
-                if (step.time != null && step.time > 0)
+                if (step.time != null && step.time > 0) {
                     edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
+                    edit_step_time.setVisibility(View.VISIBLE);
+                }
                 else
                     edit_step_time.setVisibility(View.GONE);
 
@@ -220,10 +294,11 @@ public class CoockingActivity extends AppCompatActivity {
                 Integer totalSteps = recipe.getStepList().size();
                 ((TextView) findViewById(R.id.coocking_step_number)).setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
                 if (step.fileName != null && step.fileName.length() > 0) {
-                    MyApp.setPic(step.fileName, (ImageView) findViewById(R.id.coocking_step_photo));
-                    (findViewById(R.id.coocking_step_photo)).setVisibility(View.VISIBLE);
+                    //MyApp.setPic(step.fileName, (ImageView) findViewById(R.id.coocking_step_photo));
+                    MyApp.setPic(step.fileName, (ImageView) findViewById(R.id.float_photo));
+                    //(findViewById(R.id.coocking_step_photo)).setVisibility(View.VISIBLE);
                 } else {
-                    (findViewById(R.id.coocking_step_photo)).setVisibility(View.GONE);
+                    //(findViewById(R.id.coocking_step_photo)).setVisibility(View.GONE);
                 }
                 findViewById(R.id.next_button).setEnabled(stepNumber < recipe.getStepList().size() - 1);
                 findViewById(R.id.prev_button).setEnabled(stepNumber != 0);

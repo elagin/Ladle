@@ -12,6 +12,23 @@
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/alignment_type"
+        android:gravity="center_vertical"
+        android:background="#22000000">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/float_photo"
+            android:background="@drawable/ic_menu_camera"
+            android:alpha="0.4"
+            android:layout_margin="8dp" />
+
+    </LinearLayout>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -29,24 +46,26 @@
 
         <ImageButton
             android:id="@+id/coocking_step_photo"
-            android:layout_width="336dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_menu_camera"
-            tools:layout_editor_absoluteX="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/coocking_step_number" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/buttons_panel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="1.0" />
 
         <TextView
             android:id="@+id/coocking_step_time"
-            android:layout_width="0dp"
+            android:layout_width="336dp"
             android:layout_height="wrap_content"
             android:maxLines="1"
             tools:layout_editor_absoluteX="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/coocking_step_photo"/>
+            app:layout_constraintTop_toBottomOf="@+id/coocking_step_number"/>
 
         <TextView
             android:id="@+id/coocking_step_descr"
-            android:layout_width="0dp"
+            android:layout_width="336dp"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:textSize="20dp"
@@ -54,16 +73,17 @@
             app:layout_constraintTop_toBottomOf="@+id/coocking_step_time"/>
 
         <LinearLayout
+            android:id="@+id/buttons_panel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_green_dark"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/coocking_step_descr"
             android:layout_marginEnd="16dp"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginStart="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1.0">
 
             <Button
                 android:id="@+id/prev_button"
