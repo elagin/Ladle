@@ -55,7 +55,7 @@ public class CoockingActivity extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
-    private View mControlsView;
+    //private View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
         public void run() {
@@ -64,7 +64,7 @@ public class CoockingActivity extends AppCompatActivity {
             if (actionBar != null) {
                 actionBar.show();
             }
-            mControlsView.setVisibility(View.VISIBLE);
+            //mControlsView.setVisibility(View.VISIBLE);
         }
     };
     private boolean mVisible;
@@ -101,7 +101,7 @@ public class CoockingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_coocking);
 
         mVisible = true;
-        mControlsView = findViewById(R.id.fullscreen_content_controls);
+        //mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
 
         // Set up the user interaction to manually show or hide the system UI.
@@ -115,7 +115,7 @@ public class CoockingActivity extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         findViewById(R.id.next_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +168,7 @@ public class CoockingActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
-        mControlsView.setVisibility(View.GONE);
+        //mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
@@ -221,6 +221,7 @@ public class CoockingActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.coocking_step_number)).setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
                 if (step.fileName != null && step.fileName.length() > 0) {
                     MyApp.setPic(step.fileName, (ImageView) findViewById(R.id.coocking_step_photo));
+                    (findViewById(R.id.coocking_step_photo)).setVisibility(View.VISIBLE);
                 } else {
                     (findViewById(R.id.coocking_step_photo)).setVisibility(View.GONE);
                 }
