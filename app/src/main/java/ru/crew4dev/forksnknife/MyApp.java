@@ -27,6 +27,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -115,29 +116,6 @@ public class MyApp extends Application {
         return instance.getApplicationContext().getFilesDir().getAbsolutePath();
     }
 
-    /*
-        private static void saveRecipes() {
-            FileOutputStream fos = null;
-            ObjectOutputStream os = null;
-
-            try {
-                fos = getAppContext().openFileOutput(fileNameRecipes, Context.MODE_PRIVATE);
-                os = new ObjectOutputStream(fos);
-                os.writeObject(recipes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (os != null)
-                        os.close();
-                    if (fos != null)
-                        fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    */
     public static boolean saveRecipesJSon(Context context, boolean isLocal) {
         BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
@@ -177,9 +155,63 @@ public class MyApp extends Application {
         }
     }
 
+    /*
+        private static void saveRecipes() {
+            FileOutputStream fos = null;
+            ObjectOutputStream os = null;
+
+            try {
+                fos = getAppContext().openFileOutput(fileNameRecipes, Context.MODE_PRIVATE);
+                os = new ObjectOutputStream(fos);
+                os.writeObject(recipes);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (os != null)
+                        os.close();
+                    if (fos != null)
+                        fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    */
+    public static boolean saveRecipeJSon(Context context, String path, Recipe recipe) {
+        BufferedOutputStream fos = null;
+        ObjectOutputStream os = null;
+        try {
+            fos = new BufferedOutputStream(new FileOutputStream(path));
+            os = new ObjectOutputStream(fos);
+            Recipe saveRec = new Recipe(recipe);
+            os.writeObject(getJSonData(saveRec));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            return false;
+        } finally {
+            try {
+                if (os != null)
+                    os.close();
+                if (fos != null)
+                    fos.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private static String getJSonData() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(new RecipeJsonDataHolder(recipes));
+        return gson.toJson(new RecipesJsonDataHolder(recipes));
+    }
+
+    private static String getJSonData(Recipe recipe) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(new RecipeJsonDataHolder(recipe));
     }
 
     /* Checks if external storage is available for read and write */
@@ -236,7 +268,7 @@ public class MyApp extends Application {
             }
             is = new ObjectInputStream(fis);
             String json = (String) is.readObject();
-            RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
+            RecipesJsonDataHolder holder = new Gson().fromJson(json, RecipesJsonDataHolder.class);
             if (holder.mContactList.size() > 0)
                 recipes = holder.mContactList;
             return true;
@@ -260,9 +292,17 @@ public class MyApp extends Application {
     }
 
     private static class RecipeJsonDataHolder {
+        public Recipe mReciple;
+
+        public RecipeJsonDataHolder(Recipe reciple) {
+            this.mReciple = reciple;
+        }
+    }
+
+    private static class RecipesJsonDataHolder {
         public List<Recipe> mContactList;
 
-        public RecipeJsonDataHolder(List<Recipe> mContactList) {
+        public RecipesJsonDataHolder(List<Recipe> mContactList) {
             this.mContactList = mContactList;
         }
     }
@@ -280,6 +320,7 @@ public class MyApp extends Application {
         return null;
     }
 
+    //Записываем отредактированный рецепт в список.
     public static void updateRecipe(Recipe recipe) {
         for (int i = 0; i < recipes.size(); i++) {
             Recipe oldRecipe = recipes.get(i);
@@ -375,6 +416,7 @@ public class MyApp extends Application {
 //        String strSDCardPath = System.getenv("EXTERNAL_SDCARD_STORAGE");
 //        String strSDCardPath2 = System.getenv("MEDIA_STORAGE");
 //        String strSDCardPath3 = System.getenv("ENV_MEDIA_STORAGE");
+        //Environment.DIRECTORY_DOWNLOADS)
         String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
         //externalStorageDirectory.substring(externalStorageDirectory.lastIndexOf(File.separator))+ File.separator + pathList.get(0);
 //        return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
@@ -719,7 +761,6 @@ public class MyApp extends Application {
         return System.getenv("SECONDARY_STORAGE");
     }
 
-
     public static List<String> getSdCards() {
         List<String> sVold = new ArrayList<>();
         //sVold.add("/mnt/sdcard");
@@ -835,5 +876,78 @@ public class MyApp extends Application {
             permissionRequested = true;
         }
         return ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static int loadRecipe(Context context) {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        String[] list = dir.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.contains(".fnk");
+            }
+        });
+        int insertCount = 0;
+        for (int i = 0; i < list.length; i++) {
+            File file = new File(dir.getAbsolutePath() + File.separator + list[i]);
+            Recipe newRec = new Recipe(loadOneRecipeJSon(file.getAbsolutePath(), context));
+            if (newRec != null) {
+                newRec.setUid(MyApp.newId());
+                List<Recipe.Step> recipleList = newRec.getStepList();
+                for (Recipe.Step step : recipleList) {
+                    step.fileName = null;
+                }
+                recipes.add(newRec);
+                file.delete();
+                insertCount++;
+            }
+        }
+        if(insertCount > 0)
+            saveRecipesJSon(context, true);
+        return insertCount;
+    }
+
+    public static Recipe loadOneRecipeJSon(String path, Context context) {
+        BufferedInputStream fis = null;
+        ObjectInputStream is = null;
+        if (!permissionGranted())
+            return null;
+        try {
+            fis = new BufferedInputStream(new FileInputStream(path));
+            is = new ObjectInputStream(fis);
+            String json = (String) is.readObject();
+            RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
+            if (holder != null && holder.mReciple != null) {
+                return holder.mReciple;
+            }
+            return null;
+        } catch (Exception e) {
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                    if (fis != null) {
+                        fis.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void email(Activity activity, String path, String name, int requestCode) {
+        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent.setType("*/*");
+        StringBuilder subj = new StringBuilder();
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subj.append(name).append(" - ").append(activity.getString(R.string.app_name)).toString());
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                String.format(activity.getString(R.string.share_manual), activity.getString(R.string.app_name), activity.getString(R.string.import_rec)));
+        File attachment = new File(path);
+        Uri uri = Uri.fromFile(attachment);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        activity.startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), requestCode);
     }
 }

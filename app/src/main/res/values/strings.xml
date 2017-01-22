@@ -28,6 +28,7 @@
     <string name="about_info">Приложение для хранения кулинарных рецептов.</string>
     <string name="feedback"><![CDATA[<a href=\"mailto:crew4dev@gmail.com\">Связаться с автором.</a>]]></string>
     <string name="import_succsess">Данные успешно импортированы.</string>
+    <string name="import_succsess_count">Добавлено %1$d рецептов.</string>
     <string name="export_succsess">Данные успешно экспртированы.</string>
     <string name="recipe">Рецепт:</string>
     <string name="edit">редактировать</string>
@@ -49,6 +50,7 @@
     <string name="rec_tag">Метки</string>
     <string name="tech_info">Тех. информация</string>
     <string name="title_activity_settings">Настройки</string>
+    <string name="share_manual">Пожалуйста, сохраните прикрепленный файл на ваше устройство. Запустите приложение %1$s и в главном меню выберите пункт %2$s.</string>
 
     <!-- Strings related to Settings -->
 
@@ -65,4 +67,7 @@
     <string name="settings">Настройки</string>
     <string name="unknown_code_version">Не определено</string>
     <string name="code_version_prefix">Текущая версия</string>
+    <string name="import_rec">Загрузить рецепт</string>
+    <string name="share_as_text">Поделиться текстом</string>
+    <string name="share_as_file">Поделиться файлом</string>
 </resources>
