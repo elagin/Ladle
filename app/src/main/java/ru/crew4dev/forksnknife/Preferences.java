@@ -29,11 +29,11 @@ public class Preferences {
         String path = preferences.getString(syncFolder, "");
         if (path.isEmpty()) {
             File externalStorage = MyApp.getExternalStorage();
-            if (externalStorage != null) {
+            if (externalStorage != null && externalStorage.canWrite()) {
                 path = externalStorage.getAbsolutePath();
             } else {
                 File internalStorage = MyApp.getInternalStorage();
-                if (internalStorage != null)
+                if (internalStorage != null && internalStorage.canWrite())
                     path = internalStorage.getAbsolutePath();
                 else {
                     path = MyApp.getFileDir();
