@@ -13,6 +13,10 @@
         android:visible="false"
         android:title="@string/import_from_sd"/>
     <item
+        android:id="@+id/menu_import_rec"
+        android:orderInCategory="400"
+        android:title="@string/import_rec"/>
+    <item
         android:id="@+id/menu_clearFolder"
         android:orderInCategory="500"
         android:visible="false"

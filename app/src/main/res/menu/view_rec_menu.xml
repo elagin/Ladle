@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:yourapp="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_share_rec"
-        android:icon="@android:drawable/ic_menu_share"
-        android:title="@string/share"
-        android:visible="true"
-        yourapp:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_edit_rec"
-        android:icon="@android:drawable/ic_menu_edit"
-        android:title="@string/edit"
-        android:visible="true"
-        yourapp:showAsAction="ifRoom"/>
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+        <item
+            android:icon="@android:drawable/ic_menu_share"
+            android:title="@string/share"
+            android:visible="true"
+            yourapp:showAsAction="ifRoom">
+            <menu>
+                <group android:checkableBehavior="single" />
+                <item
+                    android:id="@+id/action_share_rec_as_text"
+                    android:title="@string/share_as_text" />
+                <item
+                    android:id="@+id/action_share_rec_as_file"
+                    android:title="@string/share_as_file" />
+            </menu>
+        </item>
+        <item
+            android:id="@+id/action_edit_rec"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="@string/edit"
+            android:visible="true"
+            yourapp:showAsAction="ifRoom" />
+    </group>
 </menu>
