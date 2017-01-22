@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         if (grantResults.length == 0) return;
         switch (requestCode) {
             case MyApp.SDCARD_PERMISSION:
-                if (this.checkSelfPermission(Manifest.permission_group.LOCATION) != PackageManager.PERMISSION_GRANTED)
+                if (this.checkSelfPermission(Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED)
                     MyApp.permissionRequested = false;
                 break;
             default:

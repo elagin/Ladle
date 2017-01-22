@@ -97,9 +97,11 @@ public class MyApp extends Application {
         if (internal != null && internal.canWrite()) {
             storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
         }
-        File external = MyApp.getExternalStorage();
-        if (external != null && external.canWrite()) {
-            storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
+        if (permissionGranted()) {
+            File external = MyApp.getExternalStorage();
+            if (external != null && external.canWrite()) {
+                storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
+            }
         }
     }
 
@@ -119,7 +121,8 @@ public class MyApp extends Application {
     public static boolean saveRecipesJSon(Context context, boolean isLocal) {
         BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
-
+        if (!permissionGranted())
+            return false;
         try {
             if (isLocal) {
                 //fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
@@ -181,6 +184,8 @@ public class MyApp extends Application {
     public static boolean saveRecipeJSon(Context context, String path, Recipe recipe) {
         BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
+        if (!permissionGranted())
+            return false;
         try {
             fos = new BufferedOutputStream(new FileOutputStream(path));
             os = new ObjectOutputStream(fos);
@@ -409,7 +414,6 @@ public class MyApp extends Application {
         return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
     }
 
-
     public static File getExternalStorage() {
 //        String extStore = System.getenv("EXTERNAL_STORAGE");
 //        String secStore = System.getenv("SECONDARY_STORAGE");
@@ -420,9 +424,8 @@ public class MyApp extends Application {
         String externalStorageDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
         //externalStorageDirectory.substring(externalStorageDirectory.lastIndexOf(File.separator))+ File.separator + pathList.get(0);
 //        return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
-
         List<String> pathList = getExternalMounts();
-        if (pathList.size() > 0) {
+        if (pathList.size() > 0 && permissionGranted()) {
             String sdCard = pathList.get(0).substring(pathList.get(0).lastIndexOf(File.separator));
             String path = externalStorageDirectory.substring(0, externalStorageDirectory.lastIndexOf(File.separator));
             return new File(path + sdCard + File.separator + exportFolderName);
@@ -871,13 +874,13 @@ public class MyApp extends Application {
 
     private static boolean permissionGranted() {
         if (Build.VERSION.SDK_INT < 23) return true;
-        if (ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+        if (ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
             return true;
         if (!permissionRequested) {
             MyApp.getCurrentActivity().requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MyApp.SDCARD_PERMISSION);
             permissionRequested = true;
         }
-        return ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     public static int loadRecipe(Context context) {
@@ -903,7 +906,7 @@ public class MyApp extends Application {
                 insertCount++;
             }
         }
-        if(insertCount > 0)
+        if (insertCount > 0)
             saveRecipesJSon(context, true);
         return insertCount;
     }
