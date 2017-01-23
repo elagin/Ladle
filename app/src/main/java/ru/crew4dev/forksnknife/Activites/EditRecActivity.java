@@ -154,7 +154,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             edit_rec_name.setText(recipe.getName());
             edit_rec_descr.setText(recipe.getDescription());
             edit_rec_tags.setText(recipe.getTags());
-            if (recipe.getSteps().length() > 0)
+            if (recipe.getSteps() != null && recipe.getSteps().length() > 0)
                 edit_rec_steps.setText(recipe.getSteps());
             else
                 edit_rec_steps.setVisibility(View.GONE);

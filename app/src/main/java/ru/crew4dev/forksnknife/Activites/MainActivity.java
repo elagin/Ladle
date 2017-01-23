@@ -57,11 +57,11 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     @Override
     protected void onResume() {
         super.onResume();
-        fillTable();
+        update();
     }
 
-    private void fillTable() {
-        Log.d(TAG, "fillTable");
+    private void update() {
+        Log.d(TAG, "update");
         table.removeAllViews();
         final List<Recipe> recipes = MyApp.getRecipes();
         for (int i = 0; i < recipes.size(); i++) {
@@ -204,6 +204,13 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             case R.id.menu_clearFolder:
                 MyApp.deletePhotos();
                 return true;
+            case R.id.menu_import_rec:
+                int newItems = MyApp.loadRecipe(this);
+                if (newItems > 0) {
+                    update();
+                    Toast.makeText(this, String.format(getString(R.string.import_succsess_count), newItems), Toast.LENGTH_LONG).show();
+                }
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -213,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         if (MyApp.loadRecipesJSon(false, this)) {
             Toast.makeText(this, getString(R.string.import_succsess), Toast.LENGTH_LONG).show();
             MyApp.saveRecipesJSon(this, true);
-            fillTable();
+            update();
         } else
             Toast.makeText(this, getString(R.string.error_import), Toast.LENGTH_LONG).show();
     }
@@ -224,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         if (grantResults.length == 0) return;
         switch (requestCode) {
             case MyApp.SDCARD_PERMISSION:
-                if (this.checkSelfPermission(Manifest.permission_group.LOCATION) != PackageManager.PERMISSION_GRANTED)
+                if (this.checkSelfPermission(Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED)
                     MyApp.permissionRequested = false;
                 break;
             default:

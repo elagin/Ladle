@@ -38,6 +38,11 @@ public class Recipe implements Serializable {
             this.desc = desc;
             this.time = time;
         }
+
+        public Step(Step step) {
+            this.desc = step.desc;
+            this.time = step.time;
+        }
     }
 
     private Integer uid;
@@ -55,6 +60,26 @@ public class Recipe implements Serializable {
     public Recipe() {
         ingredients = new ArrayList<>();
         stepList = new ArrayList<>();
+    }
+
+    public Recipe(Recipe recipe) {
+        this.name = recipe.name;
+        this.description = recipe.description;
+        this.totalTime = recipe.totalTime;
+        this.tags = recipe.tags;
+        this.ingredients = recipe.ingredients;
+        this.stepList = new ArrayList<>(recipe.stepList);
+//        try {
+//            this.stepList = recipe.stepList.
+//        } catch (CloneNotSupportedException e) {
+//            e.printStackTrace();
+//        }
+//        Collections.copy(this.stepList, recipe.stepList);
+//
+        //this.stepList = new CopyOnWriteArrayList<>(recipe.stepList);
+//        for (Step step : this.stepList) {
+//            step.fileName = null;
+//        }
     }
 
     public String getName() {

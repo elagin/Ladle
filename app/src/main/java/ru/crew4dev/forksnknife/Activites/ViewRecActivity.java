@@ -1,5 +1,6 @@
 package ru.crew4dev.forksnknife.Activites;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -16,9 +17,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.List;
 
 import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
 
@@ -35,6 +38,8 @@ public class ViewRecActivity extends AppCompatActivity {
     private ImageView image_main;
 
     private Integer recipeID;
+    private static File shareFile;
+    private static final int RESULT_SHARE_FILE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +94,11 @@ public class ViewRecActivity extends AppCompatActivity {
             case R.id.action_edit_rec:
                 MyApp.toEdit(recipeID);
                 return true;
-            case R.id.action_share_rec:
+            case R.id.action_share_rec_as_text:
                 shareRecipe();
+                return true;
+            case R.id.action_share_rec_as_file:
+                saveRecipe(this, MyApp.getRecipe(recipeID));
                 return true;
             case R.id.action_coocking_rec:
                 MyApp.toCoocking(recipeID);
@@ -113,12 +121,7 @@ public class ViewRecActivity extends AppCompatActivity {
         Integer totalTime = recipe.getTotalTime();
         if (totalTime != null) {
             buffer.append("\n\n");
-            buffer.append(getString(R.string.time)).append(totalTime.toString());
-        }
-        String steps = recipe.getSteps();
-        if (steps.length() > 0) {
-            buffer.append("\n\n");
-            buffer.append(getString(R.string.preparation)).append("\n").append(steps);
+            buffer.append(getString(R.string.time_format_w_mins)).append(totalTime.toString());
         }
 
         List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
@@ -129,6 +132,20 @@ public class ViewRecActivity extends AppCompatActivity {
             buffer.append("\n");
             buffer.append(item.name).append(" ").append(item.count).append(" ").append(item.unit);
         }
+
+        List<Recipe.Step> stepList = recipe.getStepList();
+        if (stepList.size() > 0) {
+            buffer.append("\n\n");
+            buffer.append(getString(R.string.preparation)).append("\n");
+            for (Recipe.Step step : stepList) {
+                if (step.time != null && step.time > 0)
+                    buffer.append(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
+                buffer.append(" - ");
+                buffer.append(step.desc);
+                buffer.append("\n");
+            }
+        }
+
         buffer.append("\n--------\n");
         buffer.append(getString(R.string.about_info));
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -165,7 +182,7 @@ public class ViewRecActivity extends AppCompatActivity {
                 rec_tags_label.setVisibility(View.GONE);
                 rec_tags.setVisibility(View.GONE);
             }
-            if (recipe.getSteps().length() > 0)
+            if (recipe.getSteps() != null && recipe.getSteps().length() > 0)
                 rec_steps.setText(recipe.getSteps());
             else
                 rec_steps.setVisibility(View.GONE);
@@ -206,22 +223,52 @@ public class ViewRecActivity extends AppCompatActivity {
     private void addStep(String fileName, Integer time, String descr) {
         final int index = stepTable.getChildCount();
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.step_view_row, null);
-        TextView edit_step_time = (TextView) row.findViewById(R.id.coocking_step_time);
+        TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
         if (time != null && time > 0)
             edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), time.toString()));
         else
             edit_step_time.setVisibility(View.GONE);
-        ((TextView) row.findViewById(R.id.coocking_step_descr)).setText(descr);
+        ((TextView) row.findViewById(R.id.edit_step_descr)).setText(descr);
 
         Integer stepNumber = index + 1;
-        ((TextView) row.findViewById(R.id.coocking_step_number)).setText(stepNumber.toString());
+        ((TextView) row.findViewById(R.id.edit_step_number)).setText(stepNumber.toString());
         if (fileName != null) {
             Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
-            ((ImageView) row.findViewById(R.id.coocking_step_photo)).setImageBitmap(bm);
+            ((ImageView) row.findViewById(R.id.step_photo)).setImageBitmap(bm);
         } else {
-            (row.findViewById(R.id.coocking_step_photo)).setVisibility(View.GONE);
+            (row.findViewById(R.id.step_photo)).setVisibility(View.GONE);
         }
         row.setId(index);
         stepTable.addView(row);
+    }
+
+    public void saveRecipe(Context context, Recipe recipe) {
+        Long timestamp = System.currentTimeMillis();
+        String newFileName = timestamp.toString();
+        StringBuilder path = new StringBuilder();
+        shareFile = new File(path.append(Preferences.getSyncFolder()).append(File.separator).append(newFileName).append(".fnk").toString());
+        if (MyApp.saveRecipeJSon(context, shareFile.getAbsolutePath(), recipe)) {
+            MyApp.email(this, path.toString(), recipe.getName(), RESULT_SHARE_FILE);
+            shareFile.deleteOnExit();
+            if (!shareFile.exists())
+                shareFile = null;
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case RESULT_SHARE_FILE:
+                try {
+                    // if shareFile exists in memory
+                    if (shareFile != null && shareFile.exists()) {
+                        shareFile.delete();
+                        shareFile = null;
+                    }
+                } catch (Exception e) {
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
