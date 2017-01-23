@@ -112,17 +112,20 @@ public class ViewRecActivity extends AppCompatActivity {
         }
 
         StringBuilder buffer = new StringBuilder();
-        if (recipe.getDescription() != null && recipe.getDescription().length() > 0)
-            buffer.append(recipe.getDescription());
-
+        buffer.append(recipe.getName());
         Integer totalTime = recipe.getTotalTime();
         if (totalTime != null) {
-            buffer.append("\n\n");
-            buffer.append(getString(R.string.time_format_w_mins)).append(totalTime.toString());
+            buffer.append(" - ");
+            buffer.append(getString(R.string.time_format_w_mins, totalTime.toString()));
+        }
+
+        if (recipe.getDescription() != null && recipe.getDescription().length() > 0) {
+            buffer.append("\n");
+            buffer.append(recipe.getDescription());
         }
 
         List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
-        buffer.append("\n\n");
+        buffer.append("\n");
         buffer.append(getString(R.string.rec_ingred));
         for (int i = 0; i < ingredientList.size(); i++) {
             Recipe.Ingredient item = ingredientList.get(i);
@@ -132,14 +135,18 @@ public class ViewRecActivity extends AppCompatActivity {
 
         List<Recipe.Step> stepList = recipe.getStepList();
         if (stepList.size() > 0) {
+            int stepNumber = 1;
             buffer.append("\n\n");
             buffer.append(getString(R.string.preparation)).append("\n");
             for (Recipe.Step step : stepList) {
-                if (step.time != null && step.time > 0)
+                buffer.append(stepNumber).append(") ");
+                if (step.time != null && step.time > 0) {
                     buffer.append(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
-                buffer.append(" - ");
+                    buffer.append(" - ");
+                }
                 buffer.append(step.desc);
                 buffer.append("\n");
+                stepNumber++;
             }
         }
 
