@@ -561,6 +561,9 @@ public class MyApp extends Application {
 
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
         //view еще не размещен, но тогда не будут вставляться в View у которых не используется getViewTreeObserver
+//        if (view.getWidth() == 0)
+//            return true;
+
         int targetW = view.getWidth();
         if (targetW == 0) targetW = 100;
         int targetH = view.getHeight();
