@@ -123,15 +123,14 @@ public class CoockingActivity extends AppCompatActivity {
             }
         });
 
-        coocking_step_photo = (ImageButton) findViewById(R.id.coocking_step_photo);
+        coocking_step_photo = (ImageButton) findViewById(R.id.coocking_toggle_photo);
         coocking_step_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isVisiblePhoto) {
+                if (isVisiblePhoto) {
                     AnimateViews.hide(leftCreateWizard, AnimateViews.LEFT);
                     isVisiblePhoto = false;
-                }
-                else {
+                } else {
                     AnimateViews.show(leftCreateWizard, AnimateViews.LEFT);
                     isVisiblePhoto = true;
                 }
@@ -152,18 +151,17 @@ public class CoockingActivity extends AppCompatActivity {
         });
 
         leftCreateWizard = findViewById(R.id.alignment_type);
-        float_photo = (ImageButton)findViewById(R.id.float_photo);
+        float_photo = (ImageButton) findViewById(R.id.float_photo);
         float_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isVisiblePhoto) {
+                if (isVisiblePhoto) {
                     AnimateViews.hide(leftCreateWizard, AnimateViews.LEFT);
                     isVisiblePhoto = false;
+                } else {
+                    AnimateViews.show(leftCreateWizard, AnimateViews.LEFT);
+                    isVisiblePhoto = true;
                 }
-//                else {
-//                    AnimateViews.show(leftCreateWizard, AnimateViews.LEFT);
-//                    isVisiblePhoto = true;
-//                }
             }
         });
 
@@ -177,6 +175,10 @@ public class CoockingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stepNumber < recipe.getStepList().size() - 1) {
                     stepNumber = stepNumber + 1;
+                    if (isVisiblePhoto) {
+                        AnimateViews.hide(leftCreateWizard, AnimateViews.LEFT);
+                        isVisiblePhoto = false;
+                    }
                     update();
                 }
             }
@@ -187,6 +189,10 @@ public class CoockingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (stepNumber > 0) {
                     stepNumber = stepNumber - 1;
+                    if (isVisiblePhoto) {
+                        AnimateViews.hide(leftCreateWizard, AnimateViews.LEFT);
+                        isVisiblePhoto = false;
+                    }
                     update();
                 }
             }
@@ -284,8 +290,7 @@ public class CoockingActivity extends AppCompatActivity {
                 if (step.time != null && step.time > 0) {
                     edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
                     edit_step_time.setVisibility(View.VISIBLE);
-                }
-                else
+                } else
                     edit_step_time.setVisibility(View.GONE);
 
                 ((TextView) findViewById(R.id.coocking_step_descr)).setText(step.desc);
@@ -295,15 +300,17 @@ public class CoockingActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.coocking_step_number)).setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
                 if (step.fileName != null && step.fileName.length() > 0) {
                     //MyApp.setPic(step.fileName, (ImageView) findViewById(R.id.coocking_step_photo));
-                    MyApp.setPic(step.fileName, (ImageView) findViewById(R.id.float_photo));
+                    MyApp.setPic2(step.fileName, (ImageView) findViewById(R.id.float_photo), MyApp.MATCH_PARENT);
                     //(findViewById(R.id.coocking_step_photo)).setVisibility(View.VISIBLE);
+                    (findViewById(R.id.coocking_toggle_photo)).setVisibility(View.VISIBLE);
                 } else {
                     //(findViewById(R.id.coocking_step_photo)).setVisibility(View.GONE);
+                    (findViewById(R.id.coocking_toggle_photo)).setVisibility(View.GONE);
                 }
                 findViewById(R.id.next_button).setEnabled(stepNumber < recipe.getStepList().size() - 1);
                 findViewById(R.id.prev_button).setEnabled(stepNumber != 0);
             } else {
-                findViewById(R.id.coocking_step_photo).setVisibility(View.GONE);
+                findViewById(R.id.coocking_toggle_photo).setVisibility(View.GONE);
                 findViewById(R.id.next_button).setVisibility(View.GONE);
                 findViewById(R.id.prev_button).setVisibility(View.GONE);
             }

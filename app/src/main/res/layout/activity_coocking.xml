@@ -25,7 +25,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/float_photo"
             android:background="@drawable/ic_menu_camera"
-            android:alpha="0.4"
             android:layout_margin="8dp" />
 
     </LinearLayout>
@@ -45,7 +44,7 @@
             tools:layout_editor_absoluteY="0dp" />
 
         <ImageButton
-            android:id="@+id/coocking_step_photo"
+            android:id="@+id/coocking_toggle_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

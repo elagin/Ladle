@@ -241,9 +241,9 @@ public class ViewRecActivity extends AppCompatActivity {
         ((TextView) row.findViewById(R.id.coocking_step_number)).setText(stepNumber.toString());
         if (fileName != null) {
             Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
-            ((ImageView) row.findViewById(R.id.coocking_step_photo)).setImageBitmap(bm);
+            ((ImageView) row.findViewById(R.id.coocking_toggle_photo)).setImageBitmap(bm);
         } else {
-            (row.findViewById(R.id.coocking_step_photo)).setVisibility(View.GONE);
+            (row.findViewById(R.id.coocking_toggle_photo)).setVisibility(View.GONE);
         }
         row.setId(index);
         stepTable.addView(row);
