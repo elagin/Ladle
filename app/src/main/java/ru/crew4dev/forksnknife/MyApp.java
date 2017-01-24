@@ -629,8 +629,8 @@ public class MyApp extends Application {
         int targetH = view.getHeight();
         if (targetH == 0) targetH = 100;
 
-        View par = (View)view.getParent();
-        if(width == MATCH_PARENT) {
+        View par = (View) view.getParent();
+        if (width == MATCH_PARENT) {
             targetW = par.getWidth();
         }
 
@@ -657,7 +657,12 @@ public class MyApp extends Application {
             e.printStackTrace();
             return false;
         }
-        final int scaleFactor = Math.min(Math.round((float) photoW / targetW), Math.round((float) photoH / targetH));
+
+        int scaleFactor;
+        if (photoW >= photoH)
+            scaleFactor = Math.round((float) photoW / targetW);
+        else
+            scaleFactor = Math.round((float) photoH / targetH);
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;

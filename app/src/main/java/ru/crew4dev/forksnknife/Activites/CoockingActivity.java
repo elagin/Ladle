@@ -1,6 +1,5 @@
 package ru.crew4dev.forksnknife.Activites;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +15,7 @@ import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
 
 public class CoockingActivity extends AppCompatActivity {
-    private ImageButton coocking_step_photo;
+    private ImageButton coocking_toggle_photo;
     private ImageButton float_photo;
     private View float_panel;
 
@@ -49,20 +48,20 @@ public class CoockingActivity extends AppCompatActivity {
             }
         };
 
-        coocking_step_photo = (ImageButton) findViewById(R.id.coocking_toggle_photo);
-        coocking_step_photo.setOnClickListener(photoClickListener);
-        coocking_step_photo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // Removing layout listener to avoid multiple calls
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                    coocking_step_photo.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    coocking_step_photo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-                update();
-            }
-        });
+        coocking_toggle_photo = (ImageButton) findViewById(R.id.coocking_toggle_photo);
+        coocking_toggle_photo.setOnClickListener(photoClickListener);
+//        coocking_toggle_photo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                // Removing layout listener to avoid multiple calls
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+//                    coocking_toggle_photo.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                } else {
+//                    coocking_toggle_photo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                }
+//                update();
+//            }
+//        });
 
         float_photo = (ImageButton) findViewById(R.id.float_photo);
         float_photo.setOnClickListener(photoClickListener);
