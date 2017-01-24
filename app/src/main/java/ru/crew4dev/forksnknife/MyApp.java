@@ -17,7 +17,6 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -630,9 +629,7 @@ public class MyApp extends Application {
         int targetH = view.getHeight();
         if (targetH == 0) targetH = 100;
 
-        ViewParent parent = view.getParent();
-        View par = (View)parent;
-
+        View par = (View)view.getParent();
         if(width == MATCH_PARENT) {
             targetW = par.getWidth();
         }
