@@ -65,13 +65,19 @@
                 android:layout_below="@+id/coocking_toggle_photo"
                 android:maxLines="1" />
 
-            <TextView
-                android:id="@+id/coocking_step_descr"
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/coocking_step_time"
-                android:inputType="textMultiLine"
-                android:textSize="20dp" />
+                android:layout_below="@+id/coocking_step_time">
+
+                <TextView
+                    android:id="@+id/coocking_step_descr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:textSize="20dp" />
+
+            </ScrollView>
 
         </RelativeLayout>
 

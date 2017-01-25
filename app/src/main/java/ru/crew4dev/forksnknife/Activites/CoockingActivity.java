@@ -18,6 +18,9 @@ public class CoockingActivity extends AppCompatActivity {
     private ImageButton coocking_toggle_photo;
     private ImageButton float_photo;
     private View float_panel;
+    private TextView edit_step_time;
+    private TextView coocking_step_number;
+    private TextView coocking_step_descr;
 
     private boolean inCreate;
     private boolean isVisiblePhoto;
@@ -33,7 +36,10 @@ public class CoockingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_coocking);
         inCreate = true;
         isVisiblePhoto = false;
-        float_panel = findViewById(R.id.float_panel);
+
+        edit_step_time = (TextView) findViewById(R.id.coocking_step_time);
+        coocking_step_number = (TextView) findViewById(R.id.coocking_step_number);
+        coocking_step_descr = (TextView) findViewById(R.id.coocking_step_descr);
 
         View.OnClickListener photoClickListener = new View.OnClickListener() {
             @Override
@@ -41,30 +47,29 @@ public class CoockingActivity extends AppCompatActivity {
                 if (isVisiblePhoto) {
                     AnimateViews.hide(float_panel, AnimateViews.LEFT);
                     isVisiblePhoto = false;
+                    coocking_step_number.setVisibility(View.VISIBLE);
+                    coocking_step_descr.setVisibility(View.VISIBLE);
+                    edit_step_time.setVisibility(View.VISIBLE);
+                    coocking_toggle_photo.setVisibility(View.VISIBLE);
                 } else {
                     AnimateViews.show(float_panel, AnimateViews.LEFT);
                     isVisiblePhoto = true;
+                    coocking_step_number.setVisibility(View.GONE);
+                    coocking_step_descr.setVisibility(View.GONE);
+                    edit_step_time.setVisibility(View.GONE);
+                    coocking_toggle_photo.setVisibility(View.GONE);
                 }
             }
         };
 
         coocking_toggle_photo = (ImageButton) findViewById(R.id.coocking_toggle_photo);
         coocking_toggle_photo.setOnClickListener(photoClickListener);
-//        coocking_toggle_photo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                // Removing layout listener to avoid multiple calls
-//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-//                    coocking_toggle_photo.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                } else {
-//                    coocking_toggle_photo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                }
-//                update();
-//            }
-//        });
 
         float_photo = (ImageButton) findViewById(R.id.float_photo);
         float_photo.setOnClickListener(photoClickListener);
+
+        float_panel = findViewById(R.id.float_panel);
+        float_panel.setOnClickListener(photoClickListener);
 
         findViewById(R.id.next_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +133,6 @@ public class CoockingActivity extends AppCompatActivity {
             recipe = MyApp.getRecipe(recipeID);
             if (recipe.getStepList().size() > 0) {
                 Recipe.Step step = recipe.getStepList().get(stepNumber);
-
-                TextView edit_step_time = (TextView) findViewById(R.id.coocking_step_time);
                 if (step.time != null && step.time > 0) {
                     edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
                     edit_step_time.setVisibility(View.VISIBLE);
