@@ -100,6 +100,9 @@ public class ViewRecActivity extends AppCompatActivity {
             case R.id.action_share_rec_as_file:
                 saveRecipe(this, MyApp.getRecipe(recipeID));
                 return true;
+            case R.id.action_coocking_rec:
+                MyApp.toCoocking(recipeID);
+                return true;
         }
         return false;
     }
@@ -227,20 +230,20 @@ public class ViewRecActivity extends AppCompatActivity {
     private void addStep(String fileName, Integer time, String descr) {
         final int index = stepTable.getChildCount();
         TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.step_view_row, null);
-        TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
+        TextView edit_step_time = (TextView) row.findViewById(R.id.coocking_step_time);
         if (time != null && time > 0)
             edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), time.toString()));
         else
             edit_step_time.setVisibility(View.GONE);
-        ((TextView) row.findViewById(R.id.edit_step_descr)).setText(descr);
+        ((TextView) row.findViewById(R.id.coocking_step_descr)).setText(descr);
 
         Integer stepNumber = index + 1;
-        ((TextView) row.findViewById(R.id.edit_step_number)).setText(stepNumber.toString());
+        ((TextView) row.findViewById(R.id.coocking_step_number)).setText(stepNumber.toString());
         if (fileName != null) {
             Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
-            ((ImageView) row.findViewById(R.id.step_photo)).setImageBitmap(bm);
+            ((ImageView) row.findViewById(R.id.coocking_toggle_photo)).setImageBitmap(bm);
         } else {
-            (row.findViewById(R.id.step_photo)).setVisibility(View.GONE);
+            (row.findViewById(R.id.coocking_toggle_photo)).setVisibility(View.GONE);
         }
         row.setId(index);
         stepTable.addView(row);

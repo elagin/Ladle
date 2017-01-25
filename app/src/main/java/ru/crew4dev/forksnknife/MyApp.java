@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -46,6 +47,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import ru.crew4dev.forksnknife.Activites.AboutActivity;
+import ru.crew4dev.forksnknife.Activites.CoockingActivity;
 import ru.crew4dev.forksnknife.Activites.EditRecActivity;
 import ru.crew4dev.forksnknife.Activites.SettingsActivity;
 import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
@@ -66,6 +68,8 @@ public class MyApp extends Application {
     public static final int DATA_STORAGE = 0;
     public static final int INTERNAL_STORAGE = 1;
     public static final int EXTERNAL_STORAGE = 2;
+
+    public static final int MATCH_PARENT = 1;
 
     private static Map<Integer, String> storages = new HashMap<>();
 
@@ -468,6 +472,14 @@ public class MyApp extends Application {
         getCurrentActivity().startActivity(intent);
     }
 
+    public static void toCoocking(int id) {
+        Intent intent = new Intent(getAppContext(), CoockingActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("recipeID", id);
+        intent.putExtras(bundle);
+        getCurrentActivity().startActivity(intent);
+    }
+
     public static void toAbout() {
         Intent intent = new Intent(getAppContext(), AboutActivity.class);
         getCurrentActivity().startActivity(intent);
@@ -551,6 +563,9 @@ public class MyApp extends Application {
     }
 
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
+        //view еще не размещен, но тогда не будут вставляться в View у которых не используется getViewTreeObserver
+//        if (view.getWidth() == 0)
+//            return true;
 
         int targetW = view.getWidth();
         if (targetW == 0) targetW = 100;
@@ -601,7 +616,73 @@ public class MyApp extends Application {
                 return true;
             }
         }
+        return false;
+    }
 
+    public static boolean setPic2(String mCurrentPhotoPath, ImageView view, int width) {
+        //view еще не размещен, но тогда не будут вставляться в View у которых не используется getViewTreeObserver
+//        if (view.getWidth() == 0)
+//            return true;
+
+        int targetW = view.getWidth();
+        if (targetW == 0) targetW = 100;
+        int targetH = view.getHeight();
+        if (targetH == 0) targetH = 100;
+
+        View par = (View) view.getParent();
+        if (width == MATCH_PARENT) {
+            targetW = par.getWidth();
+        }
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+
+        int photoW;
+        int photoH;
+        float degree;
+        try {
+            ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
+            String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+            degree = getDegree(exifOrientation);
+            BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+            if (degree == 90 || degree == 270) {
+                photoW = bmOptions.outHeight;
+                photoH = bmOptions.outWidth;
+            } else {
+                photoW = bmOptions.outWidth;
+                photoH = bmOptions.outHeight;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        int scaleFactor;
+        if (photoW >= photoH)
+            scaleFactor = Math.round((float) photoW / targetW);
+        else
+            scaleFactor = Math.round((float) photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        if (bitmap != null) {
+            if (degree != 0) {
+                bitmap = Bitmap.createScaledBitmap(bitmap, photoH / scaleFactor, photoW / scaleFactor, false);
+                bitmap = createRotatedBitmap(bitmap, degree);
+            } else {
+                bitmap = Bitmap.createScaledBitmap(bitmap, photoW / scaleFactor, photoH / scaleFactor, false);
+            }
+            if (bitmap != null) {
+                view.setImageBitmap(bitmap);
+                //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
+                return true;
+            }
+        }
         return false;
     }
 

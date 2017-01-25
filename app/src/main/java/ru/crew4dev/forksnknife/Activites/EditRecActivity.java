@@ -264,15 +264,20 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
 
+        if (edit_rec_steps_table.getChildCount() == 0) {
+            Toast.makeText(this, getString(R.string.rec_steps_empty), Toast.LENGTH_LONG).show();
+            return false;
+        }
+
         for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
             View view = edit_rec_steps_table.getChildAt(i);
             if (view instanceof TableRow) {
                 TableRow row = (TableRow) view;
                 Integer time = null;
-                String timeStr = ((TextView) row.findViewById(R.id.edit_step_time)).getText().toString();
+                String timeStr = ((TextView) row.findViewById(R.id.coocking_step_time)).getText().toString();
                 if (!timeStr.isEmpty())
                     time = Integer.valueOf(timeStr);
-                String descr = ((TextView) row.findViewById(R.id.edit_step_descr)).getText().toString();
+                String descr = ((TextView) row.findViewById(R.id.coocking_step_descr)).getText().toString();
                 if (descr.isEmpty()) {
                     Integer stepNumber = i + 1;
                     Toast.makeText(this, String.format(getString(R.string.rec_step_descr_is_empty), stepNumber.toString()), Toast.LENGTH_LONG).show();
@@ -369,10 +374,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             } else {
                 step_photo_delete.setVisibility(View.GONE);
             }
-            TextView edit_step_descr = (TextView) row.findViewById(R.id.edit_step_descr);
+            TextView edit_step_descr = (TextView) row.findViewById(R.id.coocking_step_descr);
             edit_step_descr.setText(step.desc);
             if (step.time != null) {
-                TextView edit_step_time = (TextView) row.findViewById(R.id.edit_step_time);
+                TextView edit_step_time = (TextView) row.findViewById(R.id.coocking_step_time);
                 edit_step_time.setText(step.time.toString());
             }
         } else {

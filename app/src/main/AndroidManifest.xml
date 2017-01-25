@@ -66,6 +66,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.crew4dev.forksnknife.Activites.MainActivity" />
         </activity>
+        <activity
+            android:name="ru.crew4dev.forksnknife.Activites.CoockingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_coocking">
+        </activity>
     </application>
 
 </manifest>

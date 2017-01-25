@@ -40,7 +40,7 @@
             </RelativeLayout>
 
             <EditText
-                android:id="@+id/edit_step_descr"
+                android:id="@+id/coocking_step_descr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollHorizontally="false"
@@ -59,7 +59,7 @@
                     android:text="@string/time"/>
 
                 <EditText
-                    android:id="@+id/edit_step_time"
+                    android:id="@+id/coocking_step_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

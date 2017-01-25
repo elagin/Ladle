@@ -3,6 +3,12 @@
     xmlns:yourapp="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/action_coocking_rec"
+            android:icon="@android:drawable/ic_media_play"
+            android:title="@string/title_activity_coocking"
+            android:visible="true"
+            yourapp:showAsAction="ifRoom"/>
+        <item
             android:icon="@android:drawable/ic_menu_share"
             android:title="@string/share"
             android:visible="true"
