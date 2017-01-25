@@ -630,7 +630,7 @@ public class MyApp extends Application {
         if (targetH == 0) targetH = 100;
 
         View par = (View) view.getParent();
-        if (width == MATCH_PARENT) {
+        if (width == MATCH_PARENT && par.getWidth() > 0) {
             targetW = par.getWidth();
         }
 

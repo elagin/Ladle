@@ -1,5 +1,6 @@
 package ru.crew4dev.forksnknife.Activites;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +68,19 @@ public class CoockingActivity extends AppCompatActivity {
 
         float_photo = (ImageButton) findViewById(R.id.float_photo);
         float_photo.setOnClickListener(photoClickListener);
+        float_photo.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                // Removing layout listener to avoid multiple calls
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    float_photo.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    float_photo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+                update();
+            }
+        });
 
         float_panel = findViewById(R.id.float_panel);
         float_panel.setOnClickListener(photoClickListener);
