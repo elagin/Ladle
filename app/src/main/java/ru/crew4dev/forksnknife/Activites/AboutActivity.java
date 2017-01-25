@@ -15,12 +15,15 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import ru.crew4dev.forksnknife.MyApp;
-import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
 
 import static android.text.Html.FROM_HTML_MODE_COMPACT;
+import static ru.crew4dev.forksnknife.MyApp.DATA_STORAGE;
+import static ru.crew4dev.forksnknife.MyApp.EXTERNAL_STORAGE;
+import static ru.crew4dev.forksnknife.MyApp.INTERNAL_STORAGE;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -93,33 +96,32 @@ public class AboutActivity extends AppCompatActivity {
         }
 */
         msg.append(android.os.Build.MODEL).append(" ").append(Build.VERSION.RELEASE).append("\n");
-        msg.append("Данные: ");
-        try {
-            msg.append(Preferences.getSyncFolder());
-            msg.append("\n");
-        } catch (Exception e) {
-            msg.append(e.getLocalizedMessage());
-            msg.append("\n");
-        }
 
-        File internal = MyApp.getInternalStorage();
-        if (internal != null) {
-            msg.append("\n");
-            msg.append("Внутреняя память: ");
-            int pos = internal.getAbsolutePath().lastIndexOf("/");
-            msg.append(internal.getAbsolutePath().substring(0, pos));
-        }
-        File external = MyApp.getExternalStorage();
-        if (external != null) {
-            msg.append("\n");
-            msg.append("Внешняя память: ");
-            int pos = external.getAbsolutePath().lastIndexOf("/");
-            msg.append(external.getAbsolutePath().substring(0, pos));
+
+        final Map<Integer, String> storages = MyApp.getStorages();
+        for (Map.Entry<Integer, String> entry : storages.entrySet()) {
+            switch (entry.getKey()) {
+                case DATA_STORAGE:
+                    msg.append(getString(R.string.store_device));
+                    msg.append(entry.getValue());
+                    break;
+                case INTERNAL_STORAGE:
+                    msg.append("\n");
+                    msg.append(getString(R.string.store_internal));
+                    msg.append(entry.getValue());
+                    break;
+                case EXTERNAL_STORAGE:
+                    msg.append("\n");
+                    msg.append(getString(R.string.store_external));
+                    msg.append(entry.getValue());
+                    break;
+                default:
+            }
         }
         List<String> mounts = MyApp.getExternalMounts();
         if (!mounts.isEmpty()) {
             msg.append("\n");
-            msg.append("Монтированные: ");
+            msg.append(getString(R.string.store_mounts));
             for (String item : mounts) {
                 msg.append(item);
                 msg.append("\n");

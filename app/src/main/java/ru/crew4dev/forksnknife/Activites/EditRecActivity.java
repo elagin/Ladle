@@ -399,7 +399,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     if (row.getId() == v.getId()) {
                         DialogFragment dialog = new ConfirmDialogStepDeleteFragment();
                         Bundle bundle = new Bundle();
-                        bundle.putString("message", String.format(getString(R.string.delete_step_confirm)));
+                        bundle.putString("message", getString(R.string.delete_step_confirm));
                         bundle.putInt("id", v.getId());
                         dialog.setArguments(bundle);
                         dialog.show(getSupportFragmentManager(), "ConfirmDialogStepDeleteFragment");

@@ -46,6 +46,7 @@
     <string name="error_create_folder">Ошибка создания папки %1$s</string>
     <string name="error_copy_file">Ошибка копировния файла %1$s</string>
     <string name="error_work_folder">Ошибка работы с папкой %1$s</string>
+    <string name="error_find_storages">Ошибка при поиске хранилищ %1$s.</string>
     <string name="clear_folder">Очистить папку</string>
     <string name="about_thanks"><![CDATA[Спасибо:<br/>за идею: моей жене Катерине<br/>за логотип: <a href=\"http://www.freepik.com\">http://www.freepik.com</a>]]></string>
     <string name="about_wish">Приятного аппетита.</string>
@@ -79,4 +80,11 @@
     <string name="import_rec">Загрузить рецепт</string>
     <string name="share_as_text">Поделиться текстом</string>
     <string name="share_as_file">Поделиться файлом</string>
+    <string name="store_device">Устройство: </string>
+    <string name="store_internal">Внутреняя память: </string>
+    <string name="store_external">Карта памяти: </string>
+    <string name="store_mounts">Монтированные: </string>
+
+
+
 </resources>

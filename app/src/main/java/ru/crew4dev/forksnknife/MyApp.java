@@ -85,6 +85,18 @@ public class MyApp extends Application {
         instance = this;
     }
 
+    /**
+     * Gets the application context.
+     *
+     * @return the application context
+     */
+    public static Context getContext() {
+        if (instance == null) {
+            instance = new MyApp();
+        }
+        return instance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -94,18 +106,22 @@ public class MyApp extends Application {
     }
 
     private static void readStorages() {
-        File dataDir = MyApp.getAppContext().getFilesDir();
-        if (dataDir != null && dataDir.canWrite())
-            storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
-        File internal = MyApp.getInternalStorage();
-        if (internal != null && internal.canWrite()) {
-            storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
-        }
-        if (permissionGranted()) {
-            File external = MyApp.getExternalStorage();
-            if (external != null && external.canWrite()) {
-                storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
+        try {
+            File dataDir = MyApp.getAppContext().getFilesDir();
+            if (dataDir != null && dataDir.canWrite())
+                storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
+            File internal = MyApp.getInternalStorage();
+            if (internal != null && internal.canWrite()) {
+                storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
             }
+            if (permissionGranted()) {
+                File external = MyApp.getExternalStorage();
+                if (external != null && external.canWrite()) {
+                    storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
+                }
+            }
+        } catch (Exception e) {
+            Toast.makeText(getContext(), String.format(getContext().getString(R.string.error_find_storages), e.getLocalizedMessage()), Toast.LENGTH_LONG).show();
         }
     }
 
