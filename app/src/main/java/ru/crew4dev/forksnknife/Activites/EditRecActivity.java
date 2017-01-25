@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
@@ -26,12 +27,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import ru.crew4dev.forksnknife.ConfirmDialogStepDeleteFragment;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
 
-public class EditRecActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditRecActivity extends AppCompatActivity implements View.OnClickListener, ConfirmDialogStepDeleteFragment.ConfirmDialogStepDeleteListener {
 
     private static final String TAG = "myLogs";
     private static final int RESULT_GALLERY_MAIN_IMAGE = 1;
@@ -395,16 +397,31 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
                     View row = edit_rec_steps_table.getChildAt(i);
                     if (row.getId() == v.getId()) {
-                        edit_rec_steps_table.removeViewAt(i);
-                        if (recipeID != null) {
-                            Recipe recipe = MyApp.getRecipe(recipeID);
-                            recipe.deleteStep(v.getId());
-                        }
+                        DialogFragment dialog = new ConfirmDialogStepDeleteFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("message", String.format(getString(R.string.delete_step_confirm)));
+                        bundle.putInt("id", v.getId());
+                        dialog.setArguments(bundle);
+                        dialog.show(getSupportFragmentManager(), "ConfirmDialogStepDeleteFragment");
                         break;
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onDialogImportPositiveClick(DialogFragment dialog, int id) {
+        Log.d(TAG, "User touched the dialog's positive button");
+        edit_rec_steps_table.removeViewAt(id);
+        if (recipeID != null) {
+            Recipe recipe = MyApp.getRecipe(recipeID);
+            recipe.deleteStep(id);
+        }
+    }
+
+    @Override
+    public void onDialogImportNegativeClick(DialogFragment dialog) {
     }
 
     private void addIng(String name, Double count, String unit) {
@@ -642,5 +659,4 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         });
         popupMenu.show();
     }
-
 }
