@@ -146,6 +146,10 @@ public class CoockingActivity extends AppCompatActivity {
         if (recipeID != null) {
             recipe = MyApp.getRecipe(recipeID);
             if (recipe.getStepList().size() > 0) {
+                if (recipe.getStepList().size() > 1)
+                    findViewById(R.id.buttons_panel).setVisibility(View.VISIBLE);
+                else
+                    findViewById(R.id.buttons_panel).setVisibility(View.GONE);
                 Recipe.Step step = recipe.getStepList().get(stepNumber);
                 if (step.time != null && step.time > 0) {
                     edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
@@ -168,8 +172,7 @@ public class CoockingActivity extends AppCompatActivity {
                 findViewById(R.id.prev_button).setEnabled(stepNumber != 0);
             } else {
                 findViewById(R.id.coocking_toggle_photo).setVisibility(View.GONE);
-                findViewById(R.id.next_button).setVisibility(View.GONE);
-                findViewById(R.id.prev_button).setVisibility(View.GONE);
+                findViewById(R.id.buttons_panel).setVisibility(View.GONE);
             }
         }
     }
