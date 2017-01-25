@@ -111,7 +111,7 @@ public class MyApp extends Application {
             if (dataDir != null && dataDir.canWrite())
                 storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
             File internal = MyApp.getInternalStorage();
-            if (internal != null && internal.canWrite()) {
+            if (internal.canWrite()) {
                 storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
             }
             if (permissionGranted()) {
@@ -146,7 +146,7 @@ public class MyApp extends Application {
         try {
             if (isLocal) {
                 //fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
-                fos = new BufferedOutputStream(new FileOutputStream(Preferences.getSyncFolder() + File.separator + fileNameRecipesJSon));
+                fos = new BufferedOutputStream(new FileOutputStream(Preferences.getSyncFolder(getContext()) + File.separator + fileNameRecipesJSon));
             } else {
 //                if (isExternalStorageWritable()) {
 ////                    exportPhotos();
@@ -286,7 +286,7 @@ public class MyApp extends Application {
         try {
             if (isLocal) {
                 //fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
-                fis = new BufferedInputStream(new FileInputStream(Preferences.getSyncFolder() + File.separator + fileNameRecipesJSon));
+                fis = new BufferedInputStream(new FileInputStream(Preferences.getSyncFolder(getContext()) + File.separator + fileNameRecipesJSon));
             } else {
 //                if (isExternalStorageReadable())
 //                    fis = new BufferedInputStream(new FileInputStream(getExternalFileName(false)));
@@ -548,8 +548,7 @@ public class MyApp extends Application {
             try {
                 //options = new BitmapFactory.Options();
                 options.inSampleSize = 2;
-                Bitmap bitmap = BitmapFactory.decodeFile(path, options);
-                return bitmap;
+                return BitmapFactory.decodeFile(path, options);
             } catch (Exception ex) {
                 //Log.d(TAG, String.valueOf(ex));
             }
@@ -738,7 +737,7 @@ public class MyApp extends Application {
     public static Uri getNewFileName() throws IOException {
         Long timestamp = System.currentTimeMillis();
         String newFileName = timestamp.toString();
-        String file = Preferences.getSyncFolder() + File.separator + newFileName + ".jpg";
+        String file = Preferences.getSyncFolder(getContext()) + File.separator + newFileName + ".jpg";
         File newfile = new File(file);
         newfile.createNewFile();
         return Uri.fromFile(newfile);
@@ -805,7 +804,7 @@ public class MyApp extends Application {
         List<String> files = getAllFiles();
         File[] filesOnFolder = new File[0];
         try {
-            filesOnFolder = new File(Preferences.getSyncFolder()).listFiles();
+            filesOnFolder = new File(Preferences.getSyncFolder(getContext())).listFiles();
             for (File aFilesOnFolder : filesOnFolder) {
                 String fileName = aFilesOnFolder.getAbsolutePath();
                 if (fileName.contains(".jpg")) {

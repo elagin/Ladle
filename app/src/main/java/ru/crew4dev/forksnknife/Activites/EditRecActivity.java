@@ -586,7 +586,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             File src = new File(cursor.getString(cursor.getColumnIndex(filePathColumn[0])));
             String syncFolder = "";
             try {
-                syncFolder = Preferences.getSyncFolder();
+                syncFolder = Preferences.getSyncFolder(this);
                 File dataFolder = new File(syncFolder);
                 File dst = new File(dataFolder, src.getName());
                 try {

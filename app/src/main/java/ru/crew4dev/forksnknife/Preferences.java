@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -25,19 +26,23 @@ public class Preferences {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public static String getSyncFolder() throws IllegalArgumentException, SecurityException {
+    public static String getSyncFolder(Context context) throws IllegalArgumentException, SecurityException {
         String path = preferences.getString(syncFolder, "");
         if (path.isEmpty()) {
-            File externalStorage = MyApp.getExternalStorage();
-            if (externalStorage != null && externalStorage.canWrite()) {
-                path = externalStorage.getAbsolutePath();
-            } else {
-                File internalStorage = MyApp.getInternalStorage();
-                if (internalStorage != null && internalStorage.canWrite())
-                    path = internalStorage.getAbsolutePath();
-                else {
-                    path = MyApp.getFileDir();
+            try {
+                File externalStorage = MyApp.getExternalStorage();
+                if (externalStorage != null && externalStorage.canWrite()) {
+                    path = externalStorage.getAbsolutePath();
+                } else {
+                    File internalStorage = MyApp.getInternalStorage();
+                    if (internalStorage.canWrite())
+                        path = internalStorage.getAbsolutePath();
+                    else {
+                        path = MyApp.getFileDir();
+                    }
                 }
+            } catch (Exception e) {
+                Toast.makeText(context, String.format(context.getString(R.string.error_find_storages), e.getLocalizedMessage()), Toast.LENGTH_LONG).show();
             }
         }
         try {

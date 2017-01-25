@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import ru.crew4dev.forksnknife.AnimateViews;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.R;
@@ -145,12 +147,13 @@ public class CoockingActivity extends AppCompatActivity {
     private void update() {
         if (recipeID != null) {
             recipe = MyApp.getRecipe(recipeID);
-            if (recipe.getStepList().size() > 0) {
-                if (recipe.getStepList().size() > 1)
+            List<Recipe.Step> stepList = recipe.getStepList();
+            if (stepList != null && stepList.size() > 0) {
+                if (stepList.size() > 1)
                     findViewById(R.id.buttons_panel).setVisibility(View.VISIBLE);
                 else
                     findViewById(R.id.buttons_panel).setVisibility(View.GONE);
-                Recipe.Step step = recipe.getStepList().get(stepNumber);
+                Recipe.Step step = stepList.get(stepNumber);
                 if (step.time != null && step.time > 0) {
                     edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
                     edit_step_time.setVisibility(View.VISIBLE);
@@ -160,7 +163,7 @@ public class CoockingActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.coocking_step_descr)).setText(step.desc);
 
                 Integer id = stepNumber + 1;
-                Integer totalSteps = recipe.getStepList().size();
+                Integer totalSteps = stepList.size();
                 ((TextView) findViewById(R.id.coocking_step_number)).setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
                 if (step.fileName != null && step.fileName.length() > 0) {
                     MyApp.setPic2(step.fileName, (ImageView) findViewById(R.id.float_photo), MyApp.MATCH_PARENT);
@@ -168,7 +171,7 @@ public class CoockingActivity extends AppCompatActivity {
                 } else {
                     (findViewById(R.id.coocking_toggle_photo)).setVisibility(View.GONE);
                 }
-                findViewById(R.id.next_button).setEnabled(stepNumber < recipe.getStepList().size() - 1);
+                findViewById(R.id.next_button).setEnabled(stepNumber < stepList.size() - 1);
                 findViewById(R.id.prev_button).setEnabled(stepNumber != 0);
             } else {
                 findViewById(R.id.coocking_toggle_photo).setVisibility(View.GONE);
