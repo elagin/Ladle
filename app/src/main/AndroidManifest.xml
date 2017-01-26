@@ -37,7 +37,6 @@
         <activity android:name="ru.crew4dev.forksnknife.Activites.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -49,7 +48,6 @@
         <activity
             android:name="ru.crew4dev.forksnknife.Activites.ViewRecActivity"
             android:label="@string/title_activity_view_rec"
-            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name="ru.crew4dev.forksnknife.Activites.AboutActivity"

@@ -294,10 +294,10 @@ public class MyApp extends Application {
             is = new ObjectInputStream(fis);
             String json = (String) is.readObject();
             RecipesJsonDataHolder holder = new Gson().fromJson(json, RecipesJsonDataHolder.class);
-            if (holder.mContactList.size() > 0)
+            if (holder.mContactList.size() > 0) {
                 recipes = holder.mContactList;
-            return true;
-
+                return true;
+            }
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -578,6 +578,8 @@ public class MyApp extends Application {
     }
 
     public static boolean setPic(String mCurrentPhotoPath, ImageView view) {
+//        return setPic2(mCurrentPhotoPath, view, 1);
+
         //view еще не размещен, но тогда не будут вставляться в View у которых не используется getViewTreeObserver
 //        if (view.getWidth() == 0)
 //            return true;
@@ -586,50 +588,56 @@ public class MyApp extends Application {
         if (targetW == 0) targetW = 100;
         int targetH = view.getHeight();
         if (targetH == 0) targetH = 100;
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        int photoW;
-        int photoH;
-        float degree;
         try {
-            ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
-            String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            degree = getDegree(exifOrientation);
-            BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-            if (degree == 90 || degree == 270) {
-                photoW = bmOptions.outHeight;
-                photoH = bmOptions.outWidth;
-            } else {
-                photoW = bmOptions.outWidth;
-                photoH = bmOptions.outHeight;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        final int scaleFactor = Math.min(Math.round((float) photoW / targetW), Math.round((float) photoH / targetH));
 
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
+            // Get the dimensions of the bitmap
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        if (bitmap != null) {
-            if (degree != 0) {
-                bitmap = Bitmap.createScaledBitmap(bitmap, photoH / scaleFactor, photoW / scaleFactor, false);
-                bitmap = createRotatedBitmap(bitmap, degree);
-            } else {
-                bitmap = Bitmap.createScaledBitmap(bitmap, photoW / scaleFactor, photoH / scaleFactor, false);
+            int photoW;
+            int photoH;
+            float degree;
+            try {
+                ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
+                String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+                degree = getDegree(exifOrientation);
+                BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+                if (degree == 90 || degree == 270) {
+                    photoW = bmOptions.outHeight;
+                    photoH = bmOptions.outWidth;
+                } else {
+                    photoW = bmOptions.outWidth;
+                    photoH = bmOptions.outHeight;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
             }
+            final int scaleFactor = Math.min(Math.round((float) photoW / targetW), Math.round((float) photoH / targetH));
+
+            // Decode the image file into a Bitmap sized to fill the View
+            bmOptions.inJustDecodeBounds = false;
+            bmOptions.inSampleSize = scaleFactor;
+            bmOptions.inPurgeable = true;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
             if (bitmap != null) {
-                view.setImageBitmap(bitmap);
-                //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
-                return true;
+                if (degree != 0) {
+                    if (scaleFactor != 0)
+                        bitmap = Bitmap.createScaledBitmap(bitmap, photoH / scaleFactor, photoW / scaleFactor, false);
+                    bitmap = createRotatedBitmap(bitmap, degree);
+                } else {
+                    if (scaleFactor != 0)
+                        bitmap = Bitmap.createScaledBitmap(bitmap, photoW / scaleFactor, photoH / scaleFactor, false);
+                }
+                if (bitmap != null) {
+                    view.setImageBitmap(bitmap);
+                    //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
+                    return true;
+                }
             }
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         return false;
     }
@@ -643,60 +651,65 @@ public class MyApp extends Application {
         if (targetW == 0) targetW = 100;
         int targetH = view.getHeight();
         if (targetH == 0) targetH = 100;
-
-        View par = (View) view.getParent();
-        if (width == MATCH_PARENT && par.getWidth() > 0) {
-            targetW = par.getWidth();
-        }
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-
-        int photoW;
-        int photoH;
-        float degree;
         try {
-            ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
-            String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            degree = getDegree(exifOrientation);
-            BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-            if (degree == 90 || degree == 270) {
-                photoW = bmOptions.outHeight;
-                photoH = bmOptions.outWidth;
-            } else {
-                photoW = bmOptions.outWidth;
-                photoH = bmOptions.outHeight;
+            View par = (View) view.getParent();
+            if (width == MATCH_PARENT && par.getWidth() > 0) {
+                targetW = par.getWidth();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
 
-        int scaleFactor;
-        if (photoW >= photoH)
-            scaleFactor = Math.round((float) photoW / targetW);
-        else
-            scaleFactor = Math.round((float) photoH / targetH);
+            // Get the dimensions of the bitmap
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
 
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        if (bitmap != null) {
-            if (degree != 0) {
-                bitmap = Bitmap.createScaledBitmap(bitmap, photoH / scaleFactor, photoW / scaleFactor, false);
-                bitmap = createRotatedBitmap(bitmap, degree);
-            } else {
-                bitmap = Bitmap.createScaledBitmap(bitmap, photoW / scaleFactor, photoH / scaleFactor, false);
+            int photoW;
+            int photoH;
+            float degree;
+            try {
+                ExifInterface exif = new ExifInterface(mCurrentPhotoPath);
+                String exifOrientation = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
+                degree = getDegree(exifOrientation);
+                BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+                if (degree == 90 || degree == 270) {
+                    photoW = bmOptions.outHeight;
+                    photoH = bmOptions.outWidth;
+                } else {
+                    photoW = bmOptions.outWidth;
+                    photoH = bmOptions.outHeight;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
             }
+
+            int scaleFactor;
+            if (photoW >= photoH)
+                scaleFactor = Math.round((float) photoW / targetW);
+            else
+                scaleFactor = Math.round((float) photoH / targetH);
+
+            // Decode the image file into a Bitmap sized to fill the View
+            bmOptions.inJustDecodeBounds = false;
+            bmOptions.inSampleSize = scaleFactor;
+            bmOptions.inPurgeable = true;
+
+            Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
             if (bitmap != null) {
-                view.setImageBitmap(bitmap);
-                //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
-                return true;
+                if (degree != 0) {
+                    if (scaleFactor != 0)
+                        bitmap = Bitmap.createScaledBitmap(bitmap, photoH / scaleFactor, photoW / scaleFactor, false);
+                    bitmap = createRotatedBitmap(bitmap, degree);
+                } else {
+                    if (scaleFactor != 0)
+                        bitmap = Bitmap.createScaledBitmap(bitmap, photoW / scaleFactor, photoH / scaleFactor, false);
+                }
+                if (bitmap != null) {
+                    view.setImageBitmap(bitmap);
+                    //view.setLayoutParams(new LinearLayout.LayoutParams(bitmap.getWidth(), bitmap.getHeight()));
+                    return true;
+                }
             }
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
         }
         return false;
     }
