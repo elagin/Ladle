@@ -299,7 +299,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             recipe.setUid(recipeID);
 
         MyApp.updateRecipe(recipe);
-        MyApp.saveRecipesJSon(this, true);
+        MyApp.saveRecipesJSon(true);
         return true;
     }
 

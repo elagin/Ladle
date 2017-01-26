@@ -138,7 +138,7 @@ public class MyApp extends Application {
         return instance.getApplicationContext().getFilesDir().getAbsolutePath();
     }
 
-    public static boolean saveRecipesJSon(Context context, boolean isLocal) {
+    public static boolean saveRecipesJSon(boolean isLocal) {
         BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
         if (!permissionGranted())
@@ -163,7 +163,7 @@ public class MyApp extends Application {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             return false;
         } finally {
             try {
@@ -201,7 +201,7 @@ public class MyApp extends Application {
             }
         }
     */
-    public static boolean saveRecipeJSon(Context context, String path, Recipe recipe) {
+    public static boolean saveRecipeJSon(String path, Recipe recipe) {
         BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
         if (!permissionGranted())
@@ -214,7 +214,7 @@ public class MyApp extends Application {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             return false;
         } finally {
             try {
@@ -278,7 +278,7 @@ public class MyApp extends Application {
         }
     */
 
-    public static boolean loadRecipesJSon(boolean isLocal, Context context) {
+    public static boolean loadRecipesJSon(boolean isLocal) {
         BufferedInputStream fis = null;
         ObjectInputStream is = null;
         if (!permissionGranted())
@@ -299,7 +299,7 @@ public class MyApp extends Application {
             return true;
 
         } catch (Exception e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } finally {
             if (is != null) {
@@ -977,7 +977,7 @@ public class MyApp extends Application {
         return ContextCompat.checkSelfPermission(MyApp.getAppContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static int loadRecipe(Context context) {
+    public static int loadRecipe() {
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         String[] list = dir.list(new FilenameFilter() {
             @Override
@@ -988,24 +988,27 @@ public class MyApp extends Application {
         int insertCount = 0;
         for (int i = 0; i < list.length; i++) {
             File file = new File(dir.getAbsolutePath() + File.separator + list[i]);
-            Recipe newRec = new Recipe(loadOneRecipeJSon(file.getAbsolutePath(), context));
-            if (newRec != null) {
-                newRec.setUid(MyApp.newId());
-                List<Recipe.Step> recipleList = newRec.getStepList();
-                for (Recipe.Step step : recipleList) {
-                    step.fileName = null;
+            Recipe recipe = loadOneRecipeJSon(file.getAbsolutePath());
+            if (recipe != null) {
+                Recipe newRec = new Recipe();
+                if (newRec != null) {
+                    newRec.setUid(MyApp.newId());
+                    List<Recipe.Step> recipleList = newRec.getStepList();
+                    for (Recipe.Step step : recipleList) {
+                        step.fileName = null;
+                    }
+                    recipes.add(newRec);
+                    file.delete();
+                    insertCount++;
                 }
-                recipes.add(newRec);
-                file.delete();
-                insertCount++;
             }
         }
         if (insertCount > 0)
-            saveRecipesJSon(context, true);
+            saveRecipesJSon(true);
         return insertCount;
     }
 
-    public static Recipe loadOneRecipeJSon(String path, Context context) {
+    public static Recipe loadOneRecipeJSon(String path) {
         BufferedInputStream fis = null;
         ObjectInputStream is = null;
         if (!permissionGranted())
@@ -1018,9 +1021,10 @@ public class MyApp extends Application {
             if (holder != null && holder.mReciple != null) {
                 return holder.mReciple;
             }
+            Toast.makeText(getContext(), String.format(getContext().getString(R.string.error_load_reciple), path), Toast.LENGTH_LONG).show();
             return null;
         } catch (Exception e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } finally {
             if (is != null) {

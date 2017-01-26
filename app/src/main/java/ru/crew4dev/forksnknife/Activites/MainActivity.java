@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         table = (TableLayout) findViewById(R.id.main_rec_table);
         table.requestLayout();     // Not sure if this is needed.
 
-        MyApp.loadRecipesJSon(true, this);
+        MyApp.loadRecipesJSon(true);
         registerForContextMenu(table);
     }
 
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             if (view.getId() == id) {
                 table.removeView(view);
                 MyApp.removeRecipe(id);
-                MyApp.saveRecipesJSon(this, true);
+                MyApp.saveRecipesJSon(true);
                 return;
             }
         }
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 MyApp.toSettings();
                 return true;
             case R.id.menu_export:
-                if (MyApp.saveRecipesJSon(this, false))
+                if (MyApp.saveRecipesJSon(false))
                     Toast.makeText(this, getString(R.string.export_succsess), Toast.LENGTH_LONG).show();
                 else
                     Toast.makeText(this, getString(R.string.error_export), Toast.LENGTH_LONG).show();
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 MyApp.deletePhotos();
                 return true;
             case R.id.menu_import_rec:
-                int newItems = MyApp.loadRecipe(this);
+                int newItems = MyApp.loadRecipe();
                 if (newItems > 0) {
                     update();
                     Toast.makeText(this, String.format(getString(R.string.import_succsess_count), newItems), Toast.LENGTH_LONG).show();
@@ -217,9 +217,9 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
     }
 
     private void loadRecipes() {
-        if (MyApp.loadRecipesJSon(false, this)) {
+        if (MyApp.loadRecipesJSon(false)) {
             Toast.makeText(this, getString(R.string.import_succsess), Toast.LENGTH_LONG).show();
-            MyApp.saveRecipesJSon(this, true);
+            MyApp.saveRecipesJSon(true);
             update();
         } else
             Toast.makeText(this, getString(R.string.error_import), Toast.LENGTH_LONG).show();
