@@ -49,6 +49,7 @@
         <activity
             android:name="ru.crew4dev.forksnknife.Activites.ViewRecActivity"
             android:label="@string/title_activity_view_rec"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name="ru.crew4dev.forksnknife.Activites.AboutActivity"
@@ -68,7 +69,7 @@
         </activity>
         <activity
             android:name="ru.crew4dev.forksnknife.Activites.CoockingActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_coocking">
         </activity>
     </application>

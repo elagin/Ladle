@@ -394,17 +394,21 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         dell_step.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
-                    View row = edit_rec_steps_table.getChildAt(i);
-                    if (row.getId() == v.getId()) {
-                        DialogFragment dialog = new ConfirmDialogStepDeleteFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("message", getString(R.string.delete_step_confirm));
-                        bundle.putInt("id", v.getId());
-                        dialog.setArguments(bundle);
-                        dialog.show(getSupportFragmentManager(), "ConfirmDialogStepDeleteFragment");
-                        break;
+                if(edit_rec_steps_table.getChildCount() > 1) {
+                    for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+                        View row = edit_rec_steps_table.getChildAt(i);
+                        if (row.getId() == v.getId()) {
+                            DialogFragment dialog = new ConfirmDialogStepDeleteFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("message", getString(R.string.delete_step_confirm));
+                            bundle.putInt("id", v.getId());
+                            dialog.setArguments(bundle);
+                            dialog.show(getSupportFragmentManager(), "ConfirmDialogStepDeleteFragment");
+                            break;
+                        }
                     }
+                } else {
+                    Toast.makeText(MyApp.getContext(), getString(R.string.last_step), Toast.LENGTH_LONG).show();
                 }
             }
         });

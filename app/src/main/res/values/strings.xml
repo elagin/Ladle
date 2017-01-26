@@ -13,6 +13,7 @@
     <string name="rec_name_is_empty">Не указано название рецепта.</string>
     <string name="rec_step_descr_is_empty">В шаге %1$s не указано описание.</string>
     <string name="rec_steps_empty">Не создано ни одного шага.</string>
+    <string name="last_step">Нельзя удалить единственный шаг.</string>
     <string name="delete">Удалить</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
