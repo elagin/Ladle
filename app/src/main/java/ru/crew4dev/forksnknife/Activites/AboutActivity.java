@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
 
 import static android.text.Html.FROM_HTML_MODE_COMPACT;
@@ -97,6 +98,13 @@ public class AboutActivity extends AppCompatActivity {
 */
         msg.append(android.os.Build.MODEL).append(" ").append(Build.VERSION.RELEASE).append("\n");
 
+        msg.append("Хранилище данных: ");
+        String dataFolder = Preferences.getSyncFolder(this);
+        if (dataFolder != null)
+            msg.append(dataFolder);
+        else
+            msg.append(getString(R.string.not_avaible));
+        msg.append("\n");
 
         final Map<Integer, String> storages = MyApp.getStorages();
         for (Map.Entry<Integer, String> entry : storages.entrySet()) {

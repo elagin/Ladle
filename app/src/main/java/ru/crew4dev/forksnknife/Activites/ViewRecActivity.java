@@ -253,13 +253,19 @@ public class ViewRecActivity extends AppCompatActivity {
         Long timestamp = System.currentTimeMillis();
         String newFileName = timestamp.toString();
         StringBuilder path = new StringBuilder();
-        shareFile = new File(path.append(Preferences.getSyncFolder(this)).append(File.separator).append(newFileName).append(".fnk").toString());
-        if (MyApp.saveRecipeJSon(shareFile.getAbsolutePath(), recipe)) {
-            MyApp.email(this, path.toString(), recipe.getName(), RESULT_SHARE_FILE);
-            shareFile.deleteOnExit();
-            if (!shareFile.exists())
-                shareFile = null;
+        String folder = Preferences.getSyncFolder(this);
+        if (folder != null && !folder.isEmpty()) {
+            shareFile = new File(path.append(folder).append(File.separator).append(newFileName).append(".fnk").toString());
+            if (MyApp.saveRecipeJSon(shareFile.getAbsolutePath(), recipe)) {
+                MyApp.email(this, path.toString(), recipe.getName(), RESULT_SHARE_FILE);
+                shareFile.deleteOnExit();
+                if (!shareFile.exists())
+                    shareFile = null;
+            }
+        } else {
+            Toast.makeText(this, getString(R.string.error_write), Toast.LENGTH_LONG).show();
         }
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

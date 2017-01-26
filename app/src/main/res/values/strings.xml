@@ -38,6 +38,7 @@
     <string name="gallery">Галерея</string>
     <string name="cam">Камера</string>
     <string name="gallery_not_avaible">Галерея не доступна</string>
+    <string name="not_avaible">не доступно</string>
     <string name="error_recipe_is_not_found">Рецепт не найден.</string>
     <string name="error_import">Ошибка импорта данных.</string>
     <string name="error_export">Ошибка экспорта данных.</string>
@@ -49,6 +50,7 @@
     <string name="error_work_folder">Ошибка работы с папкой %1$s</string>
     <string name="error_find_storages">Ошибка при поиске хранилищ %1$s.</string>
     <string name="error_load_reciple">Ошибка при загрузке рецепта из %1$s.</string>
+    <string name="error_write">Ошибка записи.</string>
     <string name="clear_folder">Очистить папку</string>
     <string name="about_thanks"><![CDATA[Спасибо:<br/>за идею: моей жене Катерине<br/>за логотип: <a href=\"http://www.freepik.com\">http://www.freepik.com</a>]]></string>
     <string name="about_wish">Приятного аппетита.</string>

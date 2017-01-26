@@ -28,7 +28,9 @@ public class Preferences {
 
     public static String getSyncFolder(Context context) throws IllegalArgumentException, SecurityException {
         String path = preferences.getString(syncFolder, "");
-        if (path.isEmpty()) {
+        if (!path.isEmpty())
+            return path;
+        else {
             try {
                 File externalStorage = MyApp.getExternalStorage();
                 if (externalStorage != null && externalStorage.canWrite()) {
@@ -41,22 +43,18 @@ public class Preferences {
                         path = MyApp.getFileDir();
                     }
                 }
+                if (MyApp.getExistsFolder(path) != null) {
+                    setSyncFolder(path);
+                    return path;
+                }
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException(ex);
             } catch (Exception e) {
                 Toast.makeText(context, String.format(context.getString(R.string.error_find_storages), e.getLocalizedMessage()), Toast.LENGTH_LONG).show();
             }
         }
-        try {
-            File folder = MyApp.getExistsFolder(path);
-            if (folder != null) {
-                setSyncFolder(path);
-                return folder.getAbsolutePath();
-            }
-        } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-        return path;
+        return null;
     }
-
 
     public static void setSyncFolder(String value) {
         preferences.edit().putString(syncFolder, value).commit();

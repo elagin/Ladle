@@ -146,7 +146,13 @@ public class MyApp extends Application {
         try {
             if (isLocal) {
                 //fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
-                fos = new BufferedOutputStream(new FileOutputStream(Preferences.getSyncFolder(getContext()) + File.separator + fileNameRecipesJSon));
+                String folder = Preferences.getSyncFolder(getContext());
+                if(folder != null && !folder.isEmpty())
+                    fos = new BufferedOutputStream(new FileOutputStream(folder + File.separator + fileNameRecipesJSon));
+                else {
+                    Toast.makeText(getContext(), getContext().getString(R.string.error_write), Toast.LENGTH_LONG).show();
+                    return false;
+                }
             } else {
 //                if (isExternalStorageWritable()) {
 ////                    exportPhotos();
@@ -286,7 +292,11 @@ public class MyApp extends Application {
         try {
             if (isLocal) {
                 //fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
-                fis = new BufferedInputStream(new FileInputStream(Preferences.getSyncFolder(getContext()) + File.separator + fileNameRecipesJSon));
+                String folder = Preferences.getSyncFolder(getContext());
+                if(folder != null && !folder.isEmpty())
+                    fis = new BufferedInputStream(new FileInputStream( folder + File.separator + fileNameRecipesJSon));
+                else
+                    return false;
             } else {
 //                if (isExternalStorageReadable())
 //                    fis = new BufferedInputStream(new FileInputStream(getExternalFileName(false)));
@@ -750,10 +760,15 @@ public class MyApp extends Application {
     public static Uri getNewFileName() throws IOException {
         Long timestamp = System.currentTimeMillis();
         String newFileName = timestamp.toString();
-        String file = Preferences.getSyncFolder(getContext()) + File.separator + newFileName + ".jpg";
-        File newfile = new File(file);
-        newfile.createNewFile();
-        return Uri.fromFile(newfile);
+        String folder = Preferences.getSyncFolder(getContext());
+        if (folder != null && !folder.isEmpty()) {
+            String file = folder + File.separator + newFileName + ".jpg";
+            File newfile = new File(file);
+            newfile.createNewFile();
+            return Uri.fromFile(newfile);
+        } else
+            Toast.makeText(getContext(), getContext().getString(R.string.error_write), Toast.LENGTH_LONG).show();
+            return null;
     }
 
     public static boolean fileDelete(String name) {
@@ -817,12 +832,15 @@ public class MyApp extends Application {
         List<String> files = getAllFiles();
         File[] filesOnFolder = new File[0];
         try {
-            filesOnFolder = new File(Preferences.getSyncFolder(getContext())).listFiles();
-            for (File aFilesOnFolder : filesOnFolder) {
-                String fileName = aFilesOnFolder.getAbsolutePath();
-                if (fileName.contains(".jpg")) {
-                    if (files.indexOf(fileName) == -1)
-                        res = fileDelete(fileName);
+            String folder = Preferences.getSyncFolder(getContext());
+            if (folder != null && !folder.isEmpty()) {
+                filesOnFolder = new File(folder).listFiles();
+                for (File aFilesOnFolder : filesOnFolder) {
+                    String fileName = aFilesOnFolder.getAbsolutePath();
+                    if (fileName.contains(".jpg")) {
+                        if (files.indexOf(fileName) == -1)
+                            res = fileDelete(fileName);
+                    }
                 }
             }
         } catch (Exception e) {
