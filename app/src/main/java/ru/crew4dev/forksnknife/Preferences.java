@@ -3,6 +3,7 @@ package ru.crew4dev.forksnknife;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
@@ -36,17 +37,20 @@ public class Preferences {
                 if (externalStorage != null && externalStorage.canWrite()) {
                     path = externalStorage.getAbsolutePath();
                 } else {
-                    File internalStorage = MyApp.getInternalStorage();
+                    File internalStorage = Environment.getExternalStorageDirectory();
                     if (internalStorage.canWrite())
                         path = internalStorage.getAbsolutePath();
                     else {
                         path = MyApp.getFileDir();
+                        if (MyApp.getExistsFolder(path, false) != null) {
+                            setSyncFolder(path);
+                            return path;
+                        }
                     }
                 }
-                if (MyApp.getExistsFolder(path) != null) {
-                    setSyncFolder(path);
-                    return path;
-                }
+                File folder = MyApp.getExistsFolder(path, true);
+                setSyncFolder(folder.getAbsolutePath());
+                return folder.getAbsolutePath();
             } catch (IllegalArgumentException ex) {
                 throw new IllegalArgumentException(ex);
             } catch (Exception e) {

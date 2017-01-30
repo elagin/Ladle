@@ -110,6 +110,7 @@ public class AboutActivity extends AppCompatActivity {
         for (Map.Entry<Integer, String> entry : storages.entrySet()) {
             switch (entry.getKey()) {
                 case DATA_STORAGE:
+                    msg.append("\n");
                     msg.append(getString(R.string.store_device));
                     msg.append(entry.getValue());
                     break;

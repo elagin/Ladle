@@ -27,6 +27,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -110,7 +111,7 @@ public class MyApp extends Application {
             File dataDir = MyApp.getAppContext().getFilesDir();
             if (dataDir != null && dataDir.canWrite())
                 storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
-            File internal = MyApp.getInternalStorage();
+            File internal = Environment.getExternalStorageDirectory();
             if (internal.canWrite()) {
                 storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
             }
@@ -293,8 +294,8 @@ public class MyApp extends Application {
             if (isLocal) {
                 //fis = new BufferedInputStream(getAppContext().openFileInput(fileNameRecipesJSon));
                 String folder = Preferences.getSyncFolder(getContext());
-                if(folder != null && !folder.isEmpty())
-                    fis = new BufferedInputStream(new FileInputStream( folder + File.separator + fileNameRecipesJSon));
+                if (folder != null && !folder.isEmpty())
+                    fis = new BufferedInputStream(new FileInputStream(folder + File.separator + fileNameRecipesJSon));
                 else
                     return false;
             } else {
@@ -308,6 +309,8 @@ public class MyApp extends Application {
                 recipes = holder.mContactList;
                 return true;
             }
+        } catch (FileNotFoundException e) {
+            //Ни чего страшного, файл еще не был создан.
         } catch (Exception e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
@@ -440,10 +443,6 @@ public class MyApp extends Application {
 //        return res;
 //    }
 
-    public static File getInternalStorage() {
-        return new File(Environment.getExternalStorageDirectory() + File.separator + exportFolderName);
-    }
-
     public static File getExternalStorage() {
 //        String extStore = System.getenv("EXTERNAL_STORAGE");
 //        String secStore = System.getenv("SECONDARY_STORAGE");
@@ -458,7 +457,9 @@ public class MyApp extends Application {
         if (pathList.size() > 0 && permissionGranted()) {
             String sdCard = pathList.get(0).substring(pathList.get(0).lastIndexOf(File.separator));
             String path = externalStorageDirectory.substring(0, externalStorageDirectory.lastIndexOf(File.separator));
-            return new File(path + sdCard + File.separator + exportFolderName);
+            StringBuilder folder = new StringBuilder();
+            folder.append(path).append(sdCard);
+            return new File(folder.toString());
         } else
             return null;
     }
@@ -982,10 +983,18 @@ public class MyApp extends Application {
         return rv.toArray(new String[rv.size()]);
     }
 
-    public static File getExistsFolder(String path) {
+    public static File getExistsFolder(String path, boolean subFolder) {
         if (path.isEmpty())
             throw new IllegalArgumentException();
-        File folder = new File(path);
+
+        File folder;
+        if(subFolder) {
+            StringBuilder fullName = new StringBuilder();
+            fullName.append(path).append(File.separator).append(exportFolderName);
+            folder = new File(fullName.toString());
+        } else {
+            folder = new File(path);
+        }
         if (folder.exists())
             return folder;
         else {

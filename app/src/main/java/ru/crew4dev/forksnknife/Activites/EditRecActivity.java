@@ -235,9 +235,13 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         recipe.setTags(edit_rec_tags.getText().toString());
         recipe.setSteps(edit_rec_steps.getText().toString());
         String totalTime = edit_rec_total_time_count.getText().toString();
-        if (totalTime.length() > 0)
+        if (!totalTime.isEmpty()) {
+            if (totalTime.length() > 5) {
+                Toast.makeText(this, getString(R.string.invalid_time), Toast.LENGTH_LONG).show();
+                return false;
+            }
             recipe.setTotalTime(Integer.valueOf(totalTime));
-
+        }
         for (int i = 0, j = table.getChildCount(); i < j; i++) {
             View view = table.getChildAt(i);
             if (view instanceof TableRow) {
@@ -277,8 +281,13 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 TableRow row = (TableRow) view;
                 Integer time = null;
                 String timeStr = ((TextView) row.findViewById(R.id.coocking_step_time)).getText().toString();
-                if (!timeStr.isEmpty())
+                if (!timeStr.isEmpty()) {
+                    if (timeStr.length() > 5) {
+                        Toast.makeText(this, getString(R.string.invalid_time), Toast.LENGTH_LONG).show();
+                        return false;
+                    }
                     time = Integer.valueOf(timeStr);
+                }
                 String descr = ((TextView) row.findViewById(R.id.coocking_step_descr)).getText().toString();
                 if (descr.isEmpty()) {
                     Integer stepNumber = i + 1;
@@ -394,7 +403,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         dell_step.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(edit_rec_steps_table.getChildCount() > 1) {
+                if (edit_rec_steps_table.getChildCount() > 1) {
                     for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
                         View row = edit_rec_steps_table.getChildAt(i);
                         if (row.getId() == v.getId()) {

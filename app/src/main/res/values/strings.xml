@@ -61,6 +61,8 @@
 
     <string name="coocking_step_info">%1$s из %2$s</string>
 
+    <string name="invalid_time">Время не может быть больше 99999 минут.</string>
+
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

@@ -37,7 +37,7 @@
                     android:src="@drawable/ic_menu_camera"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    tools:layout_editor_absoluteY="303dp"/>
+                    tools:layout_editor_absoluteY="400dp"/>
 
                 <ImageButton
                     android:id="@+id/image_main_delete"
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:scrollHorizontally="false"
                 android:ems="10"
-                android:inputType="textMultiLine"/>
+                android:inputType="textCapSentences|textMultiLine"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                 android:id="@+id/edit_rec_descr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
+                android:inputType="textCapSentences|textMultiLine"
                 android:scrollHorizontally="false"/>
 
             <TextView
