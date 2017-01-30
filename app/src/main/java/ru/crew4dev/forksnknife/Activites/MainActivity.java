@@ -3,6 +3,7 @@ package ru.crew4dev.forksnknife.Activites;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -231,8 +232,10 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
         if (grantResults.length == 0) return;
         switch (requestCode) {
             case MyApp.SDCARD_PERMISSION:
-                if (this.checkSelfPermission(Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    MyApp.permissionRequested = false;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (this.checkSelfPermission(Manifest.permission_group.STORAGE) != PackageManager.PERMISSION_GRANTED)
+                        MyApp.permissionRequested = false;
+                }
                 break;
             default:
                 //initSecuredComponents();

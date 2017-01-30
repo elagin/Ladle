@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:ems="5"
-                    android:inputType="time"
+                    android:inputType="number"/>
                     android:maxLines="1"/>
 
             </LinearLayout>

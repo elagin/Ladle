@@ -163,7 +163,7 @@ public class Recipe implements Serializable {
             Step step = stepList.get(id);
             if (step.fileName != null && step.fileName.length() > 0) {
                 File file = new File(step.fileName);
-                boolean deleted = file.delete();
+                file.delete();
             }
             stepList.remove(id);
         }

@@ -82,7 +82,6 @@
     <string name="title_activity_coocking">Приготовление</string>
     <string name="prev_button">Назад</string>
     <string name="next_button">Дальше</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="import_rec">Загрузить рецепт</string>
     <string name="share_as_text">Поделиться текстом</string>
     <string name="share_as_file">Поделиться файлом</string>

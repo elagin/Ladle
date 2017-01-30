@@ -171,49 +171,50 @@ public class ViewRecActivity extends AppCompatActivity {
     private void update() {
         if (recipeID != null) {
             Recipe recipe = MyApp.getRecipe(recipeID);
+            if (recipe != null) {
+                image_main = (ImageView) findViewById(R.id.image_main);
+                if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
+                    MyApp.setPic(recipe.getPhoto(), image_main);
+                } else
+                    image_main.setVisibility(View.GONE);
 
-            image_main = (ImageView) findViewById(R.id.image_main);
-            if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
-                MyApp.setPic(recipe.getPhoto(), image_main);
-            } else
-                image_main.setVisibility(View.GONE);
+                rec_name.setText(recipe.getName());
+                if (recipe.getDescription().length() > 0)
+                    rec_descr.setText(recipe.getDescription());
+                else
+                    rec_descr.setVisibility(View.GONE);
+                if (recipe.getTags().length() > 0) {
+                    rec_tags.setText(recipe.getTags());
+                } else {
+                    rec_tags_label.setVisibility(View.GONE);
+                    rec_tags.setVisibility(View.GONE);
+                }
+                if (recipe.getSteps() != null && recipe.getSteps().length() > 0)
+                    rec_steps.setText(recipe.getSteps());
+                else
+                    rec_steps.setVisibility(View.GONE);
+                recTable.removeAllViews();
+                List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
+                for (int i = 0; i < ingredientList.size(); i++) {
+                    Recipe.Ingredient item = ingredientList.get(i);
+                    addIng(item.name, item.count, item.unit);
+                }
 
-            rec_name.setText(recipe.getName());
-            if (recipe.getDescription().length() > 0)
-                rec_descr.setText(recipe.getDescription());
-            else
-                rec_descr.setVisibility(View.GONE);
-            if (recipe.getTags().length() > 0) {
-                rec_tags.setText(recipe.getTags());
-            } else {
-                rec_tags_label.setVisibility(View.GONE);
-                rec_tags.setVisibility(View.GONE);
+                stepTable.removeAllViews();
+                List<Recipe.Step> stepList = recipe.getStepList();
+                for (int i = 0; i < stepList.size(); i++) {
+                    Recipe.Step item = stepList.get(i);
+                    addStep(item.fileName, item.time, item.desc);
+                }
+                if (stepList.isEmpty())
+                    findViewById(R.id.rec_preparation).setVisibility(View.GONE);
+
+                String totalTime = recipe.getTotalStepTimeString();
+                if (totalTime.length() > 0)
+                    rec_total_time_count.setText(String.format(getString(R.string.time_format_w_mins), totalTime));
+                else
+                    rec_total_time_count.setVisibility(View.GONE);
             }
-            if (recipe.getSteps() != null && recipe.getSteps().length() > 0)
-                rec_steps.setText(recipe.getSteps());
-            else
-                rec_steps.setVisibility(View.GONE);
-            recTable.removeAllViews();
-            List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
-            for (int i = 0; i < ingredientList.size(); i++) {
-                Recipe.Ingredient item = ingredientList.get(i);
-                addIng(item.name, item.count, item.unit);
-            }
-
-            stepTable.removeAllViews();
-            List<Recipe.Step> stepList = recipe.getStepList();
-            for (int i = 0; i < stepList.size(); i++) {
-                Recipe.Step item = stepList.get(i);
-                addStep(item.fileName, item.time, item.desc);
-            }
-            if (stepList.isEmpty())
-                findViewById(R.id.rec_preparation).setVisibility(View.GONE);
-
-            String totalTime = recipe.getTotalStepTimeString();
-            if (totalTime.length() > 0)
-                rec_total_time_count.setText(String.format(getString(R.string.time_format_w_mins), totalTime));
-            else
-                rec_total_time_count.setVisibility(View.GONE);
         }
     }
 
@@ -238,7 +239,7 @@ public class ViewRecActivity extends AppCompatActivity {
         ((TextView) row.findViewById(R.id.coocking_step_descr)).setText(descr);
 
         Integer stepNumber = index + 1;
-        ((TextView) row.findViewById(R.id.coocking_step_number)).setText(stepNumber.toString());
+        ((TextView) row.findViewById(R.id.coocking_step_number)).setText(String.format("%d", stepNumber));
         if (fileName != null) {
             Bitmap bm = MyApp.decodeSampledBitmapFromUri(fileName, 100, 100);
             ((ImageView) row.findViewById(R.id.coocking_toggle_photo)).setImageBitmap(bm);

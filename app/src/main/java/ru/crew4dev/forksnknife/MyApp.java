@@ -72,7 +72,7 @@ public class MyApp extends Application {
 
     public static final int MATCH_PARENT = 1;
 
-    private static Map<Integer, String> storages = new HashMap<>();
+    private static Map<Integer, String> storages = null;
 
     //    private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
@@ -103,30 +103,29 @@ public class MyApp extends Application {
         super.onCreate();
         recipes = new ArrayList<>();
         new Preferences(this);
-        readStorages();
-    }
-
-    private static void readStorages() {
-        try {
-            File dataDir = MyApp.getAppContext().getFilesDir();
-            if (dataDir != null && dataDir.canWrite())
-                storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
-            File internal = Environment.getExternalStorageDirectory();
-            if (internal.canWrite()) {
-                storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
-            }
-            if (permissionGranted()) {
-                File external = MyApp.getExternalStorage();
-                if (external != null && external.canWrite()) {
-                    storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
-                }
-            }
-        } catch (Exception e) {
-            Toast.makeText(getContext(), String.format(getContext().getString(R.string.error_find_storages), e.getLocalizedMessage()), Toast.LENGTH_LONG).show();
-        }
     }
 
     public static Map<Integer, String> getStorages() {
+        if (storages == null) {
+            try {
+                storages = new HashMap<>();
+                File dataDir = MyApp.getAppContext().getFilesDir();
+                if (dataDir != null && dataDir.canWrite())
+                    storages.put(DATA_STORAGE, dataDir.getAbsolutePath());
+                File internal = Environment.getExternalStorageDirectory();
+                if (internal.canWrite()) {
+                    storages.put(INTERNAL_STORAGE, internal.getAbsolutePath());
+                }
+                if (permissionGranted()) {
+                    File external = MyApp.getExternalStorage();
+                    if (external != null && external.canWrite()) {
+                        storages.put(EXTERNAL_STORAGE, external.getAbsolutePath());
+                    }
+                }
+            } catch (Exception e) {
+                Toast.makeText(getContext(), String.format(getContext().getString(R.string.error_find_storages), e.getLocalizedMessage()), Toast.LENGTH_LONG).show();
+            }
+        }
         return storages;
     }
 
@@ -148,7 +147,7 @@ public class MyApp extends Application {
             if (isLocal) {
                 //fos = new BufferedOutputStream(getAppContext().openFileOutput(fileNameRecipesJSon, Context.MODE_PRIVATE));
                 String folder = Preferences.getSyncFolder(getContext());
-                if(folder != null && !folder.isEmpty())
+                if (folder != null && !folder.isEmpty())
                     fos = new BufferedOutputStream(new FileOutputStream(folder + File.separator + fileNameRecipesJSon));
                 else {
                     Toast.makeText(getContext(), getContext().getString(R.string.error_write), Toast.LENGTH_LONG).show();
@@ -765,11 +764,13 @@ public class MyApp extends Application {
         if (folder != null && !folder.isEmpty()) {
             String file = folder + File.separator + newFileName + ".jpg";
             File newfile = new File(file);
-            newfile.createNewFile();
-            return Uri.fromFile(newfile);
+            if (newfile.createNewFile())
+                return Uri.fromFile(newfile);
+            else
+                return null;
         } else
             Toast.makeText(getContext(), getContext().getString(R.string.error_write), Toast.LENGTH_LONG).show();
-            return null;
+        return null;
     }
 
     public static boolean fileDelete(String name) {
@@ -831,7 +832,7 @@ public class MyApp extends Application {
     public static boolean deletePhotos() {
         boolean res = true;
         List<String> files = getAllFiles();
-        File[] filesOnFolder = new File[0];
+        File[] filesOnFolder;
         try {
             String folder = Preferences.getSyncFolder(getContext());
             if (folder != null && !folder.isEmpty()) {
@@ -988,7 +989,7 @@ public class MyApp extends Application {
             throw new IllegalArgumentException();
 
         File folder;
-        if(subFolder) {
+        if (subFolder) {
             StringBuilder fullName = new StringBuilder();
             fullName.append(path).append(File.separator).append(exportFolderName);
             folder = new File(fullName.toString());
@@ -1025,22 +1026,22 @@ public class MyApp extends Application {
                 return name.contains(".fnk");
             }
         });
+        if (list == null)
+            return 0;
         int insertCount = 0;
         for (int i = 0; i < list.length; i++) {
             File file = new File(dir.getAbsolutePath() + File.separator + list[i]);
             Recipe recipe = loadOneRecipeJSon(file.getAbsolutePath());
             if (recipe != null) {
                 Recipe newRec = new Recipe();
-                if (newRec != null) {
-                    newRec.setUid(MyApp.newId());
-                    List<Recipe.Step> recipleList = newRec.getStepList();
-                    for (Recipe.Step step : recipleList) {
-                        step.fileName = null;
-                    }
-                    recipes.add(newRec);
-                    file.delete();
-                    insertCount++;
+                newRec.setUid(MyApp.newId());
+                List<Recipe.Step> recipleList = newRec.getStepList();
+                for (Recipe.Step step : recipleList) {
+                    step.fileName = null;
                 }
+                recipes.add(newRec);
+                file.delete();
+                insertCount++;
             }
         }
         if (insertCount > 0)

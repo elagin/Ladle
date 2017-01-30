@@ -161,7 +161,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             else
                 edit_rec_steps.setVisibility(View.GONE);
             if (recipe.getTotalTime() != null && recipe.getTotalTime().toString().length() > 0)
-                edit_rec_total_time_count.setText(recipe.getTotalTime().toString());
+                edit_rec_total_time_count.setText(String.format("%d", recipe.getTotalTime()));
             List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
             for (int i = 0; i < ingredientList.size(); i++) {
                 Recipe.Ingredient item = ingredientList.get(i);
@@ -262,6 +262,28 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                     return false;
                 }
                 try {
+//  Todo Сделать запись String.format("%d") /чтение по локали
+//                    try {
+//                        Locale locale;
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                            locale = getResources().getConfiguration().getLocales().get(0);
+//                        } else {
+//                            locale = getResources().getConfiguration().locale;
+//                        }
+//                        NumberFormat format = NumberFormat.getInstance(locale);
+//                        try {
+//                            Number number = format.parse(count);
+//                            Double d = number.doubleValue();
+//                            recipe.addIngredient(name, d, unit);
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                            Toast.makeText(this, String.format(getString(R.string.error_parse_volume), name), Toast.LENGTH_LONG).show();
+//                        }
+//                        //recipe.addIngredient(name, Double.valueOf(count), unit);
+//                    } catch (NumberFormatException ex) {
+//                        Toast.makeText(this, String.format(getString(R.string.error_parse_volume), name), Toast.LENGTH_LONG).show();
+//                        return false;
+//                    }
                     recipe.addIngredient(name, Double.valueOf(count), unit);
                 } catch (NumberFormatException ex) {
                     Toast.makeText(this, String.format(getString(R.string.error_parse_volume), name), Toast.LENGTH_LONG).show();
@@ -389,7 +411,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             edit_step_descr.setText(step.desc);
             if (step.time != null) {
                 TextView edit_step_time = (TextView) row.findViewById(R.id.coocking_step_time);
-                edit_step_time.setText(step.time.toString());
+                edit_step_time.setText(String.format("%d", step.time));
             }
         } else {
             step_photo_delete.setVisibility(View.GONE);
@@ -429,7 +451,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         edit_rec_steps_table.removeViewAt(id);
         if (recipeID != null) {
             Recipe recipe = MyApp.getRecipe(recipeID);
-            recipe.deleteStep(id);
+            if (recipe != null)
+                recipe.deleteStep(id);
         }
     }
 
@@ -597,7 +620,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (cursor != null) {
             cursor.moveToFirst();
             File src = new File(cursor.getString(cursor.getColumnIndex(filePathColumn[0])));
-            String syncFolder = "";
+            String syncFolder;
             try {
                 syncFolder = Preferences.getSyncFolder(this);
                 File dataFolder = new File(syncFolder);
