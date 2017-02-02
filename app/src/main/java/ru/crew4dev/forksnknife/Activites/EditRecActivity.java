@@ -375,8 +375,6 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-//        imageStepClickListener
-
         ImageButton step_photo_delete = (ImageButton) row.findViewById(R.id.step_photo_delete);
         step_photo_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -417,7 +415,16 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             step_photo_delete.setVisibility(View.GONE);
         }
 
+        if(step.uid == null) {
+            step.uid = MyApp.newId();
+            Log.d(TAG, "New uid: " + String.valueOf(step.uid) + " index: " + String.valueOf(index) + ": " + step.desc);
+        }
+
         row.setId(index);
+
+        TextView row_id = (TextView)row.findViewById(R.id.row_id);
+        row_id.setText(String.valueOf(step.uid));
+
         edit_rec_steps_table.addView(row);
 
         ImageButton dell_step = (ImageButton) row.findViewById(R.id.dell_step);
@@ -431,7 +438,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                         if (row.getId() == v.getId()) {
                             DialogFragment dialog = new ConfirmDialogStepDeleteFragment();
                             Bundle bundle = new Bundle();
-                            bundle.putString("message", getString(R.string.delete_step_confirm));
+                            bundle.putString("message", String.format("%s %d", getString(R.string.delete_step_confirm), v.getId()));
                             bundle.putInt("id", v.getId());
                             dialog.setArguments(bundle);
                             dialog.show(getSupportFragmentManager(), "ConfirmDialogStepDeleteFragment");
@@ -448,11 +455,18 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onDialogImportPositiveClick(DialogFragment dialog, int id) {
         Log.d(TAG, "User touched the dialog's positive button");
+
+        View view = edit_rec_steps_table.getChildAt(id);
+        TextView uid = (TextView)view.findViewById(R.id.row_id);
+        Integer iuid = Integer.valueOf(uid.getText().toString());
+
+        Log.d(TAG, "Prepare delete row: " + String.valueOf(id) + " uid: " + String.valueOf(iuid));
+
         edit_rec_steps_table.removeViewAt(id);
         if (recipeID != null) {
             Recipe recipe = MyApp.getRecipe(recipeID);
             if (recipe != null)
-                recipe.deleteStep(id);
+                recipe.deleteStep(iuid);
         }
     }
 
