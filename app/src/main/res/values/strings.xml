@@ -19,7 +19,7 @@
     <string name="no">Нет</string>
     <string name="rewrite_recipe">Перезаписать существующие рецепты ?</string>
     <string name="delete_confirm">Действительно удалить: %1$s ?</string>
-    <string name="delete_step_confirm">Действительно удалить шаг ?</string>
+    <string name="delete_step_confirm">Действительно удалить шаг № %1$d ?</string>
     <string name="cancel">Отмена</string>
     <string name="preparation">Приготовление:</string>
     <string name="share">Поделиться</string>

@@ -158,7 +158,7 @@ public class Recipe implements Serializable {
         this.tags = tags;
     }
 
-    public void deleteStep(int id) {
+    public void deleteStep(Integer id) {
         if (stepList.size() > id) {
             Step step = stepList.get(id);
             if (step.fileName != null && step.fileName.length() > 0) {

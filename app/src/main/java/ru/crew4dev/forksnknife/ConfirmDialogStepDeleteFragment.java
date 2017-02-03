@@ -12,12 +12,12 @@ import android.support.v7.app.AlertDialog;
  */
 
 public class ConfirmDialogStepDeleteFragment extends DialogFragment {
-    private static int uid;
+    private static String uid;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        uid = getArguments().getInt("id");
+        uid = getArguments().getString("id");
         String message = getArguments().getString("message");
 
         // Build the dialog and set up the button click handlers
@@ -43,7 +43,7 @@ public class ConfirmDialogStepDeleteFragment extends DialogFragment {
 * implement this interface in order to receive event callbacks.
 * Each method passes the DialogFragment in case the host needs to query it. */
     public interface ConfirmDialogStepDeleteListener {
-        void onDialogImportPositiveClick(DialogFragment dialog, int id);
+        void onDialogImportPositiveClick(DialogFragment dialog, String id);
         void onDialogImportNegativeClick(DialogFragment dialog);
     }
 
