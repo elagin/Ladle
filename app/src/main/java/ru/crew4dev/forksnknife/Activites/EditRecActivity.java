@@ -179,7 +179,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    View.OnClickListener imageMainClickListener = new View.OnClickListener() {
+    private View.OnClickListener imageMainClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             showPopupMenuImageMain(v);
@@ -375,6 +375,8 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+//        imageStepClickListener
+
         ImageButton step_photo_delete = (ImageButton) row.findViewById(R.id.step_photo_delete);
         step_photo_delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,35 +417,23 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
             step_photo_delete.setVisibility(View.GONE);
         }
 
-        if(step.uid == null) {
-            step.uid = MyApp.newId();
-            Log.d(TAG, "New uid: " + String.valueOf(step.uid) + " index: " + String.valueOf(index) + ": " + step.desc);
-        }
-
-        row.setId(index);
-
-        TextView row_id = (TextView)row.findViewById(R.id.row_id);
-        row_id.setText(String.valueOf(step.uid));
-
         edit_rec_steps_table.addView(row);
+        ((TextView) row.findViewById(R.id.row_index)).setText(String.valueOf(index));
 
-        ImageButton dell_step = (ImageButton) row.findViewById(R.id.dell_step);
-        dell_step.setId(index);
-        dell_step.setOnClickListener(new View.OnClickListener() {
+        (row.findViewById(R.id.dell_step)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (edit_rec_steps_table.getChildCount() > 1) {
-                    for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
-                        View row = edit_rec_steps_table.getChildAt(i);
-                        if (row.getId() == v.getId()) {
-                            DialogFragment dialog = new ConfirmDialogStepDeleteFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putString("message", String.format("%s %d", getString(R.string.delete_step_confirm), v.getId()));
-                            bundle.putInt("id", v.getId());
-                            dialog.setArguments(bundle);
-                            dialog.show(getSupportFragmentManager(), "ConfirmDialogStepDeleteFragment");
-                            break;
-                        }
+                    View row = (View) v.getParent();
+                    String rowId = ((TextView) row.findViewById(R.id.row_index)).getText().toString();
+                    if (!rowId.isEmpty()) {
+                        Bundle bundle = new Bundle();
+                        Integer showRowId = Integer.valueOf(rowId);
+                        bundle.putString("message", String.format(getString(R.string.delete_step_confirm), ++showRowId));
+                        bundle.putString("id", rowId);
+                        DialogFragment dialog = new ConfirmDialogStepDeleteFragment();
+                        dialog.setArguments(bundle);
+                        dialog.show(getSupportFragmentManager(), "ConfirmDialogStepDeleteFragment");
                     }
                 } else {
                     Toast.makeText(MyApp.getContext(), getString(R.string.last_step), Toast.LENGTH_LONG).show();
@@ -453,20 +443,26 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onDialogImportPositiveClick(DialogFragment dialog, int id) {
+    public void onDialogImportPositiveClick(DialogFragment dialog, String id) {
         Log.d(TAG, "User touched the dialog's positive button");
+        for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+            View row = edit_rec_steps_table.getChildAt(i);
+            String rowId = ((TextView) row.findViewById(R.id.row_index)).getText().toString();
+            if (rowId.equals(id)) {
+                edit_rec_steps_table.removeViewAt(i);
+                if (recipeID != null) {
+                    Recipe recipe = MyApp.getRecipe(recipeID);
+                    if (recipe != null)
+                        recipe.deleteStep(Integer.valueOf(id));
+                }
+                break;
 
-        View view = edit_rec_steps_table.getChildAt(id);
-        TextView uid = (TextView)view.findViewById(R.id.row_id);
-        Integer iuid = Integer.valueOf(uid.getText().toString());
-
-        Log.d(TAG, "Prepare delete row: " + String.valueOf(id) + " uid: " + String.valueOf(iuid));
-
-        edit_rec_steps_table.removeViewAt(id);
-        if (recipeID != null) {
-            Recipe recipe = MyApp.getRecipe(recipeID);
-            if (recipe != null)
-                recipe.deleteStep(iuid);
+            }
+        }
+        //Reindex row_index
+        for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
+            View row = edit_rec_steps_table.getChildAt(i);
+            ((TextView) row.findViewById(R.id.row_index)).setText(String.valueOf(i));
         }
     }
 
@@ -481,7 +477,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (name != null)
             ((TextView) row.findViewById(R.id.ing_name)).setText(name);
         if (count != null)
-            ((TextView) row.findViewById(R.id.ing_count)).setText(count.toString());
+            ((TextView) row.findViewById(R.id.ing_count)).setText(String.format("%d", count.toString()));
         if (unit != null)
             ((TextView) row.findViewById(R.id.ing_unit)).setText(unit);
         row.setId(index);

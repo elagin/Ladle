@@ -1,7 +1,5 @@
 package ru.crew4dev.forksnknife;
 
-import android.util.Log;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +32,6 @@ public class Recipe implements Serializable {
         public String fileName;
         public String desc;
         public Integer time;
-        public Integer uid;
 
         public Step(String fileName, String desc, Integer time) {
             this.fileName = fileName;
@@ -161,17 +158,14 @@ public class Recipe implements Serializable {
         this.tags = tags;
     }
 
-    public void deleteStep(int uid) {
-        for (int i = 0; i < stepList.size(); i++) {
-            Step step = stepList.get(i);
-            if (step.uid == uid) {
-                Log.d(TAG, "DeleteStep uid: " + String.valueOf(uid) + " id: " + String.valueOf(i) + ": " + step.desc);
-                if (step.fileName != null && step.fileName.length() > 0) {
-                    File file = new File(step.fileName);
-                    file.delete();
-                }
-                stepList.remove(i);
+    public void deleteStep(Integer id) {
+        if (stepList.size() > id) {
+            Step step = stepList.get(id);
+            if (step.fileName != null && step.fileName.length() > 0) {
+                File file = new File(step.fileName);
+                file.delete();
             }
+            stepList.remove(id);
         }
     }
 
