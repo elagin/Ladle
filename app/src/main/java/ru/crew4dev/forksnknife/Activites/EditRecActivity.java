@@ -358,20 +358,14 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
 
     private void addStep(Recipe.Step step) {
         final int index = edit_rec_steps_table.getChildCount();
-        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
+        final TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.prepare_step_row, null);
         ImageButton image_view_step = (ImageButton) row.findViewById(R.id.step_photo_img);
         image_view_step.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
-                    View row = edit_rec_steps_table.getChildAt(i);
-                    if (row.getId() == ((View) v.getParent().getParent().getParent().getParent()).getId()) {
-                        changePhotoStepID = i;
-                        //setStepPhotoFromCam();
-                        showPopupMenuImageStep(v);
-                        break;
-                    }
-                }
+                String rowId = ((TextView) row.findViewById(R.id.row_id)).getText().toString();
+                changePhotoStepID = Integer.valueOf(rowId);
+                showPopupMenuImageStep(v);
             }
         });
 
@@ -381,19 +375,14 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         step_photo_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
-                    View row = edit_rec_steps_table.getChildAt(i);
-                    if (row.getId() == ((View) view.getParent().getParent().getParent().getParent()).getId()) {
-                        changePhotoStepID = i;
-                        TextView viewFileName = (TextView) row.findViewById(R.id.text_photo_url);
-                        if (viewFileName.getText().length() > 0) {
-                            MyApp.fileDelete(viewFileName.getText().toString());
-                            viewFileName.setText("");
-                            view.setVisibility(View.GONE);
-                            ((ImageButton) row.findViewById(R.id.step_photo_img)).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_camera, null));
-                        }
-                        break;
-                    }
+                String rowId = ((TextView) row.findViewById(R.id.row_id)).getText().toString();
+                changePhotoStepID = Integer.valueOf(rowId);
+                TextView viewFileName = (TextView) row.findViewById(R.id.text_photo_url);
+                if (viewFileName.getText().length() > 0) {
+                    MyApp.fileDelete(viewFileName.getText().toString());
+                    viewFileName.setText("");
+                    view.setVisibility(View.GONE);
+                    ((ImageButton) row.findViewById(R.id.step_photo_img)).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_menu_camera, null));
                 }
             }
         });
@@ -418,14 +407,13 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         edit_rec_steps_table.addView(row);
-        ((TextView) row.findViewById(R.id.row_index)).setText(String.valueOf(index));
+        ((TextView) row.findViewById(R.id.row_id)).setText(String.valueOf(index));
 
         (row.findViewById(R.id.dell_step)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (edit_rec_steps_table.getChildCount() > 1) {
-                    View row = (View) v.getParent();
-                    String rowId = ((TextView) row.findViewById(R.id.row_index)).getText().toString();
+                    String rowId = ((TextView) row.findViewById(R.id.row_id)).getText().toString();
                     if (!rowId.isEmpty()) {
                         Bundle bundle = new Bundle();
                         Integer showRowId = Integer.valueOf(rowId);
@@ -447,7 +435,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         Log.d(TAG, "User touched the dialog's positive button");
         for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
             View row = edit_rec_steps_table.getChildAt(i);
-            String rowId = ((TextView) row.findViewById(R.id.row_index)).getText().toString();
+            String rowId = ((TextView) row.findViewById(R.id.row_id)).getText().toString();
             if (rowId.equals(id)) {
                 edit_rec_steps_table.removeViewAt(i);
                 if (recipeID != null) {
@@ -462,7 +450,7 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         //Reindex row_index
         for (int i = 0, j = edit_rec_steps_table.getChildCount(); i < j; i++) {
             View row = edit_rec_steps_table.getChildAt(i);
-            ((TextView) row.findViewById(R.id.row_index)).setText(String.valueOf(i));
+            ((TextView) row.findViewById(R.id.row_id)).setText(String.valueOf(i));
         }
     }
 
