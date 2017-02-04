@@ -477,7 +477,10 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
         if (name != null)
             ((TextView) row.findViewById(R.id.ing_name)).setText(name);
         if (count != null)
-            ((TextView) row.findViewById(R.id.ing_count)).setText(String.format("%d", count.toString()));
+            ((TextView) row.findViewById(R.id.ing_count)).setText(count.toString());
+        //todo Double нужно вставлять аккуратно
+        //((TextView) row.findViewById(R.id.ing_count)).setText(String.format("%d", count.toString()));
+
         if (unit != null)
             ((TextView) row.findViewById(R.id.ing_unit)).setText(unit);
         row.setId(index);
