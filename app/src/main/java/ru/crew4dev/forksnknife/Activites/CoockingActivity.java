@@ -32,6 +32,20 @@ public class CoockingActivity extends AppCompatActivity {
     private Integer recipeID;
     private Integer stepNumber;
 
+    private void toggleDescription(boolean isShow) {
+        if (isShow) {
+            coocking_step_number.setVisibility(View.VISIBLE);
+            coocking_step_descr.setVisibility(View.VISIBLE);
+            edit_step_time.setVisibility(View.VISIBLE);
+            coocking_toggle_photo.setVisibility(View.VISIBLE);
+        } else {
+            coocking_step_number.setVisibility(View.GONE);
+            coocking_step_descr.setVisibility(View.GONE);
+            edit_step_time.setVisibility(View.GONE);
+            coocking_toggle_photo.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,17 +64,11 @@ public class CoockingActivity extends AppCompatActivity {
                 if (isVisiblePhoto) {
                     AnimateViews.hide(float_panel, AnimateViews.LEFT);
                     isVisiblePhoto = false;
-                    coocking_step_number.setVisibility(View.VISIBLE);
-                    coocking_step_descr.setVisibility(View.VISIBLE);
-                    edit_step_time.setVisibility(View.VISIBLE);
-                    coocking_toggle_photo.setVisibility(View.VISIBLE);
+                    toggleDescription(true);
                 } else {
                     AnimateViews.show(float_panel, AnimateViews.LEFT);
                     isVisiblePhoto = true;
-                    coocking_step_number.setVisibility(View.GONE);
-                    coocking_step_descr.setVisibility(View.GONE);
-                    edit_step_time.setVisibility(View.GONE);
-                    coocking_toggle_photo.setVisibility(View.GONE);
+                    toggleDescription(false);
                 }
             }
         };
@@ -95,6 +103,7 @@ public class CoockingActivity extends AppCompatActivity {
                     if (isVisiblePhoto) {
                         AnimateViews.hide(float_panel, AnimateViews.LEFT);
                         isVisiblePhoto = false;
+                        toggleDescription(true);
                     }
                     update();
                 }
@@ -109,6 +118,7 @@ public class CoockingActivity extends AppCompatActivity {
                     if (isVisiblePhoto) {
                         AnimateViews.hide(float_panel, AnimateViews.LEFT);
                         isVisiblePhoto = false;
+                        toggleDescription(true);
                     }
                     update();
                 }
