@@ -1033,7 +1033,7 @@ public class MyApp extends Application {
             File file = new File(dir.getAbsolutePath() + File.separator + list[i]);
             Recipe recipe = loadOneRecipeJSon(file.getAbsolutePath());
             if (recipe != null) {
-                Recipe newRec = new Recipe();
+                Recipe newRec = new Recipe(recipe);
                 newRec.setUid(MyApp.newId());
                 List<Recipe.Step> recipleList = newRec.getStepList();
                 for (Recipe.Step step : recipleList) {
