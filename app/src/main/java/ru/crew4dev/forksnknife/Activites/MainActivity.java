@@ -71,7 +71,11 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 Log.d(TAG, "Insert " + item.getUid() + " : " + item.getName());
                 TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.recipe_row, null);
                 ((TextView) row.findViewById(R.id.rec_name_row)).setText(item.getName());
-                ((TextView) row.findViewById(R.id.rec_desc_row)).setText(item.getDescription());
+                if (item.getDescription().isEmpty()) {
+                    (row.findViewById(R.id.rec_desc_row)).setVisibility(View.GONE);
+                } else {
+                    ((TextView) row.findViewById(R.id.rec_desc_row)).setText(item.getDescription());
+                }
                 String totalTime = item.getTotalStepTimeString();
                 if (totalTime.length() > 0) {
                     ((TextView) row.findViewById(R.id.rec_total_time)).setText(totalTime);
