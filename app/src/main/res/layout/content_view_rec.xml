@@ -80,7 +80,7 @@
                 android:id="@+id/table_rec_ing_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:shrinkColumns="1"
+                android:shrinkColumns="*"
                 android:stretchColumns="*" />
 
             <View
