@@ -1068,7 +1068,7 @@ public class MyApp extends Application {
         int insertCount = 0;
         for (int i = 0; i < list.length; i++) {
             File file = new File(dir.getAbsolutePath() + File.separator + list[i]);
-            Recipe recipe = loadOneRecipeJSon2(file.getAbsolutePath());
+            Recipe recipe = loadOneRecipeJSon(file.getAbsolutePath());
             if (recipe != null) {
                 Recipe newRec = new Recipe(recipe);
                 newRec.setUid(MyApp.newId());
