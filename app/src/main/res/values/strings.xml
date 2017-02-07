@@ -24,6 +24,8 @@
     <string name="preparation">Приготовление:</string>
     <string name="share">Поделиться</string>
     <string name="about">О приложении</string>
+    <string name="help">Помощь</string>
+    <string name="help_url"><![CDATA[http://azimuth.stormway.ru/forksnknife/]]></string>
     <string name="action_settings">Настройки</string>
     <string name="export_to_sd">Экспорт ⇧</string>
     <string name="import_from_sd">Импорт ⇩</string>
@@ -89,7 +91,4 @@
     <string name="store_internal">Внутреняя память: </string>
     <string name="store_external">Карта памяти: </string>
     <string name="store_mounts">Монтированные: </string>
-
-
-
 </resources>

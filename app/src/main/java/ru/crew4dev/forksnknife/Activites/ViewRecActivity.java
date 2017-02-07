@@ -257,7 +257,7 @@ public class ViewRecActivity extends AppCompatActivity {
         String folder = Preferences.getSyncFolder(this);
         if (folder != null && !folder.isEmpty()) {
             shareFile = new File(path.append(folder).append(File.separator).append(newFileName).append(".fnk").toString());
-            if (MyApp.saveRecipeJSon(shareFile.getAbsolutePath(), recipe)) {
+            if (MyApp.saveRecipeJSon2(shareFile.getAbsolutePath(), recipe)) {
                 MyApp.email(this, path.toString(), recipe.getName(), RESULT_SHARE_FILE);
                 shareFile.deleteOnExit();
                 if (!shareFile.exists())

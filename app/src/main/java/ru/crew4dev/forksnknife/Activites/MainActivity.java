@@ -190,6 +190,9 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
             case R.id.menu_about:
                 MyApp.toAbout();
                 return true;
+            case R.id.menu_help:
+                MyApp.toHelp(this);
+                return true;
             case R.id.menu_settings:
                 MyApp.toSettings();
                 return true;

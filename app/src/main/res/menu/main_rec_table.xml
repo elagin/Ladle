@@ -27,6 +27,10 @@
         android:visible="false"
         android:title="@string/settings"/>
     <item
+        android:id="@+id/menu_help"
+        android:orderInCategory="700"
+        android:title="@string/help"/>
+    <item
         android:id="@+id/menu_about"
         android:orderInCategory="800"
         android:title="@string/about"/>

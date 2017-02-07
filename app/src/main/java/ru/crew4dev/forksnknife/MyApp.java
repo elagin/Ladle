@@ -25,10 +25,14 @@ import com.google.gson.GsonBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,6 +80,7 @@ public class MyApp extends Application {
 
     //    private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
+    private final static String fileNameRecipesJSon2 = "recipe_list_json2.txt";
     private final static String exportFolderName = "Forksnknife";
 
     static {
@@ -207,6 +212,31 @@ public class MyApp extends Application {
             }
         }
     */
+
+    public static boolean saveRecipeJSon2(String path, Recipe recipe) {
+        if (!permissionGranted())
+            return false;
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter(path));
+            Recipe saveRec = new Recipe(recipe);
+            String json = getJSonData(saveRec);
+            writer.write(json);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        } finally {
+            if (writer != null)
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+        return false;
+    }
+
     public static boolean saveRecipeJSon(String path, Recipe recipe) {
         BufferedOutputStream fos = null;
         ObjectOutputStream os = null;
@@ -509,6 +539,13 @@ public class MyApp extends Application {
     public static void toAbout() {
         Intent intent = new Intent(getAppContext(), AboutActivity.class);
         getCurrentActivity().startActivity(intent);
+    }
+
+    public static void toHelp(Context context) {
+        String url = context.getString(R.string.help_url);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        context.startActivity(intent);
     }
 
     public static void toSettings() {
@@ -1031,7 +1068,7 @@ public class MyApp extends Application {
         int insertCount = 0;
         for (int i = 0; i < list.length; i++) {
             File file = new File(dir.getAbsolutePath() + File.separator + list[i]);
-            Recipe recipe = loadOneRecipeJSon(file.getAbsolutePath());
+            Recipe recipe = loadOneRecipeJSon2(file.getAbsolutePath());
             if (recipe != null) {
                 Recipe newRec = new Recipe(recipe);
                 newRec.setUid(MyApp.newId());
@@ -1047,6 +1084,37 @@ public class MyApp extends Application {
         if (insertCount > 0)
             saveRecipesJSon(true);
         return insertCount;
+    }
+
+    public static Recipe loadOneRecipeJSon2(String path) {
+        if (!permissionGranted())
+            return null;
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+
+            StringBuilder res = new StringBuilder();
+            String str = null;
+            while ((str = reader.readLine()) != null) {
+                res.append(str);
+            }
+            String json = res.toString();
+            RecipeJsonDataHolder holder = new Gson().fromJson(json, RecipeJsonDataHolder.class);
+            if (holder != null && holder.mReciple != null) {
+                return holder.mReciple;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null)
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+        return null;
+
     }
 
     public static Recipe loadOneRecipeJSon(String path) {
