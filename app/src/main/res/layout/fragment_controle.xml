@@ -1,0 +1,83 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ru.crew4dev.forksnknife.Activites.CoockingActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/fullscreen_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/buttons_panel"
+            android:layout_alignParentEnd="false"
+            android:keepScreenOn="true">
+
+            <LinearLayout
+                android:id="@+id/float_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#22000000"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="0dp">
+
+                <ImageButton
+                    android:id="@+id/float_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/ic_menu_camera" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/coocking_step_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 of 3"
+                android:textSize="40dp" />
+
+            <ImageButton
+                android:id="@+id/coocking_toggle_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/coocking_step_number"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_below="@+id/coocking_step_number"
+                android:src="@drawable/ic_menu_camera" />
+
+            <TextView
+                android:id="@+id/coocking_step_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/coocking_toggle_photo"
+                android:maxLines="1" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/coocking_step_time">
+
+                <TextView
+                    android:id="@+id/coocking_step_descr"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp" />
+
+            </ScrollView>
+
+        </RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

@@ -52,7 +52,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import ru.crew4dev.forksnknife.Activites.AboutActivity;
-import ru.crew4dev.forksnknife.Activites.CoockingActivity;
+import ru.crew4dev.forksnknife.Activites.CoockingActivity2;
 import ru.crew4dev.forksnknife.Activites.EditRecActivity;
 import ru.crew4dev.forksnknife.Activites.SettingsActivity;
 import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
@@ -529,7 +529,7 @@ public class MyApp extends Application {
     }
 
     public static void toCoocking(int id) {
-        Intent intent = new Intent(getAppContext(), CoockingActivity.class);
+        Intent intent = new Intent(getAppContext(), CoockingActivity2.class);
         Bundle bundle = new Bundle();
         bundle.putInt("recipeID", id);
         intent.putExtras(bundle);

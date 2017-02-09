@@ -146,6 +146,10 @@ public class Recipe implements Serializable {
         return stepList;
     }
 
+    public Step getStep(Integer id) {
+        return stepList.get(id);
+    }
+
     public void clearIngredients() {
         ingredients.clear();
     }

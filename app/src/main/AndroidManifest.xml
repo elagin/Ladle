@@ -27,30 +27,31 @@
         android:required="false" />
 
     <application
-        android:name="ru.crew4dev.forksnknife.MyApp"
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:installLocation="preferExternal"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
-        <activity android:name="ru.crew4dev.forksnknife.Activites.MainActivity">
+        <activity android:name=".Activites.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="ru.crew4dev.forksnknife.Activites.EditRecActivity"
+            android:name=".Activites.EditRecActivity"
             android:label="@string/title_activity_edit_rec"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
-            android:name="ru.crew4dev.forksnknife.Activites.ViewRecActivity"
+            android:name=".Activites.ViewRecActivity"
             android:label="@string/title_activity_view_rec"
             android:theme="@style/Theme.AppCompat.Light" />
         <activity
-            android:name="ru.crew4dev.forksnknife.Activites.AboutActivity"
+            android:name=".Activites.AboutActivity"
             android:label="@string/title_activity_about_rec"
             android:theme="@style/Theme.AppCompat.Light">
             <meta-data
@@ -58,18 +59,18 @@
                 android:value="ru.crew4dev.forksnknife.Activites.MainActivity" />
         </activity>
         <activity
-            android:name="ru.crew4dev.forksnknife.Activites.SettingsActivity"
+            android:name=".Activites.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="ru.crew4dev.forksnknife.Activites.MainActivity">
+            android:parentActivityName=".Activites.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.crew4dev.forksnknife.Activites.MainActivity" />
         </activity>
         <activity
-            android:name="ru.crew4dev.forksnknife.Activites.CoockingActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_coocking">
-        </activity>
+            android:name=".Activites.CoockingActivity"
+            android:label="@string/title_activity_coocking"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".Activites.CoockingActivity2"></activity>
     </application>
 
 </manifest>
