@@ -7,17 +7,13 @@ package ru.crew4dev.forksnknife.Activites;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
 
 import ru.crew4dev.forksnknife.AnimateViews;
 import ru.crew4dev.forksnknife.MyApp;
@@ -37,10 +33,11 @@ public class Fragment_control extends Fragment {
     private boolean isVisiblePhoto;
 
     private Recipe recipe;
+    private Recipe.Step step;
+
     private Integer recipeID;
     private Integer stepNumber;
 
-    Recipe.Step step;
     private View view;
 
     String tag = this.getClass().getSimpleName();
@@ -108,7 +105,15 @@ public class Fragment_control extends Fragment {
 
         recipe = MyApp.getRecipe(recipeID);
         step = recipe.getStepList().get(stepNumber);
-        update();
+
+        coocking_step_descr.setText(step.desc);
+
+        if (step.time != null && step.time > 0)
+            edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
+
+        Integer id = stepNumber + 1;
+        Integer totalSteps = recipe.getStepList().size();
+        coocking_step_number.setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
         return view;
     }
 
@@ -130,26 +135,16 @@ public class Fragment_control extends Fragment {
     }
 
     private void update() {
-        if (recipeID != null) {
-            recipe = MyApp.getRecipe(recipeID);
+        if (step.time != null && step.time > 0) {
+            edit_step_time.setVisibility(View.VISIBLE);
+        } else
+            edit_step_time.setVisibility(View.GONE);
 
-            if (step.time != null && step.time > 0) {
-                edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
-                edit_step_time.setVisibility(View.VISIBLE);
-            } else
-                edit_step_time.setVisibility(View.GONE);
-
-            ((TextView) view.findViewById(R.id.coocking_step_descr)).setText(step.desc);
-
-            Integer id = stepNumber + 1;
-            Integer totalSteps = recipe.getStepList().size();
-            ((TextView) view.findViewById(R.id.coocking_step_number)).setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
-            if (step.fileName != null && step.fileName.length() > 0) {
-                MyApp.setPic2(step.fileName, (ImageView) view.findViewById(R.id.float_photo), MyApp.MATCH_PARENT);
-                (view.findViewById(R.id.coocking_toggle_photo)).setVisibility(View.VISIBLE);
-            } else {
-                (view.findViewById(R.id.coocking_toggle_photo)).setVisibility(View.GONE);
-            }
+        if (step.fileName != null && step.fileName.length() > 0) {
+            MyApp.setPic2(step.fileName, float_photo, MyApp.MATCH_PARENT);
+            coocking_toggle_photo.setVisibility(View.VISIBLE);
+        } else {
+            coocking_toggle_photo.setVisibility(View.GONE);
         }
     }
 
