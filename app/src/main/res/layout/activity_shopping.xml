@@ -17,4 +17,11 @@
         android:shrinkColumns="*"
         android:stretchColumns="*" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/shopping_list_is_empty"
+        android:textSize="20dp"
+        android:id="@+id/textView_shopping_list_is_empty" />
+
 </RelativeLayout>

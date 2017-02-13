@@ -71,7 +71,9 @@
             android:label="@string/title_activity_coocking"
             android:screenOrientation="portrait" />
         <activity android:name=".Activites.CoockingActivity2" />
-        <activity android:name=".Activites.ShoppingActivity"></activity>
+        <activity
+            android:name=".Activites.ShoppingActivity"
+            android:label="@string/title_activity_shoppng" />
     </application>
 
 </manifest>
