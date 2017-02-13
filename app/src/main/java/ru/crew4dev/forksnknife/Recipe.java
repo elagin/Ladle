@@ -13,21 +13,6 @@ public class Recipe implements Serializable {
 
     private static final String TAG = "myLogs";
 
-    public class Ingredient implements Serializable {
-        public String name;
-        public double count;
-        public String unit;
-
-        public Ingredient() {
-        }
-
-        public Ingredient(String name, double count, String unit) {
-            this.name = name;
-            this.count = count;
-            this.unit = unit;
-        }
-    }
-
     public class Step {
         public String fileName;
         public String desc;

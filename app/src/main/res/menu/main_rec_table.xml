@@ -39,9 +39,14 @@
         android:title="@string/delete"
         android:visible="false"/>
     <item
+        android:id="@+id/action_show_shopping_cart"
+        android:icon="@drawable/ic_action_add_shopping_cart"
+        android:title="@string/action_shopping_list"
+        yourapp:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/action_add"
         android:icon="@android:drawable/ic_input_add"
-        android:title="@string/share"
+        android:title="@string/action_new_recipe"
         yourapp:showAsAction="ifRoom"/>
 </menu>
 

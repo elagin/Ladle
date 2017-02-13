@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.List;
 
 import ru.crew4dev.forksnknife.ConfirmDialogStepDeleteFragment;
+import ru.crew4dev.forksnknife.Ingredient;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
@@ -162,9 +163,9 @@ public class EditRecActivity extends AppCompatActivity implements View.OnClickLi
                 edit_rec_steps.setVisibility(View.GONE);
             if (recipe.getTotalTime() != null && recipe.getTotalTime().toString().length() > 0)
                 edit_rec_total_time_count.setText(String.format("%d", recipe.getTotalTime()));
-            List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
+            List<Ingredient> ingredientList = recipe.getIngredients();
             for (int i = 0; i < ingredientList.size(); i++) {
-                Recipe.Ingredient item = ingredientList.get(i);
+                Ingredient item = ingredientList.get(i);
                 addIng(item.name, item.count, item.unit);
             }
             List<Recipe.Step> stepList = recipe.getStepList();

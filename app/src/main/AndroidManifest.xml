@@ -69,8 +69,9 @@
         <activity
             android:name=".Activites.CoockingActivity"
             android:label="@string/title_activity_coocking"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".Activites.CoockingActivity2"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".Activites.CoockingActivity2" />
+        <activity android:name=".Activites.ShoppingActivity"></activity>
     </application>
 
 </manifest>

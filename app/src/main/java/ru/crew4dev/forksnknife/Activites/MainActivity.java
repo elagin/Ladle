@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 Log.d(TAG, "Insert " + item.getUid() + " : " + item.getName());
                 TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.recipe_row, null);
                 ((TextView) row.findViewById(R.id.rec_name_row)).setText(item.getName());
-                if (item.getDescription().isEmpty()) {
+                if (item.getDescription() != null && item.getDescription().isEmpty()) {
                     (row.findViewById(R.id.rec_desc_row)).setVisibility(View.GONE);
                 } else {
                     ((TextView) row.findViewById(R.id.rec_desc_row)).setText(item.getDescription());
@@ -192,6 +192,9 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 return true;
             case R.id.menu_help:
                 MyApp.toHelp(this);
+                return true;
+            case R.id.action_show_shopping_cart:
+                MyApp.toShoppingList();
                 return true;
             case R.id.menu_settings:
                 MyApp.toSettings();

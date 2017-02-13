@@ -55,6 +55,7 @@ import ru.crew4dev.forksnknife.Activites.AboutActivity;
 import ru.crew4dev.forksnknife.Activites.CoockingActivity2;
 import ru.crew4dev.forksnknife.Activites.EditRecActivity;
 import ru.crew4dev.forksnknife.Activites.SettingsActivity;
+import ru.crew4dev.forksnknife.Activites.ShoppingActivity;
 import ru.crew4dev.forksnknife.Activites.ViewRecActivity;
 
 /**
@@ -65,6 +66,7 @@ public class MyApp extends Application {
     private static MyApp instance;
     private static Activity currentActivity;
     private static List<Recipe> recipes;
+    private static List<Ingredient> shopingList;
     private final static Random random = new Random();
 
     public static boolean permissionRequested = false;
@@ -378,6 +380,16 @@ public class MyApp extends Application {
         return recipes;
     }
 
+    public static List<Ingredient> getShopingList() {
+        return shopingList;
+    }
+
+    public static void addShopItem(Ingredient ingredient){
+        if(shopingList == null)
+            shopingList = new ArrayList<>();
+        shopingList.add(new Ingredient(ingredient));
+    }
+
     public static Recipe getRecipe(int uid) {
         for (int i = 0; i < recipes.size(); i++) {
             Recipe recipe = recipes.get(i);
@@ -550,6 +562,11 @@ public class MyApp extends Application {
 
     public static void toSettings() {
         Intent intent = new Intent(getAppContext(), SettingsActivity.class);
+        getCurrentActivity().startActivity(intent);
+    }
+
+    public static void toShoppingList() {
+        Intent intent = new Intent(getAppContext(), ShoppingActivity.class);
         getCurrentActivity().startActivity(intent);
     }
 
@@ -1114,7 +1131,6 @@ public class MyApp extends Application {
                 }
         }
         return null;
-
     }
 
     public static Recipe loadOneRecipeJSon(String path) {

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.List;
 
+import ru.crew4dev.forksnknife.Ingredient;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
@@ -127,11 +129,11 @@ public class ViewRecActivity extends AppCompatActivity {
             buffer.append(recipe.getDescription());
         }
 
-        List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
+        List<Ingredient> ingredientList = recipe.getIngredients();
         buffer.append("\n");
         buffer.append(getString(R.string.rec_ingred));
         for (int i = 0; i < ingredientList.size(); i++) {
-            Recipe.Ingredient item = ingredientList.get(i);
+            Ingredient item = ingredientList.get(i);
             buffer.append("\n");
             buffer.append(item.name).append(" ").append(item.count).append(" ").append(item.unit);
         }
@@ -194,10 +196,10 @@ public class ViewRecActivity extends AppCompatActivity {
                 else
                     rec_steps.setVisibility(View.GONE);
                 recTable.removeAllViews();
-                List<Recipe.Ingredient> ingredientList = recipe.getIngredients();
+                List<Ingredient> ingredientList = recipe.getIngredients();
                 for (int i = 0; i < ingredientList.size(); i++) {
-                    Recipe.Ingredient item = ingredientList.get(i);
-                    addIng(item.name, item.count, item.unit);
+                    Ingredient item = ingredientList.get(i);
+                    addIng(item);
                 }
 
                 stepTable.removeAllViews();
@@ -218,13 +220,23 @@ public class ViewRecActivity extends AppCompatActivity {
         }
     }
 
-    private void addIng(String name, Double count, String unit) {
+    private void addIng(final Ingredient ingredient) {
         final int index = recTable.getChildCount();
-        TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.rec_ing_view_row, null);
-        ((TextView) row.findViewById(R.id.ing_name)).setText(name);
-        ((TextView) row.findViewById(R.id.ing_count)).setText(count.toString().replace(".0", ""));
-        ((TextView) row.findViewById(R.id.ing_unit)).setText(unit);
+        final TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.rec_ing_view_row, null);
+        ((TextView) row.findViewById(R.id.ing_name)).setText(ingredient.name);
+        ((TextView) row.findViewById(R.id.ing_count)).setText(ingredient.count.toString().replace(".0", ""));
+        ((TextView) row.findViewById(R.id.ing_unit)).setText(ingredient.unit);
         row.setId(index);
+
+        ImageButton button_add_shopping_cart = (ImageButton) row.findViewById(R.id.button_add_shopping_cart);
+        button_add_shopping_cart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MyApp.addShopItem(ingredient);
+                Toast.makeText(getApplicationContext(), getString(R.string.add_to_shopping_list), Toast.LENGTH_LONG).show();
+            }
+        });
+
         recTable.addView(row);
     }
 
@@ -266,7 +278,6 @@ public class ViewRecActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, getString(R.string.error_write), Toast.LENGTH_LONG).show();
         }
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
