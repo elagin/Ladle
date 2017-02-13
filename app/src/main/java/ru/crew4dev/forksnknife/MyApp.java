@@ -714,7 +714,8 @@ public class MyApp extends Application {
         //view еще не размещен, но тогда не будут вставляться в View у которых не используется getViewTreeObserver
 //        if (view.getWidth() == 0)
 //            return true;
-
+//        if(view.getDrawable() != null)
+//            return true;
         int targetW = view.getWidth();
         if (targetW == 0) targetW = 100;
         int targetH = view.getHeight();
@@ -801,6 +802,7 @@ public class MyApp extends Application {
             return false;
         }
     */
+
     public static void fileCopy(File src, File dst) throws IOException {
         BufferedInputStream in = new BufferedInputStream(new FileInputStream(src));
         OutputStream out = new BufferedOutputStream(new FileOutputStream(dst));

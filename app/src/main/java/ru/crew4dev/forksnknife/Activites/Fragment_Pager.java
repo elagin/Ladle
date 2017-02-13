@@ -15,7 +15,7 @@ import ru.crew4dev.forksnknife.Recipe;
 public class Fragment_Pager extends FragmentPagerAdapter {
 
     private Integer recipeID;
-    int PAGE_COUNT = 0;
+    int pageCount = 0;
 
     public Fragment_Pager(FragmentManager fm, Integer recipeId) {
         super(fm);
@@ -24,7 +24,7 @@ public class Fragment_Pager extends FragmentPagerAdapter {
         this.recipeID = recipeId;
         Recipe recipe = MyApp.getRecipe(recipeID);
         if (recipe != null) {
-            PAGE_COUNT = recipe.getStepList().size();
+            pageCount = recipe.getStepList().size();
         }
     }
 
@@ -41,6 +41,6 @@ public class Fragment_Pager extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return PAGE_COUNT;
+        return pageCount;
     }
 }

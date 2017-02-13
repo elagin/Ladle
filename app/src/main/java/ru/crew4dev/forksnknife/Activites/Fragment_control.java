@@ -13,10 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
 
 import ru.crew4dev.forksnknife.AnimateViews;
 import ru.crew4dev.forksnknife.MyApp;
@@ -36,9 +33,12 @@ public class Fragment_control extends Fragment {
     private boolean isVisiblePhoto;
 
     private Recipe recipe;
+    private Recipe.Step step;
+
     private Integer recipeID;
     private Integer stepNumber;
 
+    private View view;
 
     String tag = this.getClass().getSimpleName();
 
@@ -48,7 +48,7 @@ public class Fragment_control extends Fragment {
         super.onCreate(savedInstanceState);
         /** Getting the arguments to the Bundle object */
         Bundle data = getArguments();
-        if(data != null ) {
+        if (data != null) {
             stepNumber = data.getInt("current_step");
             recipeID = data.getInt("current_recipe");
         }
@@ -57,7 +57,7 @@ public class Fragment_control extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(tag, "onCreateView");
-        final View view = inflater.inflate(R.layout.fragment_controle, container, false);
+        view = inflater.inflate(R.layout.fragment_controle, container, false);
 
         inCreate = true;
         isVisiblePhoto = false;
@@ -96,45 +96,55 @@ public class Fragment_control extends Fragment {
                 } else {
                     float_photo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
-                update(view);
+                update();
             }
         });
 
         float_panel = view.findViewById(R.id.float_panel);
         float_panel.setOnClickListener(photoClickListener);
 
-        //((TextView)view.findViewById(R.id.textView)).setText(String.valueOf(stepNum));
-        toggleDescription(true);
-        update(view);
+        recipe = MyApp.getRecipe(recipeID);
+        step = recipe.getStepList().get(stepNumber);
+
+        coocking_step_descr.setText(step.desc);
+
+        if (step.time != null && step.time > 0)
+            edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
+
+        Integer id = stepNumber + 1;
+        Integer totalSteps = recipe.getStepList().size();
+        coocking_step_number.setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
         return view;
     }
 
-    private void update(View view) {
-        if (recipeID != null) {
-            recipe = MyApp.getRecipe(recipeID);
-            List<Recipe.Step> stepList = recipe.getStepList();
-            if (stepList != null && stepList.size() > 0) {
-                Recipe.Step step = stepList.get(stepNumber);
-                if (step.time != null && step.time > 0) {
-                    edit_step_time.setText(String.format(getString(R.string.time_format_w_mins), step.time.toString()));
-                    edit_step_time.setVisibility(View.VISIBLE);
-                } else
-                    edit_step_time.setVisibility(View.GONE);
-
-                ((TextView) view.findViewById(R.id.coocking_step_descr)).setText(step.desc);
-
-                Integer id = stepNumber + 1;
-                Integer totalSteps = stepList.size();
-                ((TextView) view.findViewById(R.id.coocking_step_number)).setText(String.format(getString(R.string.coocking_step_info), id.toString(), totalSteps.toString()));
-                if (step.fileName != null && step.fileName.length() > 0) {
-                    MyApp.setPic2(step.fileName, (ImageView) view.findViewById(R.id.float_photo), MyApp.MATCH_PARENT);
-                    (view.findViewById(R.id.coocking_toggle_photo)).setVisibility(View.VISIBLE);
-                } else {
-                    (view.findViewById(R.id.coocking_toggle_photo)).setVisibility(View.GONE);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (inCreate) {
+            ViewTreeObserver vto = float_panel.getViewTreeObserver();
+            vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    float_panel.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    float_panel.setTranslationX(-float_panel.getWidth());
+                    inCreate = false;
                 }
-            } else {
-                view.findViewById(R.id.coocking_toggle_photo).setVisibility(View.GONE);
-            }
+            });
+        }
+        update();
+    }
+
+    private void update() {
+        if (step.time != null && step.time > 0) {
+            edit_step_time.setVisibility(View.VISIBLE);
+        } else
+            edit_step_time.setVisibility(View.GONE);
+
+        if (step.fileName != null && step.fileName.length() > 0) {
+            MyApp.setPic2(step.fileName, float_photo, MyApp.MATCH_PARENT);
+            coocking_toggle_photo.setVisibility(View.VISIBLE);
+        } else {
+            coocking_toggle_photo.setVisibility(View.GONE);
         }
     }
 

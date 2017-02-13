@@ -17,20 +17,18 @@ public class CoockingActivity2 extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coocking2);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-
         /** Getting fragment manager */
         FragmentManager fm = getSupportFragmentManager();
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
-            //recipe = MyApp.getRecipe(recipeID);
 
             /** Instantiating FragmentPagerAdapter */
             Fragment_Pager pagerAdapter = new Fragment_Pager(fm, recipeID);
 
             /** Setting the pagerAdapter to the pager object */
+            ViewPager pager = (ViewPager) findViewById(R.id.pager);
             pager.setAdapter(pagerAdapter);
         }
     }
