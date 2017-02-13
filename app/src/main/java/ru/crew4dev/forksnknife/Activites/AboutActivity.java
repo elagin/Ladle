@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.io.File;
 import java.util.List;
@@ -21,7 +22,6 @@ import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.Preferences;
 import ru.crew4dev.forksnknife.R;
 
-import static android.text.Html.FROM_HTML_MODE_COMPACT;
 import static ru.crew4dev.forksnknife.MyApp.DATA_STORAGE;
 import static ru.crew4dev.forksnknife.MyApp.EXTERNAL_STORAGE;
 import static ru.crew4dev.forksnknife.MyApp.INTERNAL_STORAGE;
@@ -51,11 +51,8 @@ public class AboutActivity extends AppCompatActivity {
         }
         ((TextView) this.findViewById(R.id.app_info)).setText(getString(R.string.code_version_prefix) + ": " + version);
 
-        TextView about_logo_rights = (TextView) findViewById(R.id.about_thanks);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
-            about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks)));
-        else
-            about_logo_rights.setText(Html.fromHtml(getString(R.string.about_thanks), FROM_HTML_MODE_COMPACT));
+        HtmlTextView about_logo_rights = (HtmlTextView) findViewById(R.id.about_thanks);
+        about_logo_rights.setHtml(getString(R.string.about_thanks));
         about_logo_rights.setMovementMethod(LinkMovementMethod.getInstance());
 
         about_tech_info = (TextView) findViewById(R.id.about_tech_info);

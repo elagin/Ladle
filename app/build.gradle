@@ -51,5 +51,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:support-vector-drawable:24.2.1'
+    compile 'org.sufficientlysecure:html-textview:3.1'
     testCompile 'junit:junit:4.12'
 }

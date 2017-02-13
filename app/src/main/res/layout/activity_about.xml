@@ -20,12 +20,13 @@
         android:layout_height="wrap_content"
         android:text="@string/about_info" />
 
-    <TextView
+    <org.sufficientlysecure.htmltextview.HtmlTextView
         android:id="@+id/about_thanks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/about_thanks" />
+        android:text="@string/about_thanks"
+        android:textAppearance="@android:style/TextAppearance.Small" />
 
     <TextView
         android:id="@+id/about_wish"

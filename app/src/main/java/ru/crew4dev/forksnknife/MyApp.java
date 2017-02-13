@@ -381,6 +381,16 @@ public class MyApp extends Application {
     }
 
     public static List<Ingredient> getShopingList() {
+
+        if(shopingList == null) {
+            shopingList = new ArrayList<>();
+            Ingredient ingredient = new Ingredient();
+            ingredient.name = "Паприка";
+            ingredient.count = 123.0;
+            ingredient.unit = "шт.";
+            shopingList.add(ingredient);
+        }
+
         return shopingList;
     }
 
