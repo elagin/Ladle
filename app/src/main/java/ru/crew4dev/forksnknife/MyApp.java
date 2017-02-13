@@ -384,6 +384,10 @@ public class MyApp extends Application {
         return shopingList;
     }
 
+    public static void clearShopingList() {
+        shopingList.clear();
+    }
+
     public static void addShopItem(Ingredient ingredient){
         if(shopingList == null)
             shopingList = new ArrayList<>();

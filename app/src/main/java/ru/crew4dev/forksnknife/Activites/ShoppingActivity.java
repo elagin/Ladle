@@ -3,6 +3,8 @@ package ru.crew4dev.forksnknife.Activites;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -22,17 +24,38 @@ public class ShoppingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping);
+        table_shopping_list_view = (TableLayout) findViewById(R.id.table_shopping_list_view);
+        update();
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.shopping_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear_shopping_cart:
+                MyApp.clearShopingList();
+                update();
+                return true;
+        }
+        return false;
+    }
+
+    private void update() {
         List<Ingredient> shoppingList = MyApp.getShopingList();
         if (shoppingList != null) {
             findViewById(R.id.textView_shopping_list_is_empty).setVisibility(View.GONE);
-            table_shopping_list_view = (TableLayout) findViewById(R.id.table_shopping_list_view);
+            table_shopping_list_view.removeAllViews();
             for (int i = 0; i < shoppingList.size(); i++) {
                 Ingredient Ingredient = shoppingList.get(i);
                 addIng(Ingredient);
             }
-        }
-        else
+        } else
             findViewById(R.id.textView_shopping_list_is_empty).setVisibility(View.VISIBLE);
     }
 
