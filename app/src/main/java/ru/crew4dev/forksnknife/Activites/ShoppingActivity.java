@@ -8,14 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.util.List;
 
-import ru.crew4dev.forksnknife.Ingredient;
 import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.Purchase;
 import ru.crew4dev.forksnknife.R;
 
 public class ShoppingActivity extends AppCompatActivity {
@@ -49,50 +48,53 @@ public class ShoppingActivity extends AppCompatActivity {
     }
 
     private void update() {
-        List<Ingredient> shoppingList = MyApp.getShopingList();
+        List<Purchase> shoppingList = MyApp.getShopingList();
         if (shoppingList != null) {
             findViewById(R.id.textView_shopping_list_is_empty).setVisibility(View.GONE);
             table_shopping_list_view.removeAllViews();
             for (int i = 0; i < shoppingList.size(); i++) {
-                Ingredient Ingredient = shoppingList.get(i);
-                addIng(Ingredient);
+                addIng(shoppingList.get(i));
             }
         } else
             findViewById(R.id.textView_shopping_list_is_empty).setVisibility(View.VISIBLE);
     }
 
-    private void setStrikeoutText(HtmlTextView view) {
+    private void setStrikeoutText(HtmlTextView view, boolean isStrike) {
         String original = view.getText().toString();
         if(original != null && original.length() > 0) {
-            if(original.contains("<s>")){
-                view.setHtml(original.replace("<s>","").replace("</s>",""));
-            } else {
-                String yy = "<s>" + original + "</s>";
-                view.setHtml(yy);
-            }
+            if(isStrike){
+                StringBuilder html = new StringBuilder();
+                html.append("<s>").append(original).append("</s>");
+                view.setHtml(html.toString());
+            }else
+                view.setHtml(original);
         }
     }
 
-    private void addIng(Ingredient value) {
+    private void setBought(TableRow row, Purchase purchase) {
+        setStrikeoutText((HtmlTextView)row.findViewById(R.id.ing_name), purchase.isBought());
+        setStrikeoutText((HtmlTextView)row.findViewById(R.id.ing_count), purchase.isBought());
+        setStrikeoutText((HtmlTextView)row.findViewById(R.id.ing_unit), purchase.isBought());
+    }
+
+    private void addIng(Purchase value) {
         final int index = table_shopping_list_view.getChildCount();
         final TableRow row = (TableRow) LayoutInflater.from(this).inflate(R.layout.shopping_item_row, null);
-        final Ingredient ingredient = value;
-        ((TextView) row.findViewById(R.id.ing_name)).setText(value.name);
-        ((TextView) row.findViewById(R.id.ing_count)).setText(value.count.toString().replace(".0", ""));
-        ((TextView) row.findViewById(R.id.ing_unit)).setText(value.unit);
+        final Purchase purchase = value;
+        ((HtmlTextView) row.findViewById(R.id.ing_name)).setText(purchase.getName());
+        ((HtmlTextView) row.findViewById(R.id.ing_count)).setText(purchase.getCount());
+        ((HtmlTextView) row.findViewById(R.id.ing_unit)).setText(purchase.getUnit());
         row.setId(index);
-/*
+        setBought(row, purchase);
         View shopping_item_panel = row.findViewById(R.id.shopping_item_panel);
         shopping_item_panel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setStrikeoutText((HtmlTextView)row.findViewById(R.id.ing_name), true);
-
-                //TextView name = (TextView) row.findViewById(R.id.ing_name);
-                //bString rowId = ((TextView) row.findViewById(R.id.row_id)).getText().toString();
+                purchase.toggle();
+                MyApp.saveShoppingList();
+                setBought(row, purchase);
             }
         });
-*/
         table_shopping_list_view.addView(row);
     }
 }

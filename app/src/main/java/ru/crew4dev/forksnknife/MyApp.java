@@ -66,7 +66,7 @@ public class MyApp extends Application {
     private static MyApp instance;
     private static Activity currentActivity;
     private static List<Recipe> recipes;
-    private static List<Ingredient> shopingList;
+    private static List<Purchase> shopingList;
     private final static Random random = new Random();
 
     public static boolean permissionRequested = false;
@@ -82,6 +82,7 @@ public class MyApp extends Application {
 
     //    private final static String fileNameRecipes = "recipe_list.txt";
     private final static String fileNameRecipesJSon = "recipe_list_json.txt";
+    private final static String fileNameShoppingList = "shopping_list_json.txt";
     private final static String fileNameRecipesJSon2 = "recipe_list_json2.txt";
     private final static String exportFolderName = "Forksnknife";
 
@@ -215,6 +216,31 @@ public class MyApp extends Application {
         }
     */
 
+    public static boolean saveShoppingList() {
+        if (!permissionGranted())
+            return false;
+        String path = getShoppingListFilename();
+        if (path != null && !path.isEmpty()) {
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(new FileWriter(path));
+                writer.write(getShoppingData(shopingList));
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            } finally {
+                if (writer != null)
+                    try {
+                        writer.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
+        return false;
+    }
+
     public static boolean saveRecipeJSon2(String path, Recipe recipe) {
         if (!permissionGranted())
             return false;
@@ -275,6 +301,11 @@ public class MyApp extends Application {
     private static String getJSonData(Recipe recipe) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(new RecipeJsonDataHolder(recipe));
+    }
+
+    private static String getShoppingData(List<Purchase> list) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(new ShoppingJsonDataHolder(list));
     }
 
     /* Checks if external storage is available for read and write */
@@ -368,6 +399,14 @@ public class MyApp extends Application {
         }
     }
 
+    private static class ShoppingJsonDataHolder {
+        public List<Purchase> mBody;
+
+        public ShoppingJsonDataHolder(List<Purchase> list) {
+            this.mBody = list;
+        }
+    }
+
     private static class RecipesJsonDataHolder {
         public List<Recipe> mContactList;
 
@@ -380,28 +419,21 @@ public class MyApp extends Application {
         return recipes;
     }
 
-    public static List<Ingredient> getShopingList() {
-
-        if(shopingList == null) {
-            shopingList = new ArrayList<>();
-            Ingredient ingredient = new Ingredient();
-            ingredient.name = "Паприка";
-            ingredient.count = 123.0;
-            ingredient.unit = "шт.";
-            shopingList.add(ingredient);
-        }
-
+    public static List<Purchase> getShopingList() {
+        shopingList = loadShoppingList();
         return shopingList;
     }
 
     public static void clearShopingList() {
         shopingList.clear();
+        saveShoppingList();
     }
 
-    public static void addShopItem(Ingredient ingredient){
-        if(shopingList == null)
+    public static void addShopItem(Ingredient ingredient) {
+        if (shopingList == null)
             shopingList = new ArrayList<>();
-        shopingList.add(new Ingredient(ingredient));
+        shopingList.add(new Purchase(ingredient));
+        saveShoppingList();
     }
 
     public static Recipe getRecipe(int uid) {
@@ -1118,6 +1150,52 @@ public class MyApp extends Application {
             saveRecipesJSon(true);
         return insertCount;
     }
+
+    private static String getShoppingListFilename() {
+        String folder = Preferences.getSyncFolder(getContext());
+        StringBuilder path = new StringBuilder();
+        if (folder != null && !folder.isEmpty()) {
+            path.append(folder).append(File.separator).append(fileNameShoppingList);
+            return path.toString();
+        } else {
+            Toast.makeText(getContext(), getContext().getString(R.string.error_write), Toast.LENGTH_LONG).show();
+            return null;
+        }
+
+    }
+
+    public static List<Purchase> loadShoppingList() {
+        if (!permissionGranted())
+            return null;
+        String path = getShoppingListFilename();
+        if (path != null && !path.isEmpty()) {
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new FileReader(path));
+                StringBuilder res = new StringBuilder();
+                String str;
+                while ((str = reader.readLine()) != null) {
+                    res.append(str);
+                }
+                String json = res.toString();
+                ShoppingJsonDataHolder holder = new Gson().fromJson(json, ShoppingJsonDataHolder.class);
+                if (holder != null && holder.mBody != null) {
+                    return holder.mBody;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (reader != null)
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
+        return null;
+    }
+
 
     public static Recipe loadOneRecipeJSon2(String path) {
         if (!permissionGranted())

@@ -14,11 +14,11 @@ public class Ingredient implements Serializable {
     public Ingredient() {
     }
 
-        public Ingredient(Ingredient value) {
-            this.name = value.name;
-            this.count = value.count;
-            this.unit = value.unit;
-        }
+    public Ingredient(Ingredient value) {
+        this.name = value.name;
+        this.count = value.count;
+        this.unit = value.unit;
+    }
 
     public Ingredient(String name, double count, String unit) {
         this.name = name;
