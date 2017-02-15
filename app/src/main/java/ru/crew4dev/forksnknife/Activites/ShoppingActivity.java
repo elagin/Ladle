@@ -11,6 +11,8 @@ import android.widget.TableRow;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ru.crew4dev.forksnknife.MyApp;
@@ -19,13 +21,22 @@ import ru.crew4dev.forksnknife.R;
 
 public class ShoppingActivity extends AppCompatActivity {
 
-    TableLayout table_shopping_list_view;
+    private TableLayout table_shopping_list_view;
+    private List<Purchase> shoppingList;
+
+    private static final String TAG = "myLogs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping);
         table_shopping_list_view = (TableLayout) findViewById(R.id.table_shopping_list_view);
+        shoppingList = MyApp.getShopingList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         update();
     }
 
@@ -48,8 +59,8 @@ public class ShoppingActivity extends AppCompatActivity {
     }
 
     private void update() {
-        List<Purchase> shoppingList = MyApp.getShopingList();
         if (shoppingList != null) {
+            Collections.sort(shoppingList, new CustomComparator());
             findViewById(R.id.textView_shopping_list_is_empty).setVisibility(View.GONE);
             table_shopping_list_view.removeAllViews();
             for (int i = 0; i < shoppingList.size(); i++) {
@@ -59,22 +70,31 @@ public class ShoppingActivity extends AppCompatActivity {
             findViewById(R.id.textView_shopping_list_is_empty).setVisibility(View.VISIBLE);
     }
 
+    public class CustomComparator implements Comparator<Purchase> {
+        @Override
+        public int compare(Purchase object1, Purchase object2) {
+            //from Boolean.compare:
+            return (object1.isBought() == object2.isBought()) ? 0 : (object1.isBought() ? 1 : -1);
+//            return object1.getName().compareTo(object2.getName());
+        }
+    }
+
     private void setStrikeoutText(HtmlTextView view, boolean isStrike) {
         String original = view.getText().toString();
-        if(original != null && original.length() > 0) {
-            if(isStrike){
+        if (original != null && original.length() > 0) {
+            if (isStrike) {
                 StringBuilder html = new StringBuilder();
                 html.append("<s>").append(original).append("</s>");
                 view.setHtml(html.toString());
-            }else
+            } else
                 view.setHtml(original);
         }
     }
 
     private void setBought(TableRow row, Purchase purchase) {
-        setStrikeoutText((HtmlTextView)row.findViewById(R.id.ing_name), purchase.isBought());
-        setStrikeoutText((HtmlTextView)row.findViewById(R.id.ing_count), purchase.isBought());
-        setStrikeoutText((HtmlTextView)row.findViewById(R.id.ing_unit), purchase.isBought());
+        setStrikeoutText((HtmlTextView) row.findViewById(R.id.ing_name), purchase.isBought());
+        setStrikeoutText((HtmlTextView) row.findViewById(R.id.ing_count), purchase.isBought());
+        setStrikeoutText((HtmlTextView) row.findViewById(R.id.ing_unit), purchase.isBought());
     }
 
     private void addIng(Purchase value) {
@@ -93,6 +113,7 @@ public class ShoppingActivity extends AppCompatActivity {
                 purchase.toggle();
                 MyApp.saveShoppingList();
                 setBought(row, purchase);
+                update();
             }
         });
         table_shopping_list_view.addView(row);
