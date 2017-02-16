@@ -432,7 +432,17 @@ public class MyApp extends Application {
     public static void addShopItem(Ingredient ingredient) {
         if (shopingList == null)
             shopingList = new ArrayList<>();
-        shopingList.add(new Purchase(ingredient));
+
+        boolean isMerge = false;
+        for (Purchase item : shopingList) {
+            if (item.getName().equals(ingredient.name) && item.getUnit().equals(ingredient.unit)) {
+                item.appendCount(ingredient.count);
+                isMerge = true;
+                break;
+            }
+        }
+        if (!isMerge)
+            shopingList.add(new Purchase(ingredient));
         saveShoppingList();
     }
 

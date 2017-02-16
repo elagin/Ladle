@@ -36,4 +36,8 @@ public class Purchase {
         return unit;
     }
 
+    public void appendCount(Double value) {
+        count = count + value;
+    }
+
 }

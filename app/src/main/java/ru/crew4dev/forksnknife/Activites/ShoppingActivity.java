@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
@@ -21,7 +20,7 @@ import ru.crew4dev.forksnknife.R;
 
 public class ShoppingActivity extends AppCompatActivity {
 
-    private TableLayout table_shopping_list_view;
+    private de.codecrafters.tableview.TableView table_shopping_list_view;
     private List<Purchase> shoppingList;
 
     private static final String TAG = "myLogs";
@@ -30,7 +29,7 @@ public class ShoppingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping);
-        table_shopping_list_view = (TableLayout) findViewById(R.id.table_shopping_list_view);
+        table_shopping_list_view = (de.codecrafters.tableview.TableView) findViewById(R.id.table_shopping_list_view);
         shoppingList = MyApp.getShopingList();
     }
 
