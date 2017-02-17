@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
@@ -14,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import ru.crew4dev.forksnknife.Ingredient;
 import ru.crew4dev.forksnknife.MyApp;
 import ru.crew4dev.forksnknife.Purchase;
 import ru.crew4dev.forksnknife.R;
@@ -31,6 +34,41 @@ public class ShoppingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shopping);
         table_shopping_list_view = (de.codecrafters.tableview.TableView) findViewById(R.id.table_shopping_list_view);
         shoppingList = MyApp.getShopingList();
+
+        (findViewById(R.id.button_add_purchase)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addPurchase();
+            }
+        });
+    }
+
+    private void addPurchase() {
+        TextView add_ing_name = (TextView) findViewById(R.id.add_ing_name);
+        String name = add_ing_name.getText().toString();
+        if (name.isEmpty()) {
+            Toast.makeText(getBaseContext(), getString(R.string.rec_name_ing_is_empty), Toast.LENGTH_LONG).show();
+            return;
+        }
+        TextView add_ing_count = (TextView) findViewById(R.id.add_ing_count);
+        String count = add_ing_count.getText().toString();
+        if (count.isEmpty()) {
+            Toast.makeText(getBaseContext(), getString(R.string.rec_volume_ing_is_empty), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        TextView add_ing_unit = (TextView) findViewById(R.id.add_ing_unit);
+        String unit = add_ing_unit.getText().toString();
+        if (unit.isEmpty()) {
+            Toast.makeText(getBaseContext(), getString(R.string.rec_unit_ing_is_empty), Toast.LENGTH_LONG).show();
+            return;
+        }
+        Ingredient ingredient = new Ingredient(name, Double.valueOf(count), unit);
+        MyApp.addShopItem(ingredient);
+        add_ing_name.setText("");
+        add_ing_count.setText("");
+        add_ing_unit.setText("");
+        update();
     }
 
     @Override
