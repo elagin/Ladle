@@ -36,7 +36,7 @@
                     android:src="@drawable/ic_menu_camera"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    tools:layout_editor_absoluteY="400dp" />
+                    tools:layout_editor_absoluteY="497dp" />
 
                 <ImageButton
                     android:id="@+id/image_main_delete"

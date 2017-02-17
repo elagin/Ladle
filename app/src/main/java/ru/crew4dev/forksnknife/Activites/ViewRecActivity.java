@@ -39,6 +39,9 @@ public class ViewRecActivity extends AppCompatActivity {
     private TextView rec_steps;
     private ImageView image_main;
 
+    private List<Ingredient> ingredientList;
+    private Recipe recipe;
+
     private Integer recipeID;
     private static File shareFile;
     private static final int RESULT_SHARE_FILE = 1;
@@ -76,10 +79,28 @@ public class ViewRecActivity extends AppCompatActivity {
         rec_steps = (TextView) findViewById(R.id.rec_steps);
         rec_total_time_count = (TextView) findViewById(R.id.rec_total_time_count);
 
+        ImageButton button_add_shopping_cart = (ImageButton) findViewById(R.id.button_add_shopping_cart);
+
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             recipeID = bundle.getInt("recipeID");
-            update();
+            if (recipeID != null) {
+                recipe = MyApp.getRecipe(recipeID);
+                if (recipe != null) {
+                    ingredientList = recipe.getIngredients();
+                    button_add_shopping_cart.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            for (int i = 0; i < ingredientList.size(); i++) {
+                                Ingredient ingredient = ingredientList.get(i);
+                                MyApp.addShopItem(ingredient);
+                            }
+                            Toast.makeText(getApplicationContext(), String.format(getString(R.string.add_to_shopping_list_count), ingredientList.size()), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    update();
+                }
+            }
         }
     }
 
@@ -171,53 +192,50 @@ public class ViewRecActivity extends AppCompatActivity {
     }
 
     private void update() {
-        if (recipeID != null) {
-            Recipe recipe = MyApp.getRecipe(recipeID);
-            if (recipe != null) {
-                image_main = (ImageView) findViewById(R.id.image_main);
-                if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
-                    MyApp.setPic(recipe.getPhoto(), image_main);
-                } else
-                    image_main.setVisibility(View.GONE);
 
-                rec_name.setText(recipe.getName());
-                if (recipe.getDescription().length() > 0)
-                    rec_descr.setText(recipe.getDescription());
-                else
-                    rec_descr.setVisibility(View.GONE);
-                if (recipe.getTags().length() > 0) {
-                    rec_tags.setText(recipe.getTags());
-                } else {
-                    rec_tags_label.setVisibility(View.GONE);
-                    rec_tags.setVisibility(View.GONE);
-                }
-                if (recipe.getSteps() != null && recipe.getSteps().length() > 0)
-                    rec_steps.setText(recipe.getSteps());
-                else
-                    rec_steps.setVisibility(View.GONE);
-                recTable.removeAllViews();
-                List<Ingredient> ingredientList = recipe.getIngredients();
-                for (int i = 0; i < ingredientList.size(); i++) {
-                    Ingredient item = ingredientList.get(i);
-                    addIng(item);
-                }
+        image_main = (ImageView) findViewById(R.id.image_main);
+        if (recipe.getPhoto() != null && recipe.getPhoto().length() > 0) {
+            MyApp.setPic(recipe.getPhoto(), image_main);
+        } else
+            image_main.setVisibility(View.GONE);
 
-                stepTable.removeAllViews();
-                List<Recipe.Step> stepList = recipe.getStepList();
-                for (int i = 0; i < stepList.size(); i++) {
-                    Recipe.Step item = stepList.get(i);
-                    addStep(item.fileName, item.time, item.desc);
-                }
-                if (stepList.isEmpty())
-                    findViewById(R.id.rec_preparation).setVisibility(View.GONE);
-
-                String totalTime = recipe.getTotalStepTimeString();
-                if (totalTime.length() > 0)
-                    rec_total_time_count.setText(String.format(getString(R.string.time_format_w_mins), totalTime));
-                else
-                    rec_total_time_count.setVisibility(View.GONE);
-            }
+        rec_name.setText(recipe.getName());
+        if (recipe.getDescription().length() > 0)
+            rec_descr.setText(recipe.getDescription());
+        else
+            rec_descr.setVisibility(View.GONE);
+        if (recipe.getTags().length() > 0) {
+            rec_tags.setText(recipe.getTags());
+        } else {
+            rec_tags_label.setVisibility(View.GONE);
+            rec_tags.setVisibility(View.GONE);
         }
+        if (recipe.getSteps() != null && recipe.getSteps().length() > 0)
+            rec_steps.setText(recipe.getSteps());
+        else
+            rec_steps.setVisibility(View.GONE);
+        recTable.removeAllViews();
+        List<Ingredient> ingredientList = recipe.getIngredients();
+        for (int i = 0; i < ingredientList.size(); i++) {
+            Ingredient item = ingredientList.get(i);
+            addIng(item);
+        }
+
+        stepTable.removeAllViews();
+        List<Recipe.Step> stepList = recipe.getStepList();
+        for (int i = 0; i < stepList.size(); i++) {
+            Recipe.Step item = stepList.get(i);
+            addStep(item.fileName, item.time, item.desc);
+        }
+        if (stepList.isEmpty())
+            findViewById(R.id.rec_preparation).setVisibility(View.GONE);
+
+        String totalTime = recipe.getTotalStepTimeString();
+        if (totalTime.length() > 0)
+            rec_total_time_count.setText(String.format(getString(R.string.time_format_w_mins), totalTime));
+        else
+            rec_total_time_count.setVisibility(View.GONE);
+
     }
 
     private void addIng(final Ingredient ingredient) {
@@ -233,10 +251,9 @@ public class ViewRecActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MyApp.addShopItem(ingredient);
-                Toast.makeText(getApplicationContext(), getString(R.string.add_to_shopping_list), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), String.format(getString(R.string.add_to_shopping_list), ingredient.name), Toast.LENGTH_LONG).show();
             }
         });
-
         recTable.addView(row);
     }
 

@@ -38,7 +38,8 @@
     <string name="recipe">Рецепт:</string>
     <string name="action_new_recipe">Новый рецепт</string>
     <string name="action_shopping_list">Список покупок</string>
-    <string name="add_to_shopping_list">Игредиент добавлен в список покупок.</string>
+    <string name="add_to_shopping_list">%1$s добавлен в список покупок.</string>
+    <string name="add_to_shopping_list_count">Добавлено %1$d ингредиентов в список покупок.</string>
     <string name="shopping_list_is_empty">Cписок покупок пуст. Вы можете добавлять ингредиенты из просмотра рецепта.</string>
     <string name="edit">редактировать</string>
     <string name="gallery">Галерея</string>
