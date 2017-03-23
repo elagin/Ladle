@@ -86,6 +86,8 @@ public class MyApp extends Application {
     private final static String fileNameRecipesJSon2 = "recipe_list_json2.txt";
     private final static String exportFolderName = "Forksnknife";
 
+    private MyPreferences prefs = null;
+
     static {
         //currentActivity = null;
     }
@@ -1281,5 +1283,11 @@ public class MyApp extends Application {
         Uri uri = Uri.fromFile(attachment);
         emailIntent.putExtra(Intent.EXTRA_STREAM, uri);
         activity.startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), requestCode);
+    }
+
+    public MyPreferences getPreferences() {
+        if (prefs == null)
+            prefs = new MyPreferences(getContext());
+        return prefs;
     }
 }

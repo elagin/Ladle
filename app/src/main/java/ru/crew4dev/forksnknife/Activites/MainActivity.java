@@ -24,6 +24,7 @@ import java.util.List;
 import ru.crew4dev.forksnknife.ConfirmDialogFragment;
 import ru.crew4dev.forksnknife.ConfirmDialogImportFragment;
 import ru.crew4dev.forksnknife.MyApp;
+import ru.crew4dev.forksnknife.MyIntentService;
 import ru.crew4dev.forksnknife.R;
 import ru.crew4dev.forksnknife.Recipe;
 
@@ -194,7 +195,8 @@ public class MainActivity extends AppCompatActivity implements ConfirmDialogFrag
                 MyApp.toHelp(this);
                 return true;
             case R.id.action_show_shopping_cart:
-                MyApp.toShoppingList();
+                //MyApp.toShoppingList();
+                MyIntentService.startActionGetPointList(this);
                 return true;
             case R.id.menu_settings:
                 MyApp.toSettings();
